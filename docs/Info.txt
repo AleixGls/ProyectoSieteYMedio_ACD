@@ -1,0 +1,34 @@
+Las cosas que este hechas les colocare un ✔
+Las que esten medio hechas les colocare esto ∧
+Lo que no este hecho aun no tendra nada
+
+Desarrollar el portal del juego con las siguientes páginas web:
+    ● index.html Se explican las reglas del juego 
+
+    ● tutorial.html Se explica como usar el juego
+
+    ● equip.html Se listan los participantes y que ha hecho cada uno
+
+    ● programacion.html Se ha de documentar cómo se han resuelto.
+        A nivel de programación, los aspectos siguientes:
+            ▪ Lógica de juego de la banca.
+            ▪ Lógica del juego de un boot.
+            ▪ Establecimiento de la prioridad inicial de los jugadores.
+            ▪ Inserción en BBDD de los datos del juego.
+
+
+Condiciones:
+    ● Todas las páginas tienen un menú para cambiar de página
+    ● Todas las páginas tienen el logotipo del juego
+    ● Las páginas deben tener un mínimo de dos fotografías
+    ● Las páginas se deben adaptar a móvil (sin scroll lateral)
+    ● En global debe haber mínimo 2 transiciones y 2 animaciones
+    ● La estética debe ser lo más profesional posible, tomando como ejemplo páginas actuales.
+    ● El CSS debe estar en archivos aparte de los .html
+    ● El posicionamiento debe hacerse con FlexBox
+
+MEJORAS:
+    ● Incorporar javascript, por ejemplo en la página de tutorial, simular cuál es la
+    puntuación que se obtiene cuando se lanzan un par de cartas.
+    Esta es una ampliación a los requisitos mínimos del proyecto que ayudará a
+    mejorar la nota del mismo.

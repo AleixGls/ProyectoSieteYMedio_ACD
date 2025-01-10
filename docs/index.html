@@ -3,50 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Placeholder Page</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f3f4f6;
-            color: #333;
-        }
-        .container {
-            text-align: center;
-        }
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-        p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-        }
-        .button {
-            display: inline-block;
-            padding: 0.8rem 1.5rem;
-            font-size: 1rem;
-            color: white;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <title>Inici | Projecto 7 i 1/5</title>
+    <link rel="stylesheet" href="CSS/HeaderFooter.css">
+    <link rel="stylesheet" href="CSS/index.css">
 </head>
-<body>
-    <div class="container">
-        <h1>Coming Soon</h1>
-        <p>We are working hard to bring you something amazing. Stay tuned!</p>
-        <a href="#" class="button">Learn More</a>
+<body class="body">
+    <header>
+        <nav class="navbar">
+            <div class="logo"><a href="index.html"><img src="IMG/Logo.png" alt="Logo"></a></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Inici</a></li>
+                <li><a href="tutorial.html">Tutorial</a></li>
+                <li><a href="equip.html">Equip</a></li>
+                <li><a href="programacion.html">Programacio</a></li>
+            </ul>
+            <button id="Mode">Mode Oscur</button>
+        </nav>
+    </header>
+
+    <div class="carousel-container">
+        <div class="carousel">
+            <img src="https://via.placeholder.com/600x400?text=Imagen+1" alt="Imagen 1">
+            <img src="https://via.placeholder.com/600x400?text=Imagen+2" alt="Imagen 2">
+            <img src="https://via.placeholder.com/600x400?text=Imagen+3" alt="Imagen 3">
+        </div>
+        <button class="prev" id="prev">&lt;</button>
+        <button class="next" id="next">&gt;</button>
     </div>
+
+    <footer class="footer">
+        <p>| David Perera Gonzalez | Cristina Vázquez Garrrote | Aleix Linares sousa |</p>
+        <p>&copy; 2025 7 i mitg | <a href="#">Política de privacidad</a> | <a href="#">Términos de uso</a></p>
+    </footer>
+
+    <script src="JS/mode.js"></script>
+    <script src="JS/carrusel.js"></script>
 </body>
 </html>
