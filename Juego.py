@@ -244,3 +244,5 @@ def returnListRanking(field="earnings"):
     # Función que retorna una lista con los id de jugadores del diccionario que retorna la
     # función getBBDDRanking(), ordenados según la opción del ranking elegida
     pass
+
+print("a")
