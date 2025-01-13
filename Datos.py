@@ -183,19 +183,10 @@ players = {
         "type":40,
         "bet":4,
         "points":0,
-        "cards":[],
-        "roundPoints":0
-    },
-    "22225555A":{
-        "name":"Pedro",
-        "human":True,
-        "bank":False,
-        "initialCard":"",
-        "priority":0,
-        "type":40,
-        "bet":4,
-        "points":0,
-        "cards":[],
+        "cards":["AL_BE_01", "AL_BE_12","AL_BE_15"],
         "roundPoints":0
     },
 }
+
+game = []
+
