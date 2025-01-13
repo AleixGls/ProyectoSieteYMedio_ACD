@@ -69,14 +69,6 @@ def chanceExceedingSevenAndHalf(id, mazo):
     # Función que calcula la probabilidad de pasarse de siete y medio
     pass
 
-def logToFile(text):
-    # f = open("logfileSevenAndHalf.txt", "a")
-    # f.write(text)
-    # f.close()
-    # Esta función nos puede servir para enviar mensajes de texto al archivo
-    # “logFileSevenAndHalf”, que puede sernos útil a modo de debug.
-    pass
-
 def baknOrderNewCard(id, mazo):
     # Función que evalúa si la banca pedirá una nueva carta.
     pass
@@ -85,10 +77,6 @@ def newPlayer(dni, name, profile, human):
     # Función que devuelve una tupla con dos elementos, el primero es el dni del nuevo
     # jugador, el segundo, un diccionario con las claves: name, human, bank, initialCard,
     # priority, type, bet, points, ards, roundPoints
-    pass
-
-def newRandomDNI():
-    # Función que devuelve un dni válido con números aleatorios
     pass
 
 def setCardsDeck():
