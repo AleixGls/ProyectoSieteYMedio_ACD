@@ -1,0 +1,80 @@
+/* General Styles for Equip Page */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Equip Intro Section */
+.equip-intro {
+    text-align: center;
+    padding: 2rem;
+    background-color: #f9f9f9;
+}
+
+.equip-intro h1 {
+    font-size: 2.5rem;
+    color: #333;
+}
+
+.equip-intro p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-top: 1rem;
+}
+
+/* Team List Section */
+.team-list {
+    background-color: #eef2f3;
+    padding: 2rem;
+    text-align: center;
+}
+
+.team-list h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    justify-items: center;
+}
+
+.team-member {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+}
+
+.team-photo {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+
+.team-member h3 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.team-member p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #666;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,128 @@
+/* General Styles for Tutorial Page */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Tutorial Intro Section */
+.tutorial-intro {
+    background-color: #f9f9f9;
+    text-align: center;
+    padding: 2rem;
+}
+
+.tutorial-intro h1 {
+    font-size: 2.5rem;
+    color: #333;
+}
+
+.tutorial-intro p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-top: 1rem;
+}
+
+/* Tutorial Content Section */
+.tutorial-content {
+    background-color: #eef2f3;
+    padding: 2rem;
+    text-align: center;
+}
+
+.tutorial-content h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.tutorial-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    justify-items: center;
+}
+
+.tutorial-step {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 350px;
+}
+
+.tutorial-step img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+.tutorial-step p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* CTA Section */
+.cta {
+    text-align: center;
+    padding: 2rem;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    font-size: 1.2rem;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Video Introductorio Section */
+.tutorial-video {
+    text-align: center;
+    padding: 2rem;
+    background-color: #eef2f3;
+}
+
+.tutorial-video h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.video-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.video-container iframe {
+    width: 100%;
+    height: 450px; /* Ajustar altura según sea necesario */
+    border-radius: 8px;
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .tutorial-content {
+        padding: 1.5rem;
+    }
+
+    .tutorial-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tutorial-step {
+        max-width: 100%;
+    }
+}
