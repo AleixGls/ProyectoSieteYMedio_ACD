@@ -1,118 +1,156 @@
-/* General Styles */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  /* Intro Section */
-  .intro {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    background-color: #f9f9f9;
-  }
-  
+
+.intro {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #f9f9f9;
+}
+
+.intro-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  max-width: 1200px;
+  align-items: center;
+}
+
+.intro-image {
+  flex: 1;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.intro-text {
+  flex: 1;
+}
+
+.intro-text h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.intro-text p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.rules {
+  background-color: #eef2f3;
+  padding: 2rem;
+  text-align: center;
+}
+
+.rules h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.rule {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.rule img {
+  max-width: 60px;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.rule p {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Call to Action Section */
+.cta {
+  text-align: center;
+  padding: 2rem;
+}
+
+.cta-button {
+  display: inline-block;
+  background-color: #007bff;
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.2rem;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.img-principal{
+  width: 400px;
+}
+
+
+
+.intro-osc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #222222;
+}
+
+.rules-osc {
+  background-color: #222222;
+  padding: 2rem;
+  text-align: center;
+}
+
+.rules-osc h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.rule-osc {
+  background: rgb(54, 54, 54);
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.rule-osc img {
+  max-width: 60px;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.rule-osc p {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+
+@media (max-width: 768px) {
   .intro-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    max-width: 1200px;
-    align-items: center;
+    flex-direction: column;
+    text-align: center;
   }
-  
-  .intro-image {
-    flex: 1;
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-  }
-  
+
+  .intro-image,
   .intro-text {
-    flex: 1;
+    width: 100%;
   }
-  
-  .intro-text h2 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+
+  .img-principal{
+    width: 200px;
   }
-  
-  .intro-text p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-  }
-  
-  /* Rules Section */
-  .rules {
-    background-color: #eef2f3;
-    padding: 2rem;
-    text-align: center;
-  }
-  
-  .rules h2 {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-  }
-  
-  .rules-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-  }
-  
-  .rule {
-    background: #fff;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  .rule img {
-    max-width: 60px;
-    height: auto;
-    margin-bottom: 1rem;
-  }
-  
-  .rule p {
-    font-size: 1rem;
-    line-height: 1.5;
-  }
-  
-  /* Call to Action Section */
-  .cta {
-    text-align: center;
-    padding: 2rem;
-  }
-  
-  .cta-button {
-    display: inline-block;
-    background-color: #007bff;
-    color: #fff;
-    padding: 0.8rem 1.5rem;
-    font-size: 1.2rem;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-  }
-  
-  .cta-button:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-  }
-  
-  /* Responsiveness */
-  @media (max-width: 768px) {
-    .intro-content {
-      flex-direction: column;
-      text-align: center;
-    }
-  
-    .intro-image,
-    .intro-text {
-      width: 100%;
-    }
-  }
-  
+}

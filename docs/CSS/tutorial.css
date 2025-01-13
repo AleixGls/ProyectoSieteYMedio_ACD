@@ -1,12 +1,3 @@
-/* General Styles for Tutorial Page */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Tutorial Intro Section */
 .tutorial-intro {
     background-color: #f9f9f9;
     text-align: center;
@@ -24,7 +15,6 @@ body {
     margin-top: 1rem;
 }
 
-/* Tutorial Content Section */
 .tutorial-content {
     background-color: #eef2f3;
     padding: 2rem;
@@ -112,7 +102,68 @@ body {
 }
 
 
-/* Responsive Design */
+
+.tutorial-intro-osc {
+    background-color: #222222;
+    text-align: center;
+    padding: 2rem;
+}
+
+.tutorial-intro-osc h1 {
+    font-size: 2.5rem;
+    color: #ffffff;
+}
+
+.tutorial-intro-osc p {
+    font-size: 1.2rem;
+    color: #ebebeb;
+    margin-top: 1rem;
+}
+
+.tutorial-content-osc {
+    background-color: #222222;
+    padding: 2rem;
+    text-align: center;
+}
+
+.tutorial-content-osc h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #ffffff;
+}
+
+.tutorial-step-osc {
+    background: #222222;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 350px;
+}
+
+.tutorial-step-osc img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+.tutorial-step-osc p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #ffffff;
+}
+
+.tutorial-video-osc {
+    text-align: center;
+    padding: 2rem;
+    background-color: #222222;
+}
+
+.tutorial-video-osc h2 {
+    font-size: 2rem;
+    color: #ffffff;
+    margin-bottom: 1rem;
+}
 @media (max-width: 768px) {
     .tutorial-content {
         padding: 1.5rem;
