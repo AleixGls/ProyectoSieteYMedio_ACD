@@ -79,11 +79,6 @@ def newPlayer(dni, name, profile, human):
     # priority, type, bet, points, ards, roundPoints
     pass
 
-def setCardsDeck():
-    # Elegimos una baraja, y a partir de esa baraja, establecemos el diccionario de cartas
-    # contextGame["cards_deck"]
-    pass
-
 def getGameId():
     # Función que devuelve un id no existente en la tabla cardgame.
     pass

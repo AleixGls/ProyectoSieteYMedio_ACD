@@ -11,3 +11,8 @@ def logToFile(text):
     f = open("logfileSevenAndHalf.txt", "a")
     f.write(text)
     f.close()
+
+def setCardsDeck():
+    # Elegimos una baraja, y a partir de esa baraja, establecemos el diccionario de cartas
+    # contextGame["cards_deck"]
+    pass
