@@ -1,3 +1,6 @@
+import Datos as Dt
+
+
 def humanRound(id, mazo):
     # Función que gestiona la tirada de un jugador humano. Nos muestra el menú de
     # opciones:
@@ -20,18 +23,20 @@ def printWinner():
     pass
 
 def printPlayerStats(id):
-    # Esta función nos muestra los stats de un jugador humano.
-    #   name Mario
-    #   type 40
-    #   human True
-    #   bank True
-    #   initialCard E11
-    #   priority 3
-    #   bet 8
-    #   points 20
-    #   cards C07
-    #   roundPoints 0
-    pass
+    print(
+    f"""
+    Name:         {Dt.players[id]["name"]}
+    Type:         {Dt.players[id]["type"]}
+    Human:        {Dt.players[id]["human"]}
+    Bank:         {Dt.players[id]["bank"]}
+    Initial Card: {Dt.players[id]["initialCard"]}
+    Priority:     {Dt.players[id]["priority"]}
+    Bet:          {Dt.players[id]["bet"]}
+    Points:       {Dt.players[id]["points"]}
+    Cards:        {", ".join(Dt.players[id]["cards"])}
+    Round Points: {Dt.players[id]["roundPoints"]}
+    """
+    )
 
 def addRemovePlayers():
     # Función que nos muestra el menú despues de escoger la opción 1 del menu principal:

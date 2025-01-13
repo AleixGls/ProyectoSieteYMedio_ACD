@@ -171,3 +171,22 @@ cartas_al = {
     "AL_BE_14":{"literal":"Invierno"             ,"value":0.5,"priority":4,"realValue":14},
     "AL_BE_15":{"literal":"Agua"                 ,"value":0.5,"priority":4,"realValue":15},
 }
+
+
+players = {
+    "11115555A":{
+        "name":"Mario",
+        "human":True,
+        "bank":False,
+        "initialCard":"",
+        "priority":0,
+        "type":40,
+        "bet":4,
+        "points":0,
+        "cards":["AL_BE_01", "AL_BE_12","AL_BE_15"],
+        "roundPoints":0
+    },
+}
+
+game = []
+
