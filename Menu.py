@@ -54,9 +54,25 @@ def settings():
     pass
 
 def showhPlayersGame():
-    # Función que muestra los jugadores seleccionados cuando estamos añadiendo
-    # jugadores a la partida:
-    pass
+    print("Actual Players In Game".center(72,"*"))
+    for i in range(0,len(Dt.context_game["game"])):
+        player_id    = Dt.context_game["game"][i]
+        player_name  = Dt.context_game["players"][Dt.context_game["game"][i]]["name"]
+        if Dt.context_game["players"][Dt.context_game["game"][i]]["human"] == True:
+            player_human = "Human"
+        else:
+            player_human = "Bot"
+
+        if   Dt.context_game["players"][Dt.context_game["game"][i]]["type"] == 30:
+            player_type = "Cautious"
+        elif Dt.context_game["players"][Dt.context_game["game"][i]]["type"] == 40:
+            player_type = "Moderated"
+        elif Dt.context_game["players"][Dt.context_game["game"][i]]["type"] == 50:
+            player_type = "Bold"
+        else:
+            player_type = "ERROR"
+
+        print(player_id.ljust(18) + player_name.ljust(18) + player_human.ljust(18) + player_type.ljust(18))
 
 def setMaxRounds():
     # Función que pide al usuario el número de rondas de la siguiente partida y lo establece

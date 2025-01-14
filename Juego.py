@@ -50,23 +50,10 @@ def distributionPointAndNewBankCandidates():
     # una lista con los candidatos a la banca ( los que tienen 7,5)
     pass
 
-def orderPlayersByPriority(listaJugadores):
-    # Ordenamos la lista de jugadores de la partida (contextGame[“game”]) según
-    # prioridad.
-    pass
-
 def getOpt(textOpts="", inputOptText="", rangeList=[], exceptions=[]):
     # Función para la gestión de menús. Le pasamos un texto, que nos mostrará un menú,
     # un rango de opciones válidas, y una lista de excepciones, y nos devuelve la opción
     # elegida por el usuario.
-    pass
-
-def orderPlayersByPoints(listaJugadores):
-    # Función que ordena los jugadores según sus puntos.
-    pass
-
-def chanceExceedingSevenAndHalf(id, mazo):
-    # Función que calcula la probabilidad de pasarse de siete y medio
     pass
 
 def baknOrderNewCard(id, mazo):
@@ -77,11 +64,6 @@ def newPlayer(dni, name, profile, human):
     # Función que devuelve una tupla con dos elementos, el primero es el dni del nuevo
     # jugador, el segundo, un diccionario con las claves: name, human, bank, initialCard,
     # priority, type, bet, points, ards, roundPoints
-    pass
-
-def setCardsDeck():
-    # Elegimos una baraja, y a partir de esa baraja, establecemos el diccionario de cartas
-    # contextGame["cards_deck"]
     pass
 
 def getGameId():
