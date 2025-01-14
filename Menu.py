@@ -1,101 +1,167 @@
+import Utilidad as Ut
 import Datos as Dt
 
 
-def humanRound(id, mazo):
-    # Función que gestiona la tirada de un jugador humano. Nos muestra el menú de
-    # opciones:
-    #   1)View Stats
-    #   2)View Game Stats
-    #   3)Set Bet
-    #   4)Order Card
-    #   5)Automatic Play
-    #   6)Stand
-    #   Option:
-    # Y ejecuta la acción que elijamos
-    pass
+def main_menu():
+    # Muestra el menú principal del juego y gestiona la selección de opciones.
 
-def printStats(idPlayer="", titulo=""):
-    # Esta función nos imprime los stats de todos los jugadores de la partida.
-    pass
-
-def printWinner():
-    # Función que muestra el ganador de la partida.
-    pass
-
-def printPlayerStats(id):
-    print(
-    f"""
-    Name:         {Dt.players[id]["name"]}
-    Type:         {Dt.players[id]["type"]}
-    Human:        {Dt.players[id]["human"]}
-    Bank:         {Dt.players[id]["bank"]}
-    Initial Card: {Dt.players[id]["initialCard"]}
-    Priority:     {Dt.players[id]["priority"]}
-    Bet:          {Dt.players[id]["bet"]}
-    Points:       {Dt.players[id]["points"]}
-    Cards:        {", ".join(Dt.players[id]["cards"])}
-    Round Points: {Dt.players[id]["roundPoints"]}
-    """
-    )
+    while True:
+        Ut.clear_terminal()
+        print("=== Menú Principal ===")
+        print("1) Add/Remove/Show Players")
+        print("2) Settings")
+        print("3) Play Game")
+        print("4) Ranking")
+        print("5) Reports")
+        print("6) Exit")
+        
+        option = Ut.getOpt(
+            inputOptText="Seleccione una opción: ",
+            rangeList=[1, 2, 3, 4, 5, 6]
+        )
+        
+        if option == 1:
+            addRemovePlayers()
+        elif option == 2:
+            settings()
+        elif option == 3:
+            playGame()
+        elif option == 4:
+            ranking()
+        elif option == 5:
+            reports()
+        elif option == 6:
+            print("Saliendo del juego...")
+            break
 
 def addRemovePlayers():
-    # Función que nos muestra el menú despues de escoger la opción 1 del menu principal:
-    #   1)New Human Player
-    #   2)New Boot
-    #   3)Show/Remove Players
-    #   4)Go back
-    #   Option:
-    pass
+    """
+    Muestra el menú para añadir, eliminar o mostrar jugadores.
+    """
+    while True:
+        Ut.clear_terminal()
+        print("=== Gestión de Jugadores ===")
+        print("1) Nuevo Jugador Humano")
+        print("2) Nuevo Bot")
+        print("3) Mostrar/Eliminar Jugadores")
+        print("4) Volver al Menú Principal")
+        
+        option = Ut.getOpt(
+            inputOptText="Seleccione una opción: ",
+            rangeList=[1, 2, 3, 4]
+        )
+        
+        if option == 1:
+            setNewPlayer(human=True)
+        elif option == 2:
+            setNewPlayer(human=False)
+        elif option == 3:
+            showPlayersGame()
+        elif option == 4:
+            break
 
 def settings():
-    # Función que gestiona el menú settings, donde podemos establecer los jugadores que
-    # participarán en una partida, la baraja con la que se va a jugar y el número máximo de
-    # rondas
-    pass
-
-def showhPlayersGame():
-    print("Actual Players In Game".center(72,"*"))
-    for i in range(0,len(Dt.context_game["game"])):
-        player_id    = Dt.context_game["game"][i]
-        player_name  = Dt.context_game["players"][Dt.context_game["game"][i]]["name"]
-        if Dt.context_game["players"][Dt.context_game["game"][i]]["human"] == True:
-            player_human = "Human"
-        else:
-            player_human = "Bot"
-
-        if   Dt.context_game["players"][Dt.context_game["game"][i]]["type"] == 30:
-            player_type = "Cautious"
-        elif Dt.context_game["players"][Dt.context_game["game"][i]]["type"] == 40:
-            player_type = "Moderated"
-        elif Dt.context_game["players"][Dt.context_game["game"][i]]["type"] == 50:
-            player_type = "Bold"
-        else:
-            player_type = "ERROR"
-
-        print(player_id.ljust(18) + player_name.ljust(18) + player_human.ljust(18) + player_type.ljust(18))
+    """
+    Muestra el menú de configuración del juego.
+    """
+    while True:
+        Ut.clear_terminal()
+        print("=== Configuración del Juego ===")
+        print("1) Establecer Jugadores de la Partida")
+        print("2) Establecer Baraja de Cartas")
+        print("3) Establecer Máximo de Rondas")
+        print("4) Volver al Menú Principal")
+        
+        option = Ut.getOpt(
+            inputOptText="Seleccione una opción: ",
+            rangeList=[1, 2, 3, 4]
+        )
+        
+        if option == 1:
+            setPlayersGame()
+        elif option == 2:
+            setCardsDeck()
+        elif option == 3:
+            setMaxRounds()
+        elif option == 4:
+            break
 
 def setMaxRounds():
-    # Función que pide al usuario el número de rondas de la siguiente partida y lo establece
-    # en el diccionario contextGame, contextGame[“maxRounds”]
-    pass
-
-def printStats(idPlayer="", titulo=""):
-    # Esta función nos imprime los stats de todos los jugadores de la partida.
-    pass
-
-def setNewPlayer(human=True):
-    # Función que gestiona la creación de un nuevo jugador que insertaremos en la BBDD
-    pass
+    # Establece el número máximo de rondas para la partida.
+    
+    while True:
+        Ut.clear_terminal()
+        max_rounds = input("Introduzca el número máximo de rondas (por defecto 5): ").strip()
+        
+        if max_rounds.isdigit() and int(max_rounds) > 0:
+            Dt.context_game["maxRounds"] = int(max_rounds)
+            print(f"Número máximo de rondas establecido a {max_rounds}.")
+            break
+        else:
+            print("Entrada no válida. Introduzca un número mayor que 0.")
 
 def setPlayersGame():
-    # Función para establecer los jugadores que conformarán la partida siguiente
-    pass
+    """
+    Establece los jugadores que participarán en la partida.
+    """
+    Ut.clear_terminal()
+    print("=== Establecer Jugadores de la Partida ===")
+    # Aquí se implementaría la lógica para seleccionar jugadores de la base de datos.
+    print("Funcionalidad en desarrollo...")
 
-def ranking():
-    # Función queMuestra el menú del ranking y el ranking según la opción elegida
-    pass
+def showPlayersGame():
+    """
+    Muestra los jugadores actuales en la partida.
+    """
+    Ut.clear_terminal()
+    print("=== Jugadores en la Partida ===")
+    # Aquí se implementaría la lógica para mostrar los jugadores.
+    print("Funcionalidad en desarrollo...")
 
 def reports():
-    # Función que nos muestra el menú de reportes, y una vez elegida una opción, el reporte
-    # correspondiente
-    pass
+    """
+    Muestra el menú de informes y gestiona la selección de opciones.
+    """
+    while True:
+        Ut.clear_terminal()
+        print("=== Informes ===")
+        print("1) Carta Inicial Más Repetida")
+        print("2) Apuesta Más Alta por Partida")
+        print("3) Apuesta Más Baja por Partida")
+        print("4) Porcentaje de Rondas Ganadas")
+        print("5) Partidas Ganadas por Bots")
+        print("6) Rondas Ganadas por la Banca")
+        print("7) Usuarios que han sido Banca")
+        print("8) Volver al Menú Principal")
+        
+        option = Ut.getOpt(
+            inputOptText="Seleccione una opción: ",
+            rangeList=[1, 2, 3, 4, 5, 6, 7, 8]
+        )
+        
+        if option == 8:
+            break
+        else:
+            print(f"Informe {option} seleccionado. Funcionalidad en desarrollo...")
+
+def ranking():
+    """
+    Muestra el menú de ranking y gestiona la selección de opciones.
+    """
+    while True:
+        Ut.clear_terminal()
+        print("=== Ranking ===")
+        print("1) Jugadores con Más Ganancias")
+        print("2) Jugadores con Más Partidas Jugadas")
+        print("3) Jugadores con Más Minutos Jugados")
+        print("4) Volver al Menú Principal")
+        
+        option = Ut.getOpt(
+            inputOptText="Seleccione una opción: ",
+            rangeList=[1, 2, 3, 4]
+        )
+        
+        if option == 4:
+            break
+        else:
+            print(f"Ranking {option} seleccionado. Funcionalidad en desarrollo...")
