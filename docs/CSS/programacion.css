@@ -1,12 +1,5 @@
-/* General Styles for Programacion Page */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
-/* Programacion Intro Section */
+
 .programacion-intro {
     text-align: center;
     padding: 2rem;
@@ -24,7 +17,6 @@ body {
     margin-top: 1rem;
 }
 
-/* Programacion Details Section */
 .programacion-details {
     padding: 2rem;
     background-color: #eef2f3;
@@ -50,6 +42,50 @@ body {
     color: #666;
 }
 
+
+.programacion-intro-osc {
+    text-align: center;
+    padding: 2rem;
+    background-color: #333333;
+}
+
+.programacion-intro-osc h1 {
+    font-size: 2.5rem;
+    color: white;
+}
+
+.programacion-intro-osc p {
+    font-size: 1.2rem;
+    color: rgb(202, 202, 202);
+    margin-top: 1rem;
+}
+
+.programacion-details-osc {
+    padding: 2rem;
+    background-color: #333333;
+}
+
+.programacion-item-osc {
+    background: #4b4b4b;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.programacion-item-osc h2 {
+    font-size: 1.8rem;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.programacion-item-osc p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: rgb(231, 231, 231);
+}
+
+
 /* Responsiveness */
 @media (max-width: 768px) {
     .programacion-item {
@@ -63,4 +99,17 @@ body {
     .programacion-item p {
         font-size: 1rem;
     }
+
+    .programacion-item-osc {
+        padding: 1rem;
+    }
+
+    .programacion-item-osc h2 {
+        font-size: 1.5rem;
+    }
+
+    .programacion-item-osc p {
+        font-size: 1rem;
+    }
 }
+
