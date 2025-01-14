@@ -1,6 +1,9 @@
-.equip-intro {
+.equip-intro, .equip-intro-osc {
     text-align: center;
     padding: 2rem;
+}
+
+.equip-intro {
     background-color: #f9f9f9;
 }
 
@@ -15,16 +18,44 @@
     margin-top: 1rem;
 }
 
-.team-list {
-    background-color: #eef2f3;
+.equip-intro-osc {
+    background-color: #333333;
+}
+
+.equip-intro-osc h1 {
+    font-size: 2.5rem;
+    color: white;
+}
+
+.equip-intro-osc p {
+    font-size: 1.2rem;
+    color: rgb(226, 226, 226);
+    margin-top: 1rem;
+}
+
+.team-list, .team-list-osc {
     padding: 2rem;
     text-align: center;
+}
+
+.team-list {
+    background-color: #eef2f3;
 }
 
 .team-list h2 {
     font-size: 2rem;
     margin-bottom: 2rem;
     color: #333;
+}
+
+.team-list-osc {
+    background-color: #333333;
+}
+
+.team-list-osc h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: white;
 }
 
 .team-grid {
@@ -34,14 +65,21 @@
     justify-items: center;
 }
 
-.team-member {
-    background: #fff;
+.team-member, .team-member-osc {
     padding: 1rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
     width: 100%;
     max-width: 300px;
+}
+
+.team-member {
+    background: #fff;
+}
+
+.team-member-osc {
+    background: #555555;
 }
 
 .team-photo {
@@ -62,47 +100,6 @@
     color: #666;
 }
 
-
-
-
-.equip-intro-osc {
-    text-align: center;
-    padding: 2rem;
-    background-color: #333333;
-}
-
-.equip-intro-osc h1 {
-    font-size: 2.5rem;
-    color: white;
-}
-
-.equip-intro-osc p {
-    font-size: 1.2rem;
-    color: rgb(226, 226, 226);
-    margin-top: 1rem;
-}
-
-.team-list-osc {
-    background-color: #333333;
-    padding: 2rem;
-    text-align: center;
-}
-
-.team-list-osc h2 {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    color: white;
-}
-
-.team-member-osc {
-    background: #555555;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 100%;
-    max-width: 300px;
-}
 .team-member-osc h3 {
     font-size: 1.5rem;
     color: white;
@@ -113,8 +110,6 @@
     line-height: 1.5;
     color: rgb(223, 223, 223);
 }
-
-
 
 @media (max-width: 768px) {
     .team-grid {

@@ -1,9 +1,16 @@
-.intro {
+.intro, .intro-osc {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
+}
+
+.intro {
   background-color: #f9f9f9;
+}
+
+.intro-osc {
+  background-color: #222222;
 }
 
 .intro-content {
@@ -35,13 +42,20 @@
   line-height: 1.6;
 }
 
-.rules {
-  background-color: #eef2f3;
+.rules, .rules-osc {
   padding: 2rem;
   text-align: center;
 }
 
-.rules h2 {
+.rules {
+  background-color: #eef2f3;
+}
+
+.rules-osc {
+  background-color: #222222;
+}
+
+.rules h2, .rules-osc h2 {
   font-size: 2rem;
   margin-bottom: 2rem;
 }
@@ -52,21 +66,28 @@
   gap: 1.5rem;
 }
 
-.rule {
-  background: #fff;
+.rule, .rule-osc {
   padding: 1rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.rule img {
+.rule {
+  background: #fff;
+}
+
+.rule-osc {
+  background: rgb(54, 54, 54);
+}
+
+.rule img, .rule-osc img {
   max-width: 60px;
   height: auto;
   margin-bottom: 1rem;
 }
 
-.rule p {
+.rule p, .rule-osc p {
   font-size: 1rem;
   line-height: 1.5;
 }
@@ -92,63 +113,21 @@
   transform: scale(1.05);
 }
 
-.img-principal{
+.img-principal {
   width: 400px;
 }
 
-
-
-.intro-osc {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  background-color: #222222;
-}
-
-.rules-osc {
-  background-color: #222222;
-  padding: 2rem;
-  text-align: center;
-}
-
-.rules-osc h2 {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-}
-
-.rule-osc {
-  background: rgb(54, 54, 54);
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.rule-osc img {
-  max-width: 60px;
-  height: auto;
-  margin-bottom: 1rem;
-}
-
-.rule-osc p {
-  font-size: 1rem;
-  line-height: 1.5;
-}
-
-
 @media (max-width: 768px) {
   .intro-content {
-    flex-direction: column;
-    text-align: center;
+      flex-direction: column;
+      text-align: center;
   }
 
-  .intro-image,
-  .intro-text {
-    width: 100%;
+  .intro-image, .intro-text {
+      width: 100%;
   }
 
-  .img-principal{
-    width: 200px;
+  .img-principal {
+      width: 200px;
   }
 }

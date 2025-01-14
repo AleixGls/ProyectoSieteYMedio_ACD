@@ -1,30 +1,65 @@
-.tutorial-intro {
-    background-color: #f9f9f9;
+.tutorial-intro, .tutorial-intro-osc {
     text-align: center;
     padding: 2rem;
 }
 
-.tutorial-intro h1 {
+.tutorial-intro {
+    background-color: #f9f9f9;
+}
+
+.tutorial-intro-osc {
+    background-color: #222222;
+}
+
+.tutorial-intro h1, .tutorial-intro-osc h1 {
     font-size: 2.5rem;
+}
+
+.tutorial-intro h1 {
     color: #333;
 }
 
-.tutorial-intro p {
+.tutorial-intro-osc h1 {
+    color: #ffffff;
+}
+
+.tutorial-intro p, .tutorial-intro-osc p {
     font-size: 1.2rem;
-    color: #666;
     margin-top: 1rem;
+}
+
+.tutorial-intro p {
+    color: #666;
+}
+
+.tutorial-intro-osc p {
+    color: #ebebeb;
+}
+
+.tutorial-content, .tutorial-content-osc, .tutorial-video, .tutorial-video-osc {
+    padding: 2rem;
+    text-align: center;
 }
 
 .tutorial-content {
     background-color: #eef2f3;
-    padding: 2rem;
-    text-align: center;
 }
 
-.tutorial-content h2 {
+.tutorial-content-osc, .tutorial-video-osc {
+    background-color: #222222;
+}
+
+.tutorial-content h2, .tutorial-content-osc h2, .tutorial-video h2, .tutorial-video-osc h2 {
     font-size: 2rem;
     margin-bottom: 2rem;
+}
+
+.tutorial-content h2, .tutorial-video h2 {
     color: #333;
+}
+
+.tutorial-content-osc h2, .tutorial-video-osc h2 {
+    color: #ffffff;
 }
 
 .tutorial-grid {
@@ -34,25 +69,39 @@
     justify-items: center;
 }
 
-.tutorial-step {
-    background: #fff;
+.tutorial-step, .tutorial-step-osc {
     padding: 1rem;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
     max-width: 350px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.tutorial-step img {
+.tutorial-step {
+    background: #fff;
+}
+
+.tutorial-step-osc {
+    background: #222222;
+}
+
+.tutorial-step img, .tutorial-step-osc img {
     max-width: 100%;
     height: auto;
     margin-bottom: 1rem;
 }
 
-.tutorial-step p {
+.tutorial-step p, .tutorial-step-osc p {
     font-size: 1rem;
     line-height: 1.5;
+}
+
+.tutorial-step p {
     color: #333;
+}
+
+.tutorial-step-osc p {
+    color: #ffffff;
 }
 
 .cta {
@@ -76,18 +125,6 @@
     transform: scale(1.05);
 }
 
-.tutorial-video {
-    text-align: center;
-    padding: 2rem;
-    background-color: #eef2f3;
-}
-
-.tutorial-video h2 {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 1rem;
-}
-
 .video-container {
     max-width: 800px;
     margin: 0 auto;
@@ -99,75 +136,8 @@
     border-radius: 8px;
 }
 
-
-
-.tutorial-intro-osc {
-    background-color: #222222;
-    text-align: center;
-    padding: 2rem;
-}
-
-.tutorial-intro-osc h1 {
-    font-size: 2.5rem;
-    color: #ffffff;
-}
-
-.tutorial-intro-osc p {
-    font-size: 1.2rem;
-    color: #ebebeb;
-    margin-top: 1rem;
-}
-
-.tutorial-content-osc {
-    background-color: #222222;
-    padding: 2rem;
-    text-align: center;
-}
-
-.tutorial-content-osc h2 {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    color: #ffffff;
-}
-
-.tutorial-step-osc {
-    background: #222222;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 350px;
-}
-
-.tutorial-step-osc img {
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 1rem;
-}
-
-.tutorial-step-osc p {
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #ffffff;
-}
-
-.tutorial-video-osc {
-    text-align: center;
-    padding: 2rem;
-    background-color: #222222;
-}
-
-.tutorial-video-osc h2 {
-    font-size: 2rem;
-    color: #ffffff;
-    margin-bottom: 1rem;
-}
-
-
-
-
 @media (max-width: 768px) {
-    .tutorial-content {
+    .tutorial-content, .tutorial-content-osc {
         padding: 1.5rem;
     }
 
@@ -175,7 +145,7 @@
         grid-template-columns: 1fr;
     }
 
-    .tutorial-step {
+    .tutorial-step, .tutorial-step-osc {
         max-width: 100%;
     }
 }
