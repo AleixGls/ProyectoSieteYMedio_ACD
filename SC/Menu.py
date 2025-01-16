@@ -1,5 +1,8 @@
-import Utilidad as Ut
-import Datos as Dt
+import SC.Utilidad as Ut
+import SC.Datos as Dt
+import SC.Juego as Jg
+import SC.Bbdd as Bd
+
 
 
 def main_menu():
@@ -25,7 +28,7 @@ def main_menu():
         elif option == 2:
             settings()
         elif option == 3:
-            playGame()
+            Jg.playGame()
         elif option == 4:
             ranking()
         elif option == 5:
@@ -165,3 +168,49 @@ def ranking():
             break
         else:
             print(f"Ranking {option} seleccionado. Funcionalidad en desarrollo...")
+
+def setNewPlayer(human=True):
+    """
+    Crea un nuevo jugador (humano o bot) y lo añade a la base de datos.
+    
+    Parámetros:
+    - human: Booleano que indica si el jugador es humano (True) o un bot (False).
+    """
+    Ut.clear_terminal()
+    print("=== Crear Nuevo Jugador ===")
+    
+    # Solicitar nombre del jugador
+    name = input("Introduzca el nombre del jugador: ").strip()
+    if not name:
+        print("El nombre no puede estar vacío.")
+        return
+    
+    # Solicitar perfil de riesgo (solo para bots)
+    if not human:
+        print("Seleccione el perfil de riesgo del bot:")
+        print("1) Atrevido (50)")
+        print("2) Normal (40)")
+        print("3) Prudente (30)")
+        
+        profile_option = Ut.getOpt(
+            inputOptText="Seleccione una opción: ",
+            rangeList=[1, 2, 3]
+        )
+        
+        if profile_option == 1:
+            risk = 50
+        elif profile_option == 2:
+            risk = 40
+        elif profile_option == 3:
+            risk = 30
+    else:
+        risk = 40  # Por defecto, los humanos tienen un perfil "normal"
+    
+    # Generar un DNI aleatorio para el jugador
+    dni = Ut.newRandomDNI()
+    
+    # Guardar el jugador en la base de datos
+    savePlayer(dni, name, risk, human)
+    
+    print(f"Jugador '{name}' creado con éxito. DNI: {dni}")
+    input("Presione Enter para continuar...")
