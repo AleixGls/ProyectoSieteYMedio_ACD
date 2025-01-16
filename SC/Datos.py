@@ -214,7 +214,43 @@ players = {
 
 context_game = {
     "cards_deck":{},
-    "players":{},    #Jugadores extraidos de la base de datos
+    "players":{        
+        "11115555A":{
+            "name":"Mario",
+            "human":True,
+            "bank":False,
+            "initialCard":"",
+            "priority":0,
+            "type":40,
+            "bet":4,
+            "points":0,
+            "cards":["AL_BE_01", "AL_BE_12","AL_BE_15"],
+            "roundPoints":0
+        },
+        "22225555A":{
+            "name":"Pepe",
+            "human":False,
+            "bank":False,
+            "initialCard":"",
+            "priority":0,
+            "type":30,
+            "bet":4,
+            "points":0,
+            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "roundPoints":0
+        },
+        "33335555A":{
+            "name":"Jose",
+            "human":False,
+            "bank":False,
+            "initialCard":"",
+            "priority":0,
+            "type":50,
+            "bet":4,
+            "points":0,
+            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "roundPoints":0
+        },},    #Jugadores extraidos de la base de datos
     "game" :[],      #Jugadores en partida
     "mazo" :[],
     "round":"",      #Ronda actual

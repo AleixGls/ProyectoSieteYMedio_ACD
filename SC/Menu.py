@@ -2,7 +2,7 @@ import SC.Utilidad as Ut
 import SC.Datos as Dt
 import SC.Juego as Jg
 import SC.Bbdd as Bd
-
+import time
 
 
 def main_menu():
@@ -38,9 +38,8 @@ def main_menu():
             break
 
 def addRemovePlayers():
-    """
-    Muestra el menú para añadir, eliminar o mostrar jugadores.
-    """
+    # Muestra el menú para añadir, eliminar o mostrar jugadores.
+
     while True:
         Ut.clear_terminal()
         print("=== Gestión de Jugadores ===")
@@ -59,14 +58,13 @@ def addRemovePlayers():
         elif option == 2:
             setNewPlayer(human=False)
         elif option == 3:
-            showPlayersGame()
+            print("FUNCIONALIDAD POR CREAR")
         elif option == 4:
             break
 
 def settings():
-    """
-    Muestra el menú de configuración del juego.
-    """
+    # Muestra el menú de configuración del juego.
+    
     while True:
         Ut.clear_terminal()
         print("=== Configuración del Juego ===")
@@ -83,7 +81,7 @@ def settings():
         if option == 1:
             setPlayersGame()
         elif option == 2:
-            setCardsDeck()
+            Bd.setCardsDeck()
         elif option == 3:
             setMaxRounds()
         elif option == 4:
@@ -98,28 +96,119 @@ def setMaxRounds():
         
         if max_rounds.isdigit() and int(max_rounds) > 0:
             Dt.context_game["maxRounds"] = int(max_rounds)
+            Ut.clear_terminal()
             print(f"Número máximo de rondas establecido a {max_rounds}.")
+            time.sleep(2)
             break
         else:
             print("Entrada no válida. Introduzca un número mayor que 0.")
 
 def setPlayersGame():
     """
-    Establece los jugadores que participarán en la partida.
+    Permite al usuario seleccionar jugadores de la lista de jugadores guardados
+    y añadirlos a la partida actual (context_game["game"]).
+    Los jugadores ya seleccionados no aparecerán en la lista de disponibles.
     """
     Ut.clear_terminal()
-    print("=== Establecer Jugadores de la Partida ===")
-    # Aquí se implementaría la lógica para seleccionar jugadores de la base de datos.
-    print("Funcionalidad en desarrollo...")
+    showPlayersGame()
+    print()
+    print("=== Seleccionar Jugadores para la Partida ===")
+    
+    # Verificar si hay jugadores disponibles
+    if not Dt.context_game.get("players"):
+        print("No hay jugadores disponibles. Por favor, añada jugadores primero.")
+        input("Presione Enter para continuar...")
+        return
+    
+    # Obtener la lista de jugadores ya seleccionados
+    selected_players = Dt.context_game.get("game", [])
+    
+    # Filtrar jugadores disponibles (excluyendo los ya seleccionados)
+    available_players = {
+        player_id: player_data
+        for player_id, player_data in Dt.context_game["players"].items()
+        if player_id not in selected_players
+    }
+    
+    # Verificar si hay jugadores disponibles después de filtrar
+    if not available_players:
+        print("Todos los jugadores ya están seleccionados para la partida.")
+        input("Presione Enter para continuar...")
+        return
+    
+    # Mostrar la lista de jugadores disponibles
+    print("Jugadores disponibles:")
+    for i, (player_id, player_data) in enumerate(available_players.items(), start=1):
+        player_name = player_data.get("name", "Desconocido")
+        player_type = "Humano" if player_data.get("human", False) else "Bot"
+        print(f"{i}) {player_name} ({player_type}) - ID: {player_id}")
+    
+    # Solicitar al usuario que seleccione jugadores
+    while True:
+        option = input(
+            "Seleccione el número del jugador para añadir a la partida (o 'fin' para terminar): "
+        ).strip().lower()
+        
+        if option == "fin":
+            break
+        
+        if option.isdigit():
+            option = int(option)
+            if 1 <= option <= len(available_players):
+                player_id = list(available_players.keys())[option - 1]
+                selected_players.append(player_id)
+                print(f"Jugador {available_players[player_id]['name']} añadido a la partida.")
+                
+                # Actualizar la lista de jugadores disponibles
+                available_players = {
+                    player_id: player_data
+                    for player_id, player_data in Dt.context_game["players"].items()
+                    if player_id not in selected_players
+                }
+                
+                # Si no quedan jugadores disponibles, terminar
+                if not available_players:
+                    print("Todos los jugadores han sido seleccionados.")
+                    break
+            else:
+                print("Número no válido. Inténtelo de nuevo.")
+        else:
+            print("Entrada no válida. Inténtelo de nuevo.")
+    
+    # Guardar los jugadores seleccionados en context_game["game"]
+    Dt.context_game["game"] = selected_players
+    print("Jugadores seleccionados para la partida:")
+    for player_id in selected_players:
+        print(f"- {Dt.context_game['players'][player_id]['name']} (ID: {player_id})")
+    
+    input("Presione Enter para continuar...")
 
 def showPlayersGame():
-    """
-    Muestra los jugadores actuales en la partida.
-    """
-    Ut.clear_terminal()
+    #Visualizar jugadores seleccionados
     print("=== Jugadores en la Partida ===")
-    # Aquí se implementaría la lógica para mostrar los jugadores.
-    print("Funcionalidad en desarrollo...")
+    
+    # Verificar si hay jugadores en la partida
+    if not Dt.context_game.get("game"):
+        print("No hay jugadores en la partida actual.")
+    else:
+    # Mostrar la lista de jugadores
+        for i in range(0,len(Dt.context_game["game"])):
+            player_id    = Dt.context_game["game"][i]
+            player_name  = Dt.context_game["players"][Dt.context_game["game"][i]]["name"]
+            if Dt.context_game["players"][Dt.context_game["game"][i]]["human"] == True:
+                player_human = "Human"
+            else:
+                player_human = "Bot"
+            if   Dt.context_game["players"][Dt.context_game["game"][i]]["type"] == 30:
+                player_type = "Cautious"
+            elif Dt.context_game["players"][Dt.context_game["game"][i]]["type"] == 40:
+                player_type = "Moderated"
+            elif Dt.context_game["players"][Dt.context_game["game"][i]]["type"] == 50:
+                player_type = "Bold"
+            else:
+                player_type = "ERROR"
+
+            print(f"{i+1}) " + player_id.ljust(18) + player_name.ljust(18) + player_human.ljust(18) + player_type.ljust(18))
 
 def reports():
     """
@@ -210,7 +299,7 @@ def setNewPlayer(human=True):
     dni = Ut.newRandomDNI()
     
     # Guardar el jugador en la base de datos
-    savePlayer(dni, name, risk, human)
+    Bd.savePlayer(dni, name, risk, human)
     
     print(f"Jugador '{name}' creado con éxito. DNI: {dni}")
     input("Presione Enter para continuar...")
