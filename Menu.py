@@ -1,3 +1,6 @@
+import Datos as Dt
+
+
 def humanRound(id, mazo):
     # Función que gestiona la tirada de un jugador humano. Nos muestra el menú de
     # opciones:
@@ -20,18 +23,20 @@ def printWinner():
     pass
 
 def printPlayerStats(id):
-    # Esta función nos muestra los stats de un jugador humano.
-    #   name Mario
-    #   type 40
-    #   human True
-    #   bank True
-    #   initialCard E11
-    #   priority 3
-    #   bet 8
-    #   points 20
-    #   cards C07
-    #   roundPoints 0
-    pass
+    print(
+    f"""
+    Name:         {Dt.players[id]["name"]}
+    Type:         {Dt.players[id]["type"]}
+    Human:        {Dt.players[id]["human"]}
+    Bank:         {Dt.players[id]["bank"]}
+    Initial Card: {Dt.players[id]["initialCard"]}
+    Priority:     {Dt.players[id]["priority"]}
+    Bet:          {Dt.players[id]["bet"]}
+    Points:       {Dt.players[id]["points"]}
+    Cards:        {", ".join(Dt.players[id]["cards"])}
+    Round Points: {Dt.players[id]["roundPoints"]}
+    """
+    )
 
 def addRemovePlayers():
     # Función que nos muestra el menú despues de escoger la opción 1 del menu principal:
@@ -49,9 +54,25 @@ def settings():
     pass
 
 def showhPlayersGame():
-    # Función que muestra los jugadores seleccionados cuando estamos añadiendo
-    # jugadores a la partida:
-    pass
+    print("Actual Players In Game".center(72,"*"))
+    for i in range(0,len(Dt.context_game["game"])):
+        player_id    = Dt.context_game["game"][i]
+        player_name  = Dt.context_game["players"][Dt.context_game["game"][i]]["name"]
+        if Dt.context_game["players"][Dt.context_game["game"][i]]["human"] == True:
+            player_human = "Human"
+        else:
+            player_human = "Bot"
+
+        if   Dt.context_game["players"][Dt.context_game["game"][i]]["type"] == 30:
+            player_type = "Cautious"
+        elif Dt.context_game["players"][Dt.context_game["game"][i]]["type"] == 40:
+            player_type = "Moderated"
+        elif Dt.context_game["players"][Dt.context_game["game"][i]]["type"] == 50:
+            player_type = "Bold"
+        else:
+            player_type = "ERROR"
+
+        print(player_id.ljust(18) + player_name.ljust(18) + player_human.ljust(18) + player_type.ljust(18))
 
 def setMaxRounds():
     # Función que pide al usuario el número de rondas de la siguiente partida y lo establece
