@@ -1,3 +1,6 @@
+
+
+
 def insertBBDDCardgame(cardgame):
     # Función que guarda un nuevo registro en la tabla cardgame.
     # Esta función debería llamarse justo después de acabar una partida.
@@ -8,6 +11,46 @@ def insertBBDD_player_game(player_game,cardgame_id):
     # player_game.
     # Esta función debería llamarse justo después de acabar una partida
     pass
+# #def insert_player_game(dni, nombre, nivel_riesgo, es_humano):
+#     try:
+#         # Conecta a la base de datos
+#         connection = connect_to_database()
+#         if connection:
+#             cursor = connection.cursor()
+#             query = """
+#                 INSERT INTO jugadores (dni, nombre, nivel_riesgo, es_humano)
+#                 VALUES (%s, %s, %s, %s);
+#                 """
+#             # consulta si el dni existe
+#             cursor.execute(query, (dni, nombre, nivel_riesgo, es_humano))
+#             connection.commit()
+#             print(f"Jugador {nombre} con DNI {dni} insertado correctamente.")
+#             cursor.close()
+#
+#     except Error as e:
+#         # dni ya registrado
+#         if "duplicate" in str(e).lower():
+#             print(f"Error: El DNI {dni} ya está registrado en la base de datos.")
+#         else:
+#             print(f"Error al insertar jugador: {e}")
+#
+#     finally:
+#         # cierra la conexion con la base de datos
+#         if connection and connection.is_connected():
+#             connection.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def insertBBDD_player_game_round(player_game_round,cardgame_id):
     # Función que guarda en la tabla player_game_round de la BBDD el diccionario
