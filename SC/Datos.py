@@ -213,10 +213,95 @@ players = {
 }
 
 context_game = {
-    "cards_deck":{},
-    "players":{},    #Jugadores extraidos de la base de datos
-    "game" :[],      #Jugadores en partida
-    "mazo" :[],
+    "cards_deck":{}, #Baraja de cartas seleccionada
+    "players":{        
+        "11115555A":{
+            "name":"Mario",
+            "human":True,
+            "bank":False,
+            "initialCard":"",
+            "priority":0,
+            "type":40,
+            "bet":4,
+            "points":0,
+            "cards":["AL_BE_01", "AL_BE_12","AL_BE_15"],
+            "roundPoints":0
+        },
+        "22225555A":{
+            "name":"Pepe",
+            "human":False,
+            "bank":False,
+            "initialCard":"",
+            "priority":0,
+            "type":30,
+            "bet":4,
+            "points":0,
+            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "roundPoints":0
+        },
+        "33335555A":{
+            "name":"Jose",
+            "human":False,
+            "bank":False,
+            "initialCard":"",
+            "priority":0,
+            "type":50,
+            "bet":4,
+            "points":0,
+            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "roundPoints":0
+        },
+        "44445555A":{
+            "name":"Jose",
+            "human":False,
+            "bank":False,
+            "initialCard":"",
+            "priority":0,
+            "type":50,
+            "bet":4,
+            "points":0,
+            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "roundPoints":0
+        },
+        "55555555A":{
+            "name":"Jose",
+            "human":False,
+            "bank":False,
+            "initialCard":"",
+            "priority":0,
+            "type":50,
+            "bet":4,
+            "points":0,
+            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "roundPoints":0
+        },        
+        "66665555A":{
+            "name":"Jose",
+            "human":False,
+            "bank":False,
+            "initialCard":"",
+            "priority":0,
+            "type":50,
+            "bet":4,
+            "points":0,
+            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "roundPoints":0
+        },
+        "77775555A":{
+            "name":"Jose",
+            "human":False,
+            "bank":False,
+            "initialCard":"",
+            "priority":0,
+            "type":50,
+            "bet":4,
+            "points":0,
+            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "roundPoints":0
+        },
+    },    #Jugadores extraidos de la base de datos
+    "game":[],      #Jugadores en partida
+    "mazo":[],       
     "round":"",      #Ronda actual
-    "maxRounds":"",  #ROndas maximas de la partida
+    "maxRounds":5,   #Rondas maximas de la partida
 }
