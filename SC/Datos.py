@@ -213,7 +213,7 @@ players = {
 }
 
 context_game = {
-    "cards_deck":{},
+    "cards_deck":{}, #Baraja de cartas seleccionada
     "players":{        
         "11115555A":{
             "name":"Mario",
@@ -250,9 +250,58 @@ context_game = {
             "points":0,
             "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
             "roundPoints":0
-        },},    #Jugadores extraidos de la base de datos
-    "game" :[],      #Jugadores en partida
-    "mazo" :[],
+        },
+        "44445555A":{
+            "name":"Jose",
+            "human":False,
+            "bank":False,
+            "initialCard":"",
+            "priority":0,
+            "type":50,
+            "bet":4,
+            "points":0,
+            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "roundPoints":0
+        },
+        "55555555A":{
+            "name":"Jose",
+            "human":False,
+            "bank":False,
+            "initialCard":"",
+            "priority":0,
+            "type":50,
+            "bet":4,
+            "points":0,
+            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "roundPoints":0
+        },        
+        "66665555A":{
+            "name":"Jose",
+            "human":False,
+            "bank":False,
+            "initialCard":"",
+            "priority":0,
+            "type":50,
+            "bet":4,
+            "points":0,
+            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "roundPoints":0
+        },
+        "77775555A":{
+            "name":"Jose",
+            "human":False,
+            "bank":False,
+            "initialCard":"",
+            "priority":0,
+            "type":50,
+            "bet":4,
+            "points":0,
+            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "roundPoints":0
+        },
+    },    #Jugadores extraidos de la base de datos
+    "game":[],      #Jugadores en partida
+    "mazo":[],       
     "round":"",      #Ronda actual
-    "maxRounds":"",  #ROndas maximas de la partida
+    "maxRounds":5,   #Rondas maximas de la partida
 }
