@@ -2,6 +2,7 @@ import SC.Utilidad as Ut
 import SC.Datos as Dt
 import SC.Juego as Jg
 import SC.Bbdd as Bd
+import SC.Cabeceras as Cb
 import time
 
 
@@ -10,16 +11,19 @@ def main_menu():
 
     while True:
         Ut.clear_terminal()
-        print("=== Main Menu ===")
-        print("1) Add/Remove/Show Players")
-        print("2) Settings")
-        print("3) Play Game")
-        print("4) Ranking")
-        print("5) Reports")
-        print("6) Exit")
-        
+        print(Cb.cabecera00)
+        menu = [
+            "1) Add/Remove/Show Players",
+            "2) Settings",
+            "3) Play Game",
+            "4) Ranking",
+            "5) Reports",
+            "6) Exit"
+        ]
+        Ut.print_centered_menu(menu,127)
+
         option = Ut.getOpt(
-            inputOptText="Select an option: ",
+            inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3, 4, 5, 6]
         )
         
@@ -34,7 +38,7 @@ def main_menu():
         elif option == 5:
             reports()
         elif option == 6:
-            print("Leaving the game...")
+            Ut.clear_terminal()
             break
 
 def addRemovePlayers():
@@ -42,15 +46,17 @@ def addRemovePlayers():
 
     while True:
         Ut.clear_terminal()
-        print("=== Player Management ===")
-        print("1) New Human Player")
-        print("2) New Bot")
-        print("3) Show/Delete Players")
-        print("4) Return to Main Menu")
+        print(Cb.cabecera01)
+        menu=[
+            "1) New Human Player",
+            "2) New Bot",
+            "3) Show/Delete Players",
+            "4) Return to Main Menu"
+        ]
+        Ut.print_centered_menu(menu,127)
 
-        
         option = Ut.getOpt(
-            inputOptText="Select an option: ",
+            inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3, 4]
         )
         
@@ -68,14 +74,18 @@ def settings():
     
     while True:
         Ut.clear_terminal()
-        print("=== Game Settings ===")
-        print("1) Set Game Players")
-        print("2) Set Deck of Cards")
-        print("3) Set Maximum Rounds")
-        print("4) Return to Main Menu")
+        print(Cb.cabecera02)
+        menu=[
+            "1) Set Game Players",
+            "2) Set Deck of Cards",
+            "3) Set Maximum Rounds",
+            "4) Return to Main Menu"
+        ]
+        Ut.print_centered_menu(menu,127)
+
         
         option = Ut.getOpt(
-            inputOptText="Select an option: ",
+            inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3, 4]
         )
         
@@ -93,18 +103,18 @@ def setMaxRounds():
     
     while True:
         Ut.clear_terminal()
-        print("=== Select Maximum Rounds ===")
-        print(f"Current: {Dt.context_game['maxRounds']} rounds")
+        print(Cb.cabecera02)
+        print(f"Current: {Dt.context_game['maxRounds']} rounds".center(127))
         print() 
-        max_rounds = input("Enter the maximum number of rounds: ").strip()
+        max_rounds = input("Enter the maximum number of rounds: ".rjust(82)).strip()
         
         if max_rounds.isdigit() and int(max_rounds) > 0:
             Dt.context_game["maxRounds"] = int(max_rounds)
-            print(f"Maximum number of rounds set to {max_rounds}.")
+            print(f"Maximum number of rounds set to {max_rounds}.".center(127))
             time.sleep(1)
             break
         else:
-            print("Invalid input. Enter a number greater than 0.")
+            print("Invalid input. Enter a number greater than 0.".center(127))
             time.sleep(1)
 
 def setPlayersGame():
@@ -124,15 +134,19 @@ def setPlayersGame():
     # Mostrar menú principal de selección/eliminación
     while True:
         Ut.clear_terminal()
+        print(Cb.cabecera02)
         showPlayersGame()
         print()
-        print("=== Select/Remove Players ===")
-        print("1) Add Players to Game")
-        print("2) Remove Players from Game")
-        print("3) Return to Previous Menu")
+        print(" Select/Remove Players ".center(127,"="))
+        menu=[
+            "1) Add Players to Game",
+            "2) Remove Players from Game",
+            "3) Return to Previous Menu",
+        ]
+        Ut.print_centered_menu(menu,127)
         
         option = Ut.getOpt(
-            inputOptText="Select an option: ",
+            inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3]
         )
         
@@ -180,6 +194,7 @@ def addPlayersToGame(selected_players):
             break
         
         Ut.clear_terminal()
+        print(Cb.cabecera02)
         showPlayersGame()
         print()
         print("=== Add Players to the Game ===")
@@ -291,11 +306,11 @@ def removePlayersFromGame(selected_players):
 
 def showPlayersGame():
     #Visualizar jugadores seleccionados
-    print("=== Players in the Game ===")
+    print(" Players in the Game ".center(127,"="))
     
     # Verificar si hay jugadores en la partida
     if not Dt.context_game.get("game"):
-        print("There are no players in the current game.")
+        print("There are no players in the current game.".center(127))
     else:
         # Mostrar la lista de jugadores
         for i in range(0, len(Dt.context_game["game"])):
@@ -323,27 +338,30 @@ def setCardsDeck():
     """
     while True:
         Ut.clear_terminal()
-        print("=== Select Card Deck ===")
+        print(Cb.cabecera02)
 
         # Mostrar la baraja seleccionada actualmente
         if "cards_deck" in Dt.context_game and Dt.context_game["cards_deck"]:
             if Dt.context_game["cards_deck"] == Dt.cartas_es:
-                print("Currently selected deck: Spanish Deck (40 cards)")
+                print("Currently selected deck: Spanish Deck (40 cards)".center(127))
             elif Dt.context_game["cards_deck"] == Dt.cartas_en:
-                print("Currently selected deck: English Deck (52 cards)")
+                print("Currently selected deck: English Deck (52 cards)".center(127))
             elif Dt.context_game["cards_deck"] == Dt.cartas_al:
-                print("Currently selected deck: German Deck (60 cards)")
+                print("Currently selected deck: German Deck (60 cards)".center(127))
         print()
         # Mostrar las opciones de barajas disponibles
-        print("Select the card deck for the game:")
-        print("1) Spanish Deck (40 cards)")
-        print("2) English Deck (52 cards)")
-        print("3) German Deck (60 cards)")
-        print("4) Return to Previous Menu")
+        print("Select the card deck for the game:".center(127))
+        menu=[
+            "1) Spanish Deck (40 cards)",
+            "2) English Deck (52 cards)",
+            "3) German Deck (60 cards)",
+            "4) Return to Previous Menu"
+        ]
+        Ut.print_centered_menu(menu,127)
 
         # Solicitar al usuario que seleccione una opción
         option = Ut.getOpt(
-            inputOptText="Select an option (1-4): ",
+            inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3, 4]
         )
 
