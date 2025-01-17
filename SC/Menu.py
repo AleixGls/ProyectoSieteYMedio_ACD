@@ -59,7 +59,7 @@ def addRemovePlayers():
         elif option == 2:
             setNewPlayer(human=False)
         elif option == 3:
-            print("FUNCTIONALITY TO BE CREATED")
+            Bd.get_all_players()
         elif option == 4:
             break
 

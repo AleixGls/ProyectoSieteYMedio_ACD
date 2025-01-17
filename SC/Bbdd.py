@@ -1,4 +1,5 @@
 import mysql.connector
+import SC.Utilidad as Ut
 from mysql.connector import Error
 
 
@@ -37,6 +38,8 @@ finally:
         conn.close()
         print("Conexión cerrada")
 
+
+
 def insertBBDDCardgame(cardgame):
     # Función que guarda un nuevo registro en la tabla cardgame.
     # Esta función debería llamarse justo después de acabar una partida.
@@ -47,8 +50,6 @@ def insertBBDD_player_game(player_game,cardgame_id):
      #player_game.
      #Esta función debería llamarse justo después de acabar una partida
     pass
-import mysql.connector
-from mysql.connector import Error
 
 def insert_player_game(dni, nombre, risk, human):
     try:
@@ -131,3 +132,99 @@ def getPlayers():
     # Función que extrae los jugadores definidos en la BBDD y los almacena en el diccionario
     # contextGame[“players”]
     pass
+
+
+import mysql.connector
+from mysql.connector import Error
+
+import mysql.connector
+from mysql.connector import Error
+
+def get_all_players():
+    try:
+        # Conexión a la base de datos
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+        
+        if connection.is_connected():
+            Ut.clear_terminal()
+
+            cursor = connection.cursor()
+            
+            # Consultar jugadores humanos
+            query_humanos = "SELECT id_jugador, nombre, nivel_riesgo FROM jugadores WHERE es_humano = TRUE;"
+            cursor.execute(query_humanos)
+            humanos = cursor.fetchall()
+            
+            # Consultar jugadores bots
+            query_bots = "SELECT id_jugador, nombre, nivel_riesgo FROM jugadores WHERE es_humano = FALSE;"
+            cursor.execute(query_bots)
+            bots = cursor.fetchall()
+            
+            # Imprimir encabezado
+            print("*" * 140)
+            print(" " * 35 + " _____  __                            ____                                         ____   __")
+            print(" " * 34 + "/ ___/ / /_   ____  _      __        / __ \\ ___   ____ ___   ____  _   __ ___     / __ \\ / /____ _ __  __ ___   _____ _____")
+            print(" " * 33 + "\\__ \\ / __ \\ / __ \\| | /| / /______ / /_/ // _ \\ / __ `__ \\ / __ \\| | / // _ \\   / /_/ // // __ `// / / // _ \\ / ___// ___/")
+            print(" " * 33 + "___/ // / / // /_/ /| |/ |/ //_____// _, _//  __// / / / / // /_/ /| |/ //  __/  / ____// // /_/ // /_/ //  __// /   (__  )")
+            print(" " * 32 + "/____//_/ /_/ \\____/ |__/|__/       /_/ |_| \\___//_/ /_/ /_/ \\____/ |___/ \\___/  /_/    /_/ \\__,_/ \\__, / \\___//_/   /____/")
+            print(" " * 96 + "/____/")
+            print("*" * 140)
+            print("*" * 63 + "Select Players" + "*" * 64)
+            print(" " * 29 + "Boot Players" + " " * 29 + "||" + " " * 29 + "Human Players")
+            print("-" * 140)
+            print("ID                  Name                     Type                     || ID                  Name                     Type")
+            print("*" * 140)
+
+            # Combinar y mostrar datos de bots y humanos
+            max_rows = max(len(bots), len(humanos))
+            for i in range(max_rows):
+                # Obtener los datos de cada lista
+                bot_data = bots[i] if i < len(bots) else ("", "", "")
+                human_data = humanos[i] if i < len(humanos) else ("", "", "")
+                
+                # Formatear las filas
+                bot_line = f"{bot_data[0]:<20} {bot_data[1]:<25} {bot_data[2]:<25}"
+                human_line = f"{human_data[0]:<20} {human_data[1]:<25} {human_data[2]:<25}"
+                
+                print(f"{bot_line} || {human_line}")
+            
+            print("*" * 140)
+            
+            # Entrada del usuario para eliminar jugador
+            opc = input("Option ( -id to remove player, -1 to exit): ")
+            
+            if opc == "-1":
+                return {"humanos": humanos, "bots": bots}
+            else:
+                delete_player(connection, opc.strip())
+                print(f"Jugador con ID {opc} eliminado, recarga la lista para verificar.")
+                Ut.clear_terminal()
+                get_all_players()
+    except Error as e:
+        print(f"Error al listar jugadores: {e}")
+        return {"humanos": [], "bots": []}
+    finally:
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+            print("Conexión cerrada.")
+
+
+# Función para eliminar jugador
+def delete_player(connection, id_jugador):
+    try:
+        cursor = connection.cursor()
+        query = "DELETE FROM jugadores WHERE id_jugador = %s;"
+        cursor.execute(query, (id_jugador,))
+        connection.commit()
+        
+        if cursor.rowcount > 0:
+            print(f"Jugador con ID {id_jugador} eliminado correctamente.")
+        else:
+            print(f"No se encontró ningún jugador con ID {id_jugador}.")
+    except Error as e:
+        print(f"Error al eliminar jugador: {e}")
