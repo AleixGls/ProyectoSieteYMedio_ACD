@@ -30,7 +30,7 @@ def getOpt(textOpts="", inputOptText="", rangeList=[], exceptions=[]):
         if user_input in exceptions:
             return user_input
 
-        print("Opción no válida. Inténtelo de nuevo.")
+        print("Invalid option. Try again.")
 
 def logToFile(text):
     #Guarda un texto en logfileSevenAndHalf.txt.
