@@ -438,19 +438,19 @@ def setNewPlayer(human=True):
         )
         
         if profile_option == 1:
-            risk = 50
+            risk = str(50)
         elif profile_option == 2:
-            risk = 40
+            risk = str(40)
         elif profile_option == 3:
-            risk = 30
+            risk = str(30)
     else:
-        risk = 40  # Por defecto, los humanos tienen un perfil "normal"
+        risk = str(40)  # Por defecto, los humanos tienen un perfil "normal"
     
     # Generar un DNI aleatorio para el jugador
     dni = Ut.newRandomDNI()
     
     # Guardar el jugador en la base de datos
-    Bd.savePlayer(dni, name, risk, human)
+    Bd.insert_player_game(dni, name, risk, human)
     
     print(f"Player '{name}' successfully created. ID: {dni}")
     input("Press Enter to continue...")
