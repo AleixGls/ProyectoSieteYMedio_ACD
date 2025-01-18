@@ -8,6 +8,8 @@ const tutorial1 = document.querySelector('.tutorial-intro');
 const tutorial2 = document.querySelector('.tutorial-content');
 const tutorial3 = document.querySelectorAll('.tutorial-step');
 const tutorial4 = document.querySelector('.tutorial-video');
+const tutorial5 = document.querySelector('.tutorial-content2');
+
 
 function applyDarkTheme() {
     body.classList.add('body-osc');
@@ -17,6 +19,7 @@ function applyDarkTheme() {
     tutorial1.classList.add('tutorial-intro-osc');
     tutorial2.classList.add('tutorial-content-osc');
     tutorial4.classList.add('tutorial-video-osc');
+    tutorial5.classList.add('tutorial-content2-osc');
     tutorial3.forEach(step => step.classList.add('tutorial-step-osc'));
     buttonMode.innerHTML = "☀️";
     localStorage.setItem('theme', 'dark');
@@ -30,6 +33,8 @@ function applyLightTheme() {
     tutorial1.classList.add('tutorial-intro');
     tutorial2.classList.add('tutorial-content');
     tutorial4.classList.add('tutorial-video');
+    tutorial5.classList.add('tutorial-content2');
+
     tutorial3.forEach(step => step.classList.add('tutorial-step'));
     buttonMode.innerHTML = "🌙";
     localStorage.setItem('theme', 'light');
@@ -44,6 +49,8 @@ function toggleTheme() {
         tutorial1.classList.remove('tutorial-intro-osc');
         tutorial2.classList.remove('tutorial-content-osc');
         tutorial4.classList.remove('tutorial-video-osc');
+        tutorial5.classList.remove('tutorial-content2-osc');
+
         tutorial3.forEach(step => step.classList.remove('tutorial-step-osc'));
         applyLightTheme();
     } else {
@@ -54,19 +61,18 @@ function toggleTheme() {
         tutorial1.classList.remove('tutorial-intro');
         tutorial2.classList.remove('tutorial-content');
         tutorial4.classList.remove('tutorial-video');
+        tutorial5.classList.remove('tutorial-content2');
         tutorial3.forEach(step => step.classList.remove('tutorial-step'));
         applyDarkTheme();
     }
 }
 
-// Initialize theme on page load
 if (localStorage.getItem('theme') === 'dark') {
     applyDarkTheme();
 } else {
     applyLightTheme();
 }
 
-// Event listeners
 buttonMode.addEventListener('click', toggleTheme);
 buttonModee.addEventListener('click', toggleTheme);
 

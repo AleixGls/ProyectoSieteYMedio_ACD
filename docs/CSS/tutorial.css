@@ -36,16 +36,22 @@
     color: #ebebeb;
 }
 
-.tutorial-content, .tutorial-content-osc, .tutorial-video, .tutorial-video-osc {
+.tutorial-content, .tutorial-content-osc, .tutorial-video, .tutorial-video-osc, .tutorial-content2, .tutorial-content2-osc {
     padding: 2rem;
     text-align: center;
 }
 
-.tutorial-content {
+.tutorial-content, .tutorial-content2 {
     background-color: #eef2f3;
+
 }
 
-.tutorial-content-osc, .tutorial-video-osc {
+.tutorial-content img, .tutorial-content2 img, .tutorial-content-osc img, .tutorial-content2-osc img {
+    width: 50px;
+    
+}
+
+.tutorial-content-osc, .tutorial-video-osc, .tutorial-content2-osc {
     background-color: #222222;
 }
 
@@ -54,11 +60,11 @@
     margin-bottom: 2rem;
 }
 
-.tutorial-content h2, .tutorial-video h2 {
+.tutorial-content h2, .tutorial-content2 h2, .tutorial-video h2 {
     color: #333;
 }
 
-.tutorial-content-osc h2, .tutorial-video-osc h2 {
+.tutorial-content-osc h2,.tutorial-content2-osc h2, .tutorial-video-osc h2 {
     color: #ffffff;
 }
 
@@ -137,7 +143,7 @@
 }
 
 @media (max-width: 768px) {
-    .tutorial-content, .tutorial-content-osc {
+    .tutorial-content, .tutorial-content-osc, .tutorial-content2, .tutorial-content2-osc {
         padding: 1.5rem;
     }
 

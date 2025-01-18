@@ -33,24 +33,77 @@
         <h2>Reglas Básicas del Juego</h2>
         <div class="tutorial-grid">
             <div class="tutorial-step">
-                <img src="IMG/card-deal.png" alt="Repartir cartas" class="tutorial-image">
-                <p><strong>1. Repartir las cartas:</strong> Cada jugador recibe 5 cartas.</p>
+                <img src="IMG/1.png" alt="Repartir cartas" class="tutorial-image">
+                <p>Entre 2 y 6 jugadores y un máximo de 30 rondas o hasta que solo quede un jugador con puntos..</p>
             </div>
             <div class="tutorial-step">
-                <img src="IMG/card-pick.png" alt="Pedir cartas" class="tutorial-image">
-                <p><strong>2. Pedir cartas:</strong> Los jugadores pueden pedir más cartas para acercarse a 7.5 puntos.</p>
+                <img src="IMG/2.png" alt="Pedir cartas" class="tutorial-image">
+                <p>Cartas numéricas (1 al 7): Su valor es igual al número que muestran.
+                    Figuras (sota, caballo y rey): Cada una vale medio punto (0.5).
+                    En caso de usar una baraja con 48 cartas, los valores del 8, 9 y 10 se ignoran.</p>            
+                </div>
+            <div class="tutorial-step">
+                <img src="IMG/3.png" alt="Plántate" class="tutorial-image">
+                <p>Cada jugador comienza con 20 puntos
+                    las apuestas iniciales se definen antes de repartir cartas,
+                    la banca siempre juega al final de cada ronda.</p>            
+                </div>
+            <div class="tutorial-step">
+                <img src="IMG/4.png" alt="Plántate" class="tutorial-image">
+                <p>Se reparte una carta inicial a cada jugador para determinar la prioridad, 
+                    si hay empate, se usa la siguiente jerarquía de palos: Oros > Copas > Espadas > Bastos.</p>
+                </div>
+        </div>
+    </section>
+    <p></p>
+    <section class="tutorial-content2">
+        <h2>Desarrollo del juego</h2>
+        <div class="tutorial-grid">
+            <div class="tutorial-step">
+                <img src="IMG/1.png" alt="Repartir cartas" class="tutorial-image">
+                <p>Inicio de la ronda:
+
+                    A cada jugador se le reparte una carta inicial.
+                    Los jugadores deciden si quieren más cartas o se plantan.
+                    Pueden pedir cartas una a una hasta que decidan plantarse o se pasen de 7.5.</p>
             </div>
             <div class="tutorial-step">
-                <img src="IMG/card-stop.png" alt="Plántate" class="tutorial-image">
-                <p><strong>3. Plantarse:</strong> Cuando crees que tienes 7.5 puntos, te plantas y esperas a ver si la banca supera tu puntuación.</p>
-            </div>
+                <img src="IMG/2.png" alt="Pedir cartas" class="tutorial-image">
+                <p>Turno de la banca:
+
+                    La banca juega después de todos los jugadores.
+                    Juega siguiendo estas reglas:
+                    Si ya tiene 7.5, se planta.
+                    Si ya se ha pasado, no pide más cartas.
+                    Si no supera a ningún jugador o corre riesgo de eliminación, debe pedir cartas.
+                    </p>            
+                </div>
+            <div class="tutorial-step">
+                <img src="IMG/3.png" alt="Plántate" class="tutorial-image">
+                <p>Resolución de apuestas:
+
+                    Se comparan las puntuaciones de cada jugador contra la banca.
+                    Resultados posibles:
+                    Si el jugador supera a la banca sin pasarse de 7.5, gana lo apostado.
+                    Si el jugador tiene 7.5 exactos y la banca no, gana el doble de lo apostado.
+                    Si el jugador se pasa, pierde su apuesta.
+                    En caso de empate, la banca gana.</p>            
+                </div>
+            <div class="tutorial-step">
+                <img src="IMG/4.png" alt="Plántate" class="tutorial-image">
+                <p>Cambios en la banca:
+
+                    Si un jugador tiene 7.5 exactos, se convierte en candidato para ser la nueva banca.
+                    Si la banca queda eliminada, el jugador con mayor prioridad asume el rol de banca.
+                    </p>
+                </div>
         </div>
     </section>
 
     <section class="tutorial-video">
         <h2>Video Introductorio</h2>
         <div class="video-container">
-            <iframe width="100%" height="315" src="https://www.youtube.com/embed/tu_video_id" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/kep0RemOcbw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </section>
 
