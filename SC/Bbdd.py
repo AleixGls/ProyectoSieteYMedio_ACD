@@ -3,6 +3,7 @@ import SC.Utilidad as Ut
 from mysql.connector import Error
 
 
+
 config = {
     'user': 'ACD_USER',
     'password': 'P@ssw0rd',
@@ -37,7 +38,6 @@ finally:
         cursor.close()
         conn.close()
         print("Conexión cerrada")
-
 
 
 def insertBBDDCardgame(cardgame):

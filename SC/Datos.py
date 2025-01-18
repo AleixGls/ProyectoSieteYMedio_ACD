@@ -172,48 +172,10 @@ cartas_al = {
     "AL_BE_15":{"literal":"Agua"                 ,"value":0.5,"priority":4,"realValue":15},
 }
 
-
-players = {
-        "11115555A":{
-            "name":"Mario",
-            "human":True,
-            "bank":False,
-            "initialCard":"",
-            "priority":0,
-            "type":40,
-            "bet":4,
-            "points":0,
-            "cards":["AL_BE_01", "AL_BE_12","AL_BE_15"],
-            "roundPoints":0
-        },
-        "22225555A":{
-            "name":"Pepe",
-            "human":False,
-            "bank":False,
-            "initialCard":"",
-            "priority":0,
-            "type":30,
-            "bet":4,
-            "points":0,
-            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
-            "roundPoints":0
-        },
-        "33335555A":{
-            "name":"Jose",
-            "human":False,
-            "bank":False,
-            "initialCard":"",
-            "priority":0,
-            "type":50,
-            "bet":4,
-            "points":0,
-            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
-            "roundPoints":0
-        },
-}
-
 context_game = {
     "cards_deck":{}, #Baraja de cartas seleccionada
+    "mazo":[],       #Mazo de carta de la partida
+    
     "players":{        
         "11115555A":{
             "name":"Mario",
@@ -300,8 +262,8 @@ context_game = {
             "roundPoints":0
         },
     },    #Jugadores extraidos de la base de datos
-    "game":[],      #Jugadores en partida
-    "mazo":[],       
+    "game":[],       #Jugadores en partida
+
     "round":"",      #Ronda actual
     "maxRounds":5,   #Rondas maximas de la partida
 }
