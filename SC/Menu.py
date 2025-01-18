@@ -65,7 +65,7 @@ def addRemovePlayers():
         elif option == 2:
             setNewPlayer(human=False)
         elif option == 3:
-            Bd.get_all_players()
+            Bd.removeBBDDPlayer()
         elif option == 4:
             break
 
@@ -446,8 +446,9 @@ def setNewPlayer(human=True):
     
     # Solicitar nombre del jugador
     name = input("Enter the player's name: ".rjust(75)).strip()
-    if not name:
+    if name == "":
         print("The name cannot be empty.".center(127))
+        time.sleep(1)
         return
     
     # Solicitar perfil de riesgo (solo para bots)
@@ -472,12 +473,30 @@ def setNewPlayer(human=True):
         elif profile_option == 3:
             risk = str(30)
     else:
-        risk = str(40)  # Por defecto, los humanos tienen un perfil "normal"
+        print("Select the player's risk profile:".center(127))
+        menu=[
+            "1) Daring (50)",
+            "2) Normal (40)",
+            "3) Cautious (30)",
+        ]
+        Ut.print_centered_menu(menu,127)
+        
+        profile_option = Ut.getOpt(
+            inputOptText="Select an option: ".rjust(70),
+            rangeList=[1, 2, 3]
+        )
+        
+        if profile_option == 1:
+            risk = str(50)
+        elif profile_option == 2:
+            risk = str(40)
+        elif profile_option == 3:
+            risk = str(30)
     
     # Generar un DNI aleatorio para el jugador
     dni = Ut.newRandomDNI()
     
     # Guardar el jugador en la base de datos
-    Bd.insert_player_game(dni, name, risk, human)
+    Bd.savePlayer(dni, name, risk, human)
     
     input("Press Enter to continue...".center(127))

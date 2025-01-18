@@ -1,43 +1,9 @@
 import mysql.connector
 import SC.Utilidad as Ut
 from mysql.connector import Error
+import SC.Cabeceras as Cb
+import time
 
-
-
-config = {
-    'user': 'ACD_USER',
-    'password': 'P@ssw0rd',
-    'host': 'acd-game1.mysql.database.azure.com',
-    'database': 'acd_game',
-    'port': '3306'
-}
-
-try:
-    conn = mysql.connector.connect(**config)
-    print("Conexión exitosa")
-    
-    cursor = conn.cursor()
-    cursor.execute("SHOW TABLES")  
-    print("Tablas en la base de datos:")
-    for table in cursor:
-        print(table)
-    
-    cursor.execute("SELECT DATABASE()") 
-    current_db = cursor.fetchone()
-    print(f"Base de datos actual: {current_db[0]}")
-    
-except mysql.connector.Error as err:
-    if err.errno == Error.ER_ACCESS_DENIED_ERROR:
-        print("Algo está mal con tu usuario o contraseña")
-    elif err.errno == Error.ER_BAD_DB_ERROR:
-        print("La base de datos no existe")
-    else:
-        print(err)
-finally:
-    if conn.is_connected():
-        cursor.close()
-        conn.close()
-        print("Conexión cerrada")
 
 
 def insertBBDDCardgame(cardgame):
@@ -51,7 +17,7 @@ def insertBBDD_player_game(player_game,cardgame_id):
      #Esta función debería llamarse justo después de acabar una partida
     pass
 
-def insert_player_game(dni, nombre, risk, human):
+def savePlayer(dni, nombre, risk, human):
     try:
         # Conecta a la base de datos
         connection = mysql.connector.connect(
@@ -70,15 +36,17 @@ def insert_player_game(dni, nombre, risk, human):
             # Inserta el jugador en la base de datos
             cursor.execute(query, (dni, nombre, risk, human))
             connection.commit()
-            print(f"Jugador {nombre} con id_jugador {dni} insertado correctamente.")
+            print(f"Player {nombre} con ID {dni} inserted correctly.".center(127))
             cursor.close()
+            time.sleep(1)
+            
 
     except Error as e:
         # Manejando el error de duplicidad del id_jugador
         if "duplicate" in str(e).lower():
-            print(f"Error: El id_jugador {dni} ya está registrado en la base de datos.")
+            print(f"Error: The ID {dni} it is already registered in the database.".center(127))
         else:
-            print(f"Error al insertar jugador: {e}")
+            print(f"Error inserting player: {e}".center(127))
 
     finally:
         # Cierra la conexión con la base de datos
@@ -109,19 +77,6 @@ def insertBBDD_player_game_round(player_game_round,cardgame_id):
     # Mostrar el ganador.
     pass
 
-def removeBBDDPlayer():
-    # Función que nos muestra los jugadores disponibles en BBDD, y elimina el que
-    # seleccionemos
-    pass
-
-def savePlayer(nif,name,risk,human):
-    # Función que guarda en BBDD un nuevo jugador.
-    pass
-
-def delBBDDPlayer(nif):
-    # Función que elimina un jugador de la BBDD
-    pass
-
 def getBBDDRanking():
     # Función que crea la vista player_earnings, y retorna un diccionario con los datos de
     # ésta,
@@ -133,14 +88,7 @@ def getPlayers():
     # contextGame[“players”]
     pass
 
-
-import mysql.connector
-from mysql.connector import Error
-
-import mysql.connector
-from mysql.connector import Error
-
-def get_all_players():
+def removeBBDDPlayer():
     try:
         # Conexión a la base de datos
         connection = mysql.connector.connect(
@@ -166,19 +114,12 @@ def get_all_players():
             bots = cursor.fetchall()
             
             # Imprimir encabezado
-            print("*" * 140)
-            print(" " * 35 + " _____  __                            ____                                         ____   __")
-            print(" " * 34 + "/ ___/ / /_   ____  _      __        / __ \\ ___   ____ ___   ____  _   __ ___     / __ \\ / /____ _ __  __ ___   _____ _____")
-            print(" " * 33 + "\\__ \\ / __ \\ / __ \\| | /| / /______ / /_/ // _ \\ / __ `__ \\ / __ \\| | / // _ \\   / /_/ // // __ `// / / // _ \\ / ___// ___/")
-            print(" " * 33 + "___/ // / / // /_/ /| |/ |/ //_____// _, _//  __// / / / / // /_/ /| |/ //  __/  / ____// // /_/ // /_/ //  __// /   (__  )")
-            print(" " * 32 + "/____//_/ /_/ \\____/ |__/|__/       /_/ |_| \\___//_/ /_/ /_/ \\____/ |___/ \\___/  /_/    /_/ \\__,_/ \\__, / \\___//_/   /____/")
-            print(" " * 96 + "/____/")
-            print("*" * 140)
-            print("*" * 63 + "Select Players" + "*" * 64)
-            print(" " * 29 + "Boot Players" + " " * 29 + "||" + " " * 29 + "Human Players")
-            print("-" * 140)
-            print("ID                  Name                     Type                     || ID                  Name                     Type")
-            print("*" * 140)
+            print(Cb.cabecera01)
+            print( "Select Players ".center(127,"="))
+            print("Bot Players".center(63) + "|"+"Human Players".center(63))
+            print("-"*127)
+            print("ID".center(21)+"Name".center(21)+"Type".center(21)+"|"+"ID".center(21)+"Name".center(21)+"Type".center(21))
+            print("-"*127)
 
             # Combinar y mostrar datos de bots y humanos
             max_rows = max(len(bots), len(humanos))
@@ -188,34 +129,34 @@ def get_all_players():
                 human_data = humanos[i] if i < len(humanos) else ("", "", "")
                 
                 # Formatear las filas
-                bot_line = f"{bot_data[0]:<20} {bot_data[1]:<25} {bot_data[2]:<25}"
-                human_line = f"{human_data[0]:<20} {human_data[1]:<25} {human_data[2]:<25}"
+                bot_line = f"{bot_data[0].center(21)}{bot_data[1].center(21)}{bot_data[2].center(21)}"
+                human_line = f"{human_data[0].center(21)}{human_data[1].center(21)}{human_data[2].center(21)}"
                 
-                print(f"{bot_line} || {human_line}")
+                print(f"{bot_line}|{human_line}")
             
-            print("*" * 140)
+            print()
+            print("0) Leave this menu".center(127)) 
             
             # Entrada del usuario para eliminar jugador
-            opc = input("Option ( -id to remove player, -1 to exit): ")
+            opc = input("Write the ID of the player you want do delete: ".rjust(88))
             
-            if opc == "-1":
+            if opc == "0":
                 return {"humanos": humanos, "bots": bots}
             else:
-                delete_player(connection, opc.strip())
-                print(f"Jugador con ID {opc} eliminado, recarga la lista para verificar.")
+                delBBDDPlayer(connection, opc.strip())                
                 Ut.clear_terminal()
-                get_all_players()
+                removeBBDDPlayer()
+
     except Error as e:
-        print(f"Error al listar jugadores: {e}")
+        print(f"Error listing players: {e}".center(127))
         return {"humanos": [], "bots": []}
     finally:
         if 'connection' in locals() and connection.is_connected():
             connection.close()
-            print("Conexión cerrada.")
 
 
 # Función para eliminar jugador
-def delete_player(connection, id_jugador):
+def delBBDDPlayer(connection, id_jugador):
     try:
         cursor = connection.cursor()
         query = "DELETE FROM jugadores WHERE id_jugador = %s;"
@@ -223,8 +164,11 @@ def delete_player(connection, id_jugador):
         connection.commit()
         
         if cursor.rowcount > 0:
-            print(f"Jugador con ID {id_jugador} eliminado correctamente.")
+            print(f"Player with ID {id_jugador} successfully removed.".center(127))
+            time.sleep(1)
         else:
-            print(f"No se encontró ningún jugador con ID {id_jugador}.")
+            print(f"No player found with ID {id_jugador}.".center(127))
+            time.sleep(1)
     except Error as e:
-        print(f"Error al eliminar jugador: {e}")
+        print(f"Error when deleting player: {e}".center(127))
+        time.sleep(1)
