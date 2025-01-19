@@ -451,12 +451,6 @@ from mysql.connector import Error
 # Diccionario para almacenar el contexto del juego
 contextGame = {}
 
-import mysql.connector
-from mysql.connector import Error
-
-# Diccionario para almacenar el contexto del juego
-contextGame = {}
-
 
 def getPlayers():
     """Obtiene los jugadores y los guarda en un diccionario con id_jugador como clave y nombre como valor."""
