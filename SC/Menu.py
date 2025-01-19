@@ -2,6 +2,7 @@ import SC.Utilidad as Ut
 import SC.Datos as Dt
 import SC.Juego as Jg
 import SC.Bbdd as Bd
+import SC.Cabeceras as Cb
 import time
 
 
@@ -10,16 +11,19 @@ def main_menu():
 
     while True:
         Ut.clear_terminal()
-        print("=== Menú Principal ===")
-        print("1) Add/Remove/Show Players")
-        print("2) Settings")
-        print("3) Play Game")
-        print("4) Ranking")
-        print("5) Reports")
-        print("6) Exit")
-        
+        print(Cb.cabecera00)
+        menu = [
+            "1) Add/Remove/Show Players",
+            "2) Settings",
+            "3) Play Game",
+            "4) Ranking",
+            "5) Reports",
+            "6) Exit"
+        ]
+        Ut.print_centered_menu(menu,127)
+
         option = Ut.getOpt(
-            inputOptText="Seleccione una opción: ",
+            inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3, 4, 5, 6]
         )
         
@@ -34,7 +38,7 @@ def main_menu():
         elif option == 5:
             reports()
         elif option == 6:
-            print("Saliendo del juego...")
+            Ut.clear_terminal()
             break
 
 def addRemovePlayers():
@@ -42,14 +46,17 @@ def addRemovePlayers():
 
     while True:
         Ut.clear_terminal()
-        print("=== Gestión de Jugadores ===")
-        print("1) Nuevo Jugador Humano")
-        print("2) Nuevo Bot")
-        print("3) Mostrar/Eliminar Jugadores")
-        print("4) Volver al Menú Principal")
-        
+        print(Cb.cabecera01)
+        menu=[
+            "1) New Human Player",
+            "2) New Bot",
+            "3) Show/Delete Players",
+            "4) Return to Main Menu"
+        ]
+        Ut.print_centered_menu(menu,127)
+
         option = Ut.getOpt(
-            inputOptText="Seleccione una opción: ",
+            inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3, 4]
         )
         
@@ -58,7 +65,7 @@ def addRemovePlayers():
         elif option == 2:
             setNewPlayer(human=False)
         elif option == 3:
-            print("FUNCIONALIDAD POR CREAR")
+            Bd.removeBBDDPlayer()
         elif option == 4:
             break
 
@@ -67,14 +74,17 @@ def settings():
     
     while True:
         Ut.clear_terminal()
-        print("=== Configuración del Juego ===")
-        print("1) Establecer Jugadores de la Partida")
-        print("2) Establecer Baraja de Cartas")
-        print("3) Establecer Máximo de Rondas")
-        print("4) Volver al Menú Principal")
-        
+        print(Cb.cabecera02)
+        menu=[
+            "1) Set Game Players",
+            "2) Set Deck of Cards",
+            "3) Set Maximum Rounds",
+            "4) Return to Main Menu"
+        ]
+        Ut.print_centered_menu(menu,127)
+
         option = Ut.getOpt(
-            inputOptText="Seleccione una opción: ",
+            inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3, 4]
         )
         
@@ -92,18 +102,22 @@ def setMaxRounds():
     
     while True:
         Ut.clear_terminal()
-        print("=== Seleccionar rondas maximas ===")
-        print(f"Actual: {Dt.context_game["maxRounds"]} rondas")
+        print(Cb.cabecera02)
+        print(f"Current: {Dt.context_game['maxRounds']} rounds".center(127))
+        print()
+        print("0) Leave this menu".center(127))
         print() 
-        max_rounds = input("Introduzca el número máximo de rondas: ").strip()
+        max_rounds = input("Enter the maximum number of rounds: ".rjust(82)).strip()
         
         if max_rounds.isdigit() and int(max_rounds) > 0:
             Dt.context_game["maxRounds"] = int(max_rounds)
-            print(f"Número máximo de rondas establecido a {max_rounds}.")
+            print(f"Maximum number of rounds set to {max_rounds}.".center(127))
             time.sleep(1)
             break
+        elif max_rounds.isdigit() and int(max_rounds) == 0:
+            break
         else:
-            print("Entrada no válida. Introduzca un número mayor que 0.")
+            print("Invalid input. Enter a number greater than 0.".center(127))
             time.sleep(1)
 
 def setPlayersGame():
@@ -113,8 +127,8 @@ def setPlayersGame():
     # Verificar si hay jugadores disponibles
     
     if not Dt.context_game.get("players"):
-        print("No hay jugadores disponibles. Por favor, añada jugadores primero.")
-        input("Presione Enter para continuar...")
+        print("No players available. Please add players first.".center(127))
+        input("Press Enter to continue...".center(127))
         return
     
     # Obtener la lista de jugadores ya seleccionados
@@ -123,15 +137,19 @@ def setPlayersGame():
     # Mostrar menú principal de selección/eliminación
     while True:
         Ut.clear_terminal()
+        print(Cb.cabecera02)
         showPlayersGame()
         print()
-        print("=== Seleccionar/Eliminar Jugadores ===")
-        print("1) Añadir Jugadores a la Partida")
-        print("2) Eliminar Jugadores de la Partida")
-        print("3) Volver al Menú Anterior")
+        print(" Select/Remove Players ".center(127,"="))
+        menu=[
+            "1) Add Players to Game",
+            "2) Remove Players from Game",
+            "3) Return to Previous Menu",
+        ]
+        Ut.print_centered_menu(menu,127)
         
         option = Ut.getOpt(
-            inputOptText="Seleccione una opción: ",
+            inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3]
         )
         
@@ -153,8 +171,8 @@ def addPlayersToGame(selected_players):
     
     # Verificar si ya se han seleccionado 6 jugadores
     if len(selected_players) >= 6:
-        print("Ya se han seleccionado 6 jugadores. No se pueden añadir más.")
-        input("Presione Enter para continuar...")
+        print("6 players have already been selected. No more can be added.".center(127))
+        input("Press Enter to continue...".center(127))
         return
     
     # Filtrar jugadores disponibles (excluyendo los ya seleccionados)
@@ -166,43 +184,44 @@ def addPlayersToGame(selected_players):
     
     # Verificar si hay jugadores disponibles después de filtrar
     if not available_players:
-        print("Todos los jugadores ya están seleccionados para la partida.")
-        input("Presione Enter para continuar...")
+        print("All players have already been selected for the game.".center(127))
+        input("Press Enter to continue...".center(127))
         return
 
     # Solicitar al usuario que introduzca el DNI del jugador
     while True:
         # Verificar si ya se han seleccionado 6 jugadores
         if len(selected_players) >= 6:
-            print("Ya se han seleccionado 6 jugadores. No se pueden añadir más.")
+            print("6 players have already been selected. No more can be added.".center(127))
             time.sleep(1)
             break
         
         Ut.clear_terminal()
+        print(Cb.cabecera02)
         showPlayersGame()
         print()
-        print("=== Añadir Jugadores a la Partida ===")
+        print(" Add players to the game ".center(127,"="))
         for player_id, player_data in available_players.items():
-            player_name = player_data.get("name", "Desconocido")
-            player_type = "Humano" if player_data.get("human", False) else "Bot"
+            player_name = player_data.get("name", "Unknown")
+            player_type = "Human" if player_data.get("human", False) else "Bot"
             player_risk = player_data.get("type", "N/A")
             # Convertir el perfil de riesgo a texto
             if player_risk == 50:
-                risk_profile = "Atrevido"
+                risk_profile = "Daring"
             elif player_risk == 40:
                 risk_profile = "Normal"
             elif player_risk == 30:
-                risk_profile = "Prudente"
+                risk_profile = "Cautious"
             else:
                 risk_profile = "N/A"
-            print(player_id.ljust(18) + player_name.ljust(18) + player_type.ljust(18) + risk_profile.ljust(18))
+            print(str(player_id.rjust(32) + player_name.rjust(21) +" "*20+ player_type.ljust(21) + risk_profile.ljust(32)))
         print()
 
-        print("0) Salir")
+        print("0) Exit".center(127))
         print()
 
         dni = input(
-            "Introduzca el DNI del jugador que desea añadir a la partida: "
+            "Enter the ID of the player you wish to add to the game: ".rjust(90)
         ).strip().upper()
         
         if dni == "0":
@@ -210,7 +229,7 @@ def addPlayersToGame(selected_players):
         
         if dni in available_players:
             selected_players.append(dni)
-            print(f"Jugador {available_players[dni]['name']} añadido a la partida.")
+            print(f"Player {available_players[dni]['name']} added to the game.".center(127))
             time.sleep(1)
             # Actualizar la lista de jugadores disponibles
             available_players = {
@@ -221,11 +240,11 @@ def addPlayersToGame(selected_players):
             
             # Si no quedan jugadores disponibles, terminar
             if not available_players:
-                print("Todos los jugadores han sido seleccionados.")
+                print("All players have been selected.".center(127))
                 time.sleep(1)
                 break
         else:
-            print("DNI no válido. Inténtelo de nuevo.")
+            print("Invalid ID. Please try again.".center(127))
             time.sleep(1)
 
 
@@ -235,215 +254,244 @@ def removePlayersFromGame(selected_players):
     
     # Verificar si hay jugadores seleccionados
     if not selected_players:
-        print("No hay jugadores disponibles. Por favor, añada jugadores primero.")
-        input("Presione Enter para continuar...")
+        print("No players available. Please add players first.".center(127))
+        input("Press Enter to continue...".center(127))
         return
     
     # Solicitar al usuario que introduzca el DNI del jugador
     while True:
         if not selected_players:
-            print("No hay jugadores disponibles. Por favor, añada jugadores primero.")
+            print("No players available. Please add players first.".center(127))
             time.sleep(1)
             break
 
         Ut.clear_terminal()
-        print("=== Eliminar Jugadores de la Partida ===")
+        print(Cb.cabecera02)
+        print(" Remove players from the game ".center(127,"="))
         for player_id in selected_players:
             player_data = Dt.context_game["players"].get(player_id, {})
-            player_name = player_data.get("name", "Desconocido")
-            player_type = "Humano" if player_data.get("human", False) else "Bot"
+            player_name = player_data.get("name", "Unknown")
+            player_type = "Human" if player_data.get("human", False) else "Bot"
             player_risk = player_data.get("type", "N/A")
             # Convertir el perfil de riesgo a texto
             if player_risk == 50:
-                risk_profile = "Atrevido"
+                risk_profile = "Daring"
             elif player_risk == 40:
                 risk_profile = "Normal"
             elif player_risk == 30:
-                risk_profile = "Prudente"
+                risk_profile = "Cautious"
             else:
                 risk_profile = "N/A"
-            print(player_id.ljust(18) + player_name.ljust(18) + player_type.ljust(18) + risk_profile.ljust(18))
+            print(str(player_id.rjust(32) + player_name.rjust(21) +" "*20+ player_type.ljust(21) + risk_profile.ljust(32)))
         print()
-        print("0) Salir")
+        print("0) Exit".center(127))
         print()
         dni = input(
-            "Introduzca el DNI del jugador que desea eliminar: "
+            "Enter the ID of the player you wish to remove: ".rjust(85)
         ).strip().upper()
         
         if dni == "0":
             break
         
         if dni in selected_players:
-            player_name = Dt.context_game["players"].get(dni, {}).get("name", "Desconocido")
+            player_name = Dt.context_game["players"].get(dni, {}).get("name", "Unknown")
             
-            confirm = input(f"¿Está seguro de que desea eliminar a {player_name}? (s/n): ").strip().lower()
-            if confirm == "s":
+            confirm = input(f"Are you sure you want to remove {player_name}? (y/n): ".rjust(83)).strip().lower()
+            if confirm == "y":
                 selected_players.remove(dni)
-                print(f"Jugador {player_name} eliminado de la partida.")
+                print(f"Player {player_name} removed from the game.".center(127))
                 time.sleep(1)
             else:
-                print("Eliminación cancelada.")
+                print("Removal canceled.".center(127))
                 time.sleep(1)
         else:
-            print("DNI no válido. Inténtelo de nuevo.")
+            print("Invalid ID. Please try again.".center(127))
             time.sleep(1)
 
 def showPlayersGame():
     #Visualizar jugadores seleccionados
-    print("=== Jugadores en la Partida ===")
+    print(" Players in the Game ".center(127,"="))
     
     # Verificar si hay jugadores en la partida
     if not Dt.context_game.get("game"):
-        print("No hay jugadores en la partida actual.")
+        print("There are no players in the current game.".center(127))
     else:
-    # Mostrar la lista de jugadores
-        for i in range(0,len(Dt.context_game["game"])):
-            player_id    = Dt.context_game["game"][i]
-            player_name  = Dt.context_game["players"][Dt.context_game["game"][i]]["name"]
-            if Dt.context_game["players"][Dt.context_game["game"][i]]["human"] == True:
-                player_human = "Humano"
+        # Mostrar la lista de jugadores
+        for i in range(0, len(Dt.context_game["game"])):
+            player_id = Dt.context_game["game"][i]
+            player_name = Dt.context_game["players"][Dt.context_game["game"][i]]["name"]
+            if Dt.context_game["players"][Dt.context_game["game"][i]]["human"]:
+                player_human = "Human"
             else:
                 player_human = "Bot"
-            if   Dt.context_game["players"][Dt.context_game["game"][i]]["type"] == 30:
-                player_type = "Prudente"
+            if Dt.context_game["players"][Dt.context_game["game"][i]]["type"] == 30:
+                player_type = "Cautious"
             elif Dt.context_game["players"][Dt.context_game["game"][i]]["type"] == 40:
-                player_type = "Moderado"
+                player_type = "Moderate"
             elif Dt.context_game["players"][Dt.context_game["game"][i]]["type"] == 50:
-                player_type = "Atrevido"
+                player_type = "Daring"
             else:
                 player_type = "ERROR"
 
-            print(player_id.ljust(18) + player_name.ljust(18) + player_human.ljust(18) + player_type.ljust(18))
+            print(str(player_id.rjust(32) + player_name.rjust(21) +" "*20+ player_human.ljust(21)) + player_type.ljust(32))
 
 def setCardsDeck():
-    """
-    Permite al usuario seleccionar una baraja de cartas para la partida.
-    Muestra la baraja seleccionada actualmente y establece la Baraja Española como predeterminada.
-    """
+    # Permite al usuario seleccionar una baraja de cartas para la partida.
+    # Muestra la baraja seleccionada actualmente.
+
     while True:
         Ut.clear_terminal()
-        print("=== Seleccionar Baraja de Cartas ===")
+        print(Cb.cabecera02)
 
         # Mostrar la baraja seleccionada actualmente
         if "cards_deck" in Dt.context_game and Dt.context_game["cards_deck"]:
             if Dt.context_game["cards_deck"] == Dt.cartas_es:
-                print("Baraja seleccionada actualmente: Baraja Española (40 cartas)")
+                print("Currently selected deck: Spanish Deck (40 cards)".center(127))
             elif Dt.context_game["cards_deck"] == Dt.cartas_en:
-                print("Baraja seleccionada actualmente: Baraja Inglesa (52 cartas)")
+                print("Currently selected deck: English Deck (52 cards)".center(127))
             elif Dt.context_game["cards_deck"] == Dt.cartas_al:
-                print("Baraja seleccionada actualmente: Baraja Alemana (60 cartas)")
+                print("Currently selected deck: German Deck (60 cards)".center(127))
         print()
         # Mostrar las opciones de barajas disponibles
-        print("Seleccione la baraja de cartas para la partida:")
-        print("1) Baraja Española (40 cartas)")
-        print("2) Baraja Inglesa (52 cartas)")
-        print("3) Baraja Alemana (60 cartas)")
-        print("4) Volver al Menú Anterior")
+        print("Select the card deck for the game:".center(127))
+        menu=[
+            "1) Spanish Deck (40 cards)",
+            "2) English Deck (52 cards)",
+            "3) German Deck (60 cards)",
+            "4) Return to Previous Menu"
+        ]
+        Ut.print_centered_menu(menu,127)
 
         # Solicitar al usuario que seleccione una opción
         option = Ut.getOpt(
-            inputOptText="Seleccione una opción (1-4): ",
+            inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3, 4]
         )
 
         # Asignar la baraja seleccionada a context_game["cards_deck"]
         if option == 1:
             Dt.context_game["cards_deck"] = Dt.cartas_es
-            print("Baraja Española seleccionada.")
+            print("Spanish Deck selected.".center(127))
         elif option == 2:
             Dt.context_game["cards_deck"] = Dt.cartas_en
-            print("Baraja Inglesa seleccionada.")
+            print("English Deck selected.".center(127))
         elif option == 3:
             Dt.context_game["cards_deck"] = Dt.cartas_al
-            print("Baraja Alemana seleccionada.")
+            print("German Deck selected.".center(127))
         elif option == 4:
             return
-        input("Presione Enter para continuar...")
+        input("Press Enter to continue...".center(127))
 
 def reports():
-    """
-    Muestra el menú de informes y gestiona la selección de opciones.
-    """
+    # Muestra el menú de informes y gestiona la selección de opciones.
+    
     while True:
         Ut.clear_terminal()
-        print("=== Informes ===")
-        print("1) Carta Inicial Más Repetida")
-        print("2) Apuesta Más Alta por Partida")
-        print("3) Apuesta Más Baja por Partida")
-        print("4) Porcentaje de Rondas Ganadas")
-        print("5) Partidas Ganadas por Bots")
-        print("6) Rondas Ganadas por la Banca")
-        print("7) Usuarios que han sido Banca")
-        print("8) Volver al Menú Principal")
-        
+        print(Cb.cabecera04)
+        menu=[
+            "1) Most Repeated Initial Card",
+            "2) Highest Bet per Game",
+            "3) Lowest Bet per Game",
+            "4) Win Percentage per Round",
+            "5) Games Won by Bots",
+            "6) Rounds Won by the Bank",
+            "7) Users Who Have Been Bank",
+            "8) Return to Main Menu",
+        ]
+        Ut.print_centered_menu(menu,127)
+
         option = Ut.getOpt(
-            inputOptText="Seleccione una opción: ",
+            inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3, 4, 5, 6, 7, 8]
         )
         
         if option == 8:
             break
         else:
-            print(f"Informe {option} seleccionado. Funcionalidad en desarrollo...")
+            print(f"Report {option} selected. Functionality under development...".center(127))
+            time.sleep(1)
 
 def ranking():
-    """
-    Muestra el menú de ranking y gestiona la selección de opciones.
-    """
+    # Muestra el menú de ranking y gestiona la selección de opciones.
+
     while True:
         Ut.clear_terminal()
-        print("=== Ranking ===")
-        print("1) Jugadores con Más Ganancias")
-        print("2) Jugadores con Más Partidas Jugadas")
-        print("3) Jugadores con Más Minutos Jugados")
-        print("4) Volver al Menú Principal")
+        print(Cb.cabecera03)
+        menu=[
+            "1) Players with Most Earnings",
+            "2) Players with Most Games Played",
+            "3) Players with Most Minutes Played",
+            "4) Return to Main Menu",
+        ]
+        Ut.print_centered_menu(menu,127)
         
         option = Ut.getOpt(
-            inputOptText="Seleccione una opción: ",
+            inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3, 4]
         )
         
         if option == 4:
             break
         else:
-            print(f"Ranking {option} seleccionado. Funcionalidad en desarrollo...")
+            print(f"Ranking {option} selected. Functionality under development...".center(127))
+            time.sleep(1)
 
 def setNewPlayer(human=True):
-    """
-    Crea un nuevo jugador (humano o bot) y lo añade a la base de datos.
+    #Crea un nuevo jugador (humano o bot) y lo añade a la base de datos.
+    #Parámetros:
+    #- human: Booleano que indica si el jugador es humano (True) o un bot (False).
     
-    Parámetros:
-    - human: Booleano que indica si el jugador es humano (True) o un bot (False).
-    """
     Ut.clear_terminal()
-    print("=== Crear Nuevo Jugador ===")
+    print(Cb.cabecera01)
     
     # Solicitar nombre del jugador
-    name = input("Introduzca el nombre del jugador: ").strip()
-    if not name:
-        print("El nombre no puede estar vacío.")
+    name = input("Enter the player's name: ".rjust(75)).strip()
+    if name == "":
+        print("The name cannot be empty.".center(127))
+        time.sleep(1)
         return
     
     # Solicitar perfil de riesgo (solo para bots)
     if not human:
-        print("Seleccione el perfil de riesgo del bot:")
-        print("1) Atrevido (50)")
-        print("2) Normal (40)")
-        print("3) Prudente (30)")
+        print("Select the bot's risk profile:".center(127))
+        menu=[
+            "1) Daring (50)",
+            "2) Normal (40)",
+            "3) Cautious (30)",
+        ]
+        Ut.print_centered_menu(menu,127)
         
         profile_option = Ut.getOpt(
-            inputOptText="Seleccione una opción: ",
+            inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3]
         )
         
         if profile_option == 1:
-            risk = 50
+            risk = str(50)
         elif profile_option == 2:
-            risk = 40
+            risk = str(40)
         elif profile_option == 3:
-            risk = 30
+            risk = str(30)
     else:
-        risk = 40  # Por defecto, los humanos tienen un perfil "normal"
+        print("Select the player's risk profile:".center(127))
+        menu=[
+            "1) Daring (50)",
+            "2) Normal (40)",
+            "3) Cautious (30)",
+        ]
+        Ut.print_centered_menu(menu,127)
+        
+        profile_option = Ut.getOpt(
+            inputOptText="Select an option: ".rjust(70),
+            rangeList=[1, 2, 3]
+        )
+        
+        if profile_option == 1:
+            risk = str(50)
+        elif profile_option == 2:
+            risk = str(40)
+        elif profile_option == 3:
+            risk = str(30)
     
     # Generar un DNI aleatorio para el jugador
     dni = Ut.newRandomDNI()
@@ -451,5 +499,4 @@ def setNewPlayer(human=True):
     # Guardar el jugador en la base de datos
     Bd.savePlayer(dni, name, risk, human)
     
-    print(f"Jugador '{name}' creado con éxito. DNI: {dni}")
-    input("Presione Enter para continuar...")
+    input("Press Enter to continue...".center(127))

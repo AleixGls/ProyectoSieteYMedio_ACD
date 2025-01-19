@@ -30,7 +30,7 @@ def getOpt(textOpts="", inputOptText="", rangeList=[], exceptions=[]):
         if user_input in exceptions:
             return user_input
 
-        print("Opción no válida. Inténtelo de nuevo.")
+        print("Invalid option. Try again.".center(127))
 
 def logToFile(text):
     #Guarda un texto en logfileSevenAndHalf.txt.
@@ -47,3 +47,21 @@ def newRandomDNI():
     letter = letters[num % 23]
     dni = f"{num}{letter}"
     return dni
+
+def print_centered_menu(menu, screen_width=127):
+    # Imprime un menú centrado en la pantalla, con el contenido justificado a la izquierda.
+    #Parámetros:
+    #menu (list): Lista de cadenas que representan las opciones del menú.
+    #screen_width (int): Ancho total de la pantalla (por defecto 128).
+    
+    # Encontrar la longitud máxima de las opciones (para centrado correcto)
+    max_length = max(len(line) for line in menu)
+
+    # Calcular el espacio necesario para centrar el bloque
+    padding = (screen_width - max_length) // 2
+
+    # Imprimir cada línea del menú
+    for line in menu:
+        # Justificar el texto a la izquierda dentro del bloque centrado
+        centered_line = " " * padding + line.ljust(max_length)
+        print(centered_line)
