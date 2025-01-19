@@ -713,3 +713,74 @@ def delete_player(connection, id_jugador):
             print(f"No se encontró ningún jugador con ID {id_jugador}.")
     except Error as e:
         print(f"Error al eliminar jugador: {e}")
+
+
+
+def card_BBDD():
+    """
+    Establece una conexión con la base de datos, obtiene las cartas y las clasifica
+    en tres diccionarios separados según su tipo (cartas_es, cartas_en, cartas_al).
+    
+    :return: Tres diccionarios con las cartas en el formato especificado.
+    """
+    try:
+        # Establecer conexión a la base de datos
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+        
+        if connection.is_connected():
+            print("Conexión exitosa a la base de datos.")
+            
+            # Crear cursor para ejecutar la consulta
+            cursor = connection.cursor(dictionary=True)
+            
+            # Consulta para obtener las cartas
+            query = """
+            SELECT id_carta, nombre, valor_juego, priority, realValue
+            FROM cartas
+            """
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            
+            # Diccionarios para clasificar las cartas
+            cartas_es = {}
+            cartas_en = {}
+            cartas_al = {}
+            
+            # Clasificar cartas según el prefijo de id_carta
+            for row in rows:
+                card_data = {
+                    "literal": row['nombre'],
+                    "value": float(row['valor_juego']),
+                    "priority": row['priority'],
+                    "realValue": float(row['realValue'])
+                }
+                if row['id_carta'].startswith("ES_"):
+                    cartas_es[row['id_carta']] = card_data
+                elif row['id_carta'].startswith("EN_"):
+                    cartas_en[row['id_carta']] = card_data
+                elif row['id_carta'].startswith("AL_"):
+                    cartas_al[row['id_carta']] = card_data
+            
+            # Cerrar cursor y conexión
+            cursor.close()
+            connection.close()
+            print("Conexión cerrada correctamente.")
+            
+            return cartas_es, cartas_en, cartas_al
+
+    except Error as e:
+        print(f"Error al obtener cartas: {e}")
+        return {}, {}, {}
+
+# Uso de la función
+if __name__ == "__main__":
+    cartas_es, cartas_en, cartas_al = card_BBDD()
+    print("Cartas ES:", cartas_es)
+    print("Cartas EN:", cartas_en)
+    print("Cartas AL:", cartas_al)
+
