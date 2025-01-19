@@ -71,31 +71,6 @@ def insertBBDDCardgame(baraja_id, num_jugadores, num_rondas, hora_fin):
             connection.close()
 
 
-if __name__ == "__main__":
-    try:
-        print("Introducir datos para crear una partida:")
-
-        # Solicita el ID de la baraja
-        baraja_id = int(input("Ingrese el ID de la baraja: "))
-
-        # Solicita el número de jugadores
-        num_jugadores = int(input("Ingrese el número de jugadores: "))
-
-        # Solicita el número de rondas
-        num_rondas = int(input("Ingrese el número de rondas: "))
-
-        # Solicita la hora de finalización
-        hora_fin = input("Ingrese la hora de finalización (YYYY-MM-DD HH:MM:SS) o déjelo vacío: ")
-        if not hora_fin:
-            hora_fin = None
-
-        # Llama a la función para insertar los datos (ajusta tu función para incluir hora_fin si es necesario)
-        insertBBDDCardgame(baraja_id, num_jugadores, num_rondas, hora_fin)
-
-    except ValueError:
-        print("Por favor, ingrese valores válidos para los datos solicitados.")
-    except Exception as e:
-        print(f"Error inesperado: {e}")
 
 
 '''
@@ -105,7 +80,7 @@ if __name__ == "__main__":
      #Esta función debería llamarse justo después de acabar una partida
 '''
 
-def insertBBDD_player_game(partida_id, jugador_id, puntos_iniciales, es_banca):
+def insertBBDD_player_game(id_partida, id_jugador, puntos_iniciales, puntos_finales, es_banca):
     try:
         connection = mysql.connector.connect(
             host='acd-game1.mysql.database.azure.com',
@@ -120,9 +95,9 @@ def insertBBDD_player_game(partida_id, jugador_id, puntos_iniciales, es_banca):
                 INSERT INTO partidas_jugadores (id_partida, id_jugador, puntos_iniciales, es_banca)
                 VALUES (%s, %s, %s, %s);
             """
-            cursor.execute(query, (partida_id, jugador_id, puntos_iniciales, es_banca))
+            cursor.execute(query, (id_partida, id_jugador, puntos_iniciales, puntos_finales, es_banca))
             connection.commit()
-            print(f"Jugador {jugador_id} insertado correctamente en la partida {partida_id}.")
+            print(f"Jugador {id_jugador} insertado correctamente en la partida {id_partida}.")
             
     except Error as e:
         print(f"Error al insertar jugador en la partida: {e}")
@@ -132,7 +107,7 @@ def insertBBDD_player_game(partida_id, jugador_id, puntos_iniciales, es_banca):
             connection.close()
 
 
-'''
+
 def insert_player_game(dni, nombre, risk, human):
     try:
         # Conecta a la base de datos
@@ -189,37 +164,64 @@ def insert_player_game(dni, nombre, risk, human):
     #   Establecer nueva banca si es necesario.
     # Insertar en BBDD los diccionarios creados para tal propósito.
     # Mostrar el ganador.
-'''
-'''
-def insert_player_game_round(ronda_id, jugador_id, apuesta, puntos_iniciales, puntos_finales, gano):
+
+
+
+import mysql.connector
+from mysql.connector import Error
+
+def insertBBDD_player_game_round(id_ronda, id_jugador, apuesta, puntos_inicio, puntos_fin, gano):
     try:
+        # Establecer la conexión con la base de datos
         connection = mysql.connector.connect(
             host='acd-game1.mysql.database.azure.com',
             user='ACD_USER',
             password='P@ssw0rd',
             database='acd_game'
         )
+
         if connection.is_connected():
             cursor = connection.cursor()
-            
-            query = """
-                INSERT INTO rondas_jugadores (id_ronda, id_jugador, apuesta, puntos_iniciales, puntos_finales, gano)
-                VALUES (%s, %s, %s, %s, %s, %s);
-            """
-            cursor.execute(query, (ronda_id, jugador_id, apuesta, puntos_iniciales, puntos_finales, gano))
-            connection.commit()
-            print(f"Datos de ronda para jugador {jugador_id} insertados correctamente.")
-    
+
+            # Verificar si el registro ya existe
+            cursor.execute("""
+                SELECT * FROM rondas_jugadores 
+                WHERE id_ronda = %s AND id_jugador = %s
+            """, (id_ronda, id_jugador))
+
+            result = cursor.fetchone()
+
+            if result:
+                # Si el registro existe, actualizamos los valores
+                query = """
+                    UPDATE rondas_jugadores 
+                    SET apuesta = %s, puntos_inicio = %s, puntos_fin = %s, gano = %s
+                    WHERE id_ronda = %s AND id_jugador = %s
+                """
+                cursor.execute(query, (apuesta, puntos_inicio, puntos_fin, gano, id_ronda, id_jugador))
+                connection.commit()
+                print(f"Registro de ronda para el jugador {id_jugador} actualizado correctamente.")
+            else:
+                # Si el registro no existe, lo insertamos
+                query = """
+                    INSERT INTO rondas_jugadores (id_ronda, id_jugador, apuesta, puntos_inicio, puntos_fin, gano)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                """
+                cursor.execute(query, (id_ronda, id_jugador, apuesta, puntos_inicio, puntos_fin, gano))
+                connection.commit()
+                print(f"Datos de ronda para el jugador {id_jugador} insertados correctamente.")
+
     except Error as e:
-        print(f"Error al insertar datos de ronda: {e}")
-    
+        print(f"Error al insertar o actualizar los datos de ronda: {e}")
+
     finally:
         if connection.is_connected():
             connection.close()
 
-         
+
+
 '''
-'''
+****
 #inserte tanto los datos de la partida como de la ronda, de acuerdo con la lógica de las partidas y las rondas.
 def insertBBDD_player_game_round(player_game_round, partida_id):
     # player_game_round es un diccionario con la información de la ronda y los jugadores
@@ -256,15 +258,21 @@ def insertBBDD_player_game_round(player_game_round, partida_id):
     finally:
         if connection.is_connected():
             connection.close()
-
+*****
 '''
 #def removeBBDDPlayer():
     # Función que nos muestra los jugadores disponibles en BBDD, y elimina el que
     # seleccionemos
-'''
+
+
+import mysql.connector
+from mysql.connector import Error
+
+# Borrar Jugador
 
 def removeBBDDPlayer():
     try:
+        # Establecer la conexión con la base de datos
         connection = mysql.connector.connect(
             host='acd-game1.mysql.database.azure.com',
             user='ACD_USER',
@@ -273,30 +281,40 @@ def removeBBDDPlayer():
         )
         if connection.is_connected():
             cursor = connection.cursor()
+
+            # Consultar todos los jugadores
             cursor.execute("SELECT id_jugador, nombre FROM jugadores;")
             jugadores = cursor.fetchall()
 
-            # Mostrar los jugadores
-            print("ID Jugador | Nombre")
-            for jugador in jugadores:
-                print(f"{jugador[0]} | {jugador[1]}")
+            if jugadores:
+                # Mostrar los jugadores disponibles
+                print("ID Jugador | Nombre")
+                for jugador in jugadores:
+                    print(f"{jugador[0]} | {jugador[1]}")
 
-            # Eliminar jugador
-            jugador_id = input("Introduce el ID del jugador que deseas eliminar: ")
-            cursor.execute("DELETE FROM jugadores WHERE id_jugador = %s;", (jugador_id,))
-            connection.commit()
-            print(f"Jugador con ID {jugador_id} eliminado.")
+                # Solicitar el ID del jugador a eliminar
+                jugador_id = input("Introduce el ID del jugador que deseas eliminar: ")
+
+                # Verificar si el jugador existe en la lista
+                if any(jugador[0] == jugador_id for jugador in jugadores):
+                    # Eliminar el jugador de la base de datos
+                    cursor.execute("DELETE FROM jugadores WHERE id_jugador = %s;", (jugador_id,))
+                    connection.commit()
+                    print(f"Jugador con ID {jugador_id} eliminado correctamente.")
+                else:
+                    print("El jugador ingresado no existe.")
+            else:
+                print("No hay jugadores en la base de datos.")
+
     except Error as e:
         print(f"Error al eliminar jugador: {e}")
     finally:
         if connection.is_connected():
             connection.close()
 
-'''
 
-#def savePlayer(nif,name,risk,human):
     # Función que guarda en BBDD un nuevo jugador.
-'''
+
 
 def savePlayer(nif, name, risk, human):
     try:
@@ -322,10 +340,11 @@ def savePlayer(nif, name, risk, human):
             connection.close()
 
 '''
+Funcion duplicada con remove
 
 #def delBBDDPlayer(nif):
     # Función que elimina un jugador de la BBDD
-'''
+
 
 def delBBDDPlayer(nif):
     try:
@@ -346,43 +365,79 @@ def delBBDDPlayer(nif):
         if connection.is_connected():
             connection.close()
 
-'''
+
 #def getBBDDRanking():
     # Función que crea la vista player_earnings, y retorna un diccionario con los datos de
     # ésta,
     # player_id | earnings | games_played | minutes_played.
 '''
 
+
+import mysql.connector
+from mysql.connector import Error
+import time
+
+
 def getBBDDRanking():
     try:
-         connection = mysql.connector.connect(
+        # Conexión a la base de datos
+        connection = mysql.connector.connect(
             host='acd-game1.mysql.database.azure.com',
             user='ACD_USER',
             password='P@ssw0rd',
             database='acd_game'
         )
-        if connection.is_connected():
-            cursor = connection.cursor()
-            # Crear la vista player_earnings
-            cursor.execute("""
-                CREATE OR REPLACE VIEW player_earnings AS
-                SELECT id_jugador, SUM(puntos) AS earnings, COUNT(*) AS games_played
-                FROM player_game
-                GROUP BY id_jugador;
-            """)
-            # Recuperar los datos de la vista
-            cursor.execute("SELECT * FROM player_earnings;")
-            ranking = cursor.fetchall()
 
-            # Crear el diccionario con el ranking
-            ranking_dict = {row[0]: {"earnings": row[1], "games_played": row[2]} for row in ranking}
-            return ranking_dict
-    except Error as e:
-        print(f"Error al obtener ranking: {e}")
-        return {}
-    finally:
         if connection.is_connected():
+            # Creamos el cursor
+            cursor = connection.cursor()
+
+            # Consultar jugadores (humanos y bots)
+            query_players = """
+                          SELECT j.id_jugador, j.nombre, 
+                          IFNULL(SUM(pj.puntos_finales - pj.puntos_iniciales), 0) AS puntos
+                          FROM jugadores j
+                          LEFT JOIN partidas_jugadores pj ON j.id_jugador = pj.id_jugador
+                          GROUP BY j.id_jugador, j.nombre
+                          ORDER BY puntos DESC;
+                      """
+            cursor.execute(query_players)
+            players = cursor.fetchall()
+
+            # Ordenar los jugadores por puntos (nivel_riesgo) de mayor a menor
+            players_sorted = sorted(players, key=lambda x: x[2], reverse=True)
+
+            # Mostrar título centrado
+            print("*" * 140)
+            print(f"{' ' * 50}{'Ranking'.center(40)}")
+            print("-" * 140)
+            print(f"{'ID':<20}{'Name':<30}{'Points':<10}")
+            print("-" * 140)
+
+            # Mostrar los jugadores ordenados
+            for player in players_sorted:
+                print(f"{player[0]:<20} {player[1]:<30} {player[2]:<10}")
+
+            print("*" * 140)
+
+    except Error as e:
+        print(f"Error al obtener jugadores o ranking: {e}")
+    finally:
+        if 'connection' in locals() and connection.is_connected():
             connection.close()
+            print("Conexión cerrada.")
+
+    # Código principal para ejecutar la función
+
+
+if __name__ == "__main__":
+    try:
+        # Llamamos a la función de jugadores y ranking
+        getBBDDRanking()
+
+    except Exception as e:
+        print(f"Error inesperado: {e}")
+
 '''
 
 #def getPlayers():
@@ -390,9 +445,23 @@ def getBBDDRanking():
     # contextGame[“players”]
 '''
 
+import mysql.connector
+from mysql.connector import Error
+
+# Diccionario para almacenar el contexto del juego
+contextGame = {}
+
+import mysql.connector
+from mysql.connector import Error
+
+# Diccionario para almacenar el contexto del juego
+contextGame = {}
+
+
 def getPlayers():
+    """Obtiene los jugadores y los guarda en un diccionario con id_jugador como clave y nombre como valor."""
     try:
-         connection = mysql.connector.connect(
+        connection = mysql.connector.connect(
             host='acd-game1.mysql.database.azure.com',
             user='ACD_USER',
             password='P@ssw0rd',
@@ -402,18 +471,34 @@ def getPlayers():
             cursor = connection.cursor()
             cursor.execute("SELECT id_jugador, nombre FROM jugadores;")
             players = cursor.fetchall()
-            contextGame["players"] = [{"id": player[0], "name": player[1]} for player in players]
+
+            # Guardar los jugadores en un diccionario con id_jugador como clave
+            contextGame["players"] = {player[0]: player[1] for player in players}
             return contextGame["players"]
     except Error as e:
         print(f"Error al obtener jugadores: {e}")
-        return []
+        return {}  # Devolver un diccionario vacío en caso de error
     finally:
         if connection.is_connected():
             connection.close()
-            
-cris
-'''
 
+
+# Código principal para ejecutar la función
+if __name__ == "__main__":
+    try:
+        # Llamamos a la función para obtener los jugadores
+        players = getPlayers()
+
+        # Verificamos si hay jugadores en el diccionario
+        if isinstance(players, dict) and players:
+            print("Jugadores obtenidos:")
+            for player_id, player_name in players.items():
+                print(f"ID: {player_id}, Nombre: {player_name}")
+        else:
+            print("No se han encontrado jugadores o hay un error.")
+
+    except Exception as e:
+        print(f"Error inesperado: {e}")
 
 import mysql.connector
 from mysql.connector import Error
