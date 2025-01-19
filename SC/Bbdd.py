@@ -736,9 +736,9 @@ def card_BBDD():
             for row in rows:
                 card_data = {
                     "literal": row['nombre'],
-                    "value": row['valor_juego'],
+                    "value": float(row['valor_juego']),
                     "priority": row['priority'],
-                    "realValue": row['realValue']
+                    "realValue": float(row['realValue'])
                 }
                 if row['id_carta'].startswith("ES_"):
                     cartas_es[row['id_carta']] = card_data
