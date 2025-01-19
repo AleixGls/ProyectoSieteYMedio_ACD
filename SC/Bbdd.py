@@ -59,8 +59,6 @@ def insertBBDD_player_game(id_partida, id_jugador, puntos_iniciales, puntos_fina
         if connection.is_connected():
             connection.close()
 
-
-
 def savePlayer(dni, nombre, risk, human):
     try:
         # Conecta a la base de datos
@@ -84,7 +82,6 @@ def savePlayer(dni, nombre, risk, human):
             cursor.close()
             time.sleep(1)
             
-
     except Error as e:
         # Manejando el error de duplicidad del id_jugador
         if "duplicate" in str(e).lower():
@@ -196,28 +193,7 @@ def getBBDDRanking():
 
 
 def getPlayers():
-    """Obtiene los jugadores y los guarda en un diccionario con id_jugador como clave y nombre como valor."""
-    try:
-        connection = mysql.connector.connect(
-            host='acd-game1.mysql.database.azure.com',
-            user='ACD_USER',
-            password='P@ssw0rd',
-            database='acd_game'
-        )
-        if connection.is_connected():
-            cursor = connection.cursor()
-            cursor.execute("SELECT id_jugador, nombre FROM jugadores;")
-            players = cursor.fetchall()
-
-            # Guardar los jugadores en un diccionario con id_jugador como clave
-            Dt.context_game["players"] = {player[0]: player[1] for player in players}
-            return Dt.context_game["players"]
-    except Error as e:
-        print(f"Error al obtener jugadores: {e}")
-        return {}  # Devolver un diccionario vacío en caso de error
-    finally:
-        if connection.is_connected():
-            connection.close()
+    pass
 
 def removeBBDDPlayer():
     try:
