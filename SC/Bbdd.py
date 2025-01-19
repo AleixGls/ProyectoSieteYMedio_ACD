@@ -1,5 +1,4 @@
 import mysql.connector
-
 from mysql.connector import Error
 
 
@@ -40,7 +39,7 @@ finally:
 
 
 
-#def insertBBDDCardgame(cardgame):
+
     # Función que guarda un nuevo registro en la tabla cardgame.
     # Esta función debería llamarse justo después de acabar una partida.
 
@@ -73,12 +72,12 @@ def insertBBDDCardgame(baraja_id, num_jugadores, num_rondas, hora_fin):
 
 
 
-'''
-#def insertBBDD_player_game(player_game,cardgame_id):
+
+
      #Función que guarda en la tabla player_game de la BBDD el diccionario
      #player_game.
      #Esta función debería llamarse justo después de acabar una partida
-'''
+
 
 def insertBBDD_player_game(id_partida, id_jugador, puntos_iniciales, puntos_finales, es_banca):
     try:
@@ -106,7 +105,7 @@ def insertBBDD_player_game(id_partida, id_jugador, puntos_iniciales, puntos_fina
         if connection.is_connected():
             connection.close()
 
-
+#fundion inserta un jugador en la bbdd
 
 def insert_player_game(dni, nombre, risk, human):
     try:
@@ -142,7 +141,7 @@ def insert_player_game(dni, nombre, risk, human):
         if connection.is_connected():
             connection.close()
 
-#def insertBBDD_player_game_round(player_game_round,cardgame_id):
+
     # Función que guarda en la tabla player_game_round de la BBDD el diccionario
     # player_game_round.
     # Esta función debería llamarse justo después de acabar una partida.
@@ -164,8 +163,6 @@ def insert_player_game(dni, nombre, risk, human):
     #   Establecer nueva banca si es necesario.
     # Insertar en BBDD los diccionarios creados para tal propósito.
     # Mostrar el ganador.
-
-
 
 import mysql.connector
 from mysql.connector import Error
@@ -221,7 +218,7 @@ def insertBBDD_player_game_round(id_ronda, id_jugador, apuesta, puntos_inicio, p
 
 
 '''
-****
+
 #inserte tanto los datos de la partida como de la ronda, de acuerdo con la lógica de las partidas y las rondas.
 def insertBBDD_player_game_round(player_game_round, partida_id):
     # player_game_round es un diccionario con la información de la ronda y los jugadores
@@ -260,10 +257,6 @@ def insertBBDD_player_game_round(player_game_round, partida_id):
             connection.close()
 *****
 '''
-#def removeBBDDPlayer():
-    # Función que nos muestra los jugadores disponibles en BBDD, y elimina el que
-    # seleccionemos
-
 
 import mysql.connector
 from mysql.connector import Error
@@ -313,8 +306,8 @@ def removeBBDDPlayer():
             connection.close()
 
 
-    # Función que guarda en BBDD un nuevo jugador.
 
+# Función que guarda en BBDD un nuevo jugador.
 
 def savePlayer(nif, name, risk, human):
     try:
@@ -377,7 +370,7 @@ import mysql.connector
 from mysql.connector import Error
 import time
 
-
+#funcion ranking puntos mayor a menor y tiempo jugado
 def getBBDDRankingPoint():
     try:
         # Conexión a la base de datos
@@ -438,6 +431,8 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Error inesperado: {e}")
 
+#funcion puntos
+
 def getBBDDRanking():
     try:
         # Conexión a la base de datos
@@ -494,19 +489,15 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Error inesperado: {e}")
 
-'''
 
-#def getPlayers():
-    # Función que extrae los jugadores definidos en la BBDD y los almacena en el diccionario
-    # contextGame[“players”]
-'''
+# Función que extrae los jugadores definidos en la BBDD y los almacena en el diccionario
+# contextGame[“players”]
 
 import mysql.connector
 from mysql.connector import Error
 
 # Diccionario para almacenar el contexto del juego
 contextGame = {}
-
 
 def getPlayers():
     """Obtiene los jugadores y los guarda en un diccionario con id_jugador como clave y nombre como valor."""
@@ -549,6 +540,8 @@ if __name__ == "__main__":
 
     except Exception as e:
         print(f"Error inesperado: {e}")
+
+#funcion detallada de los jugadores
 
 def getPlayerDetails():
     """Obtiene los detalles de los jugadores y los guarda en un diccionario estructurado."""
