@@ -550,11 +550,87 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Error inesperado: {e}")
 
-import mysql.connector
-from mysql.connector import Error
+def getPlayerDetails():
+    """Obtiene los detalles de los jugadores y los guarda en un diccionario estructurado."""
+    try:
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+        if connection.is_connected():
+            cursor = connection.cursor(dictionary=True)
+            query = """
+                SELECT 
+                    j.id_jugador,
+                    j.nombre AS player_name,
+                    j.es_humano AS human,
+                    pj.es_banca AS bank,
+                    IFNULL(MAX(c.nombre), '') AS initial_card,
+                    j.nivel_riesgo AS priority,
+                    tb.nombre_tipo AS card_type,
+                    IFNULL(MAX(rj.apuesta), 0) AS bet,
+                    IFNULL(SUM(rj.puntos_fin - rj.puntos_inicio), 0) AS round_points,
+                    IFNULL(SUM(pj.puntos_finales - pj.puntos_iniciales), 0) AS total_points,
+                    IFNULL(GROUP_CONCAT(c.nombre SEPARATOR ', '), '') AS cards
+                FROM jugadores j
+                LEFT JOIN partidas_jugadores pj ON j.id_jugador = pj.id_jugador
+                LEFT JOIN partidas p ON pj.id_partida = p.id_partida
+                LEFT JOIN rondas_jugadores rj ON j.id_jugador = rj.id_jugador
+                LEFT JOIN cartas_jugadores cj ON j.id_jugador = cj.id_jugador
+                LEFT JOIN cartas c ON cj.id_carta = c.id_carta
+                LEFT JOIN tipos_barajas tb ON c.id_tipo_baraja = tb.id_tipo_baraja
+                GROUP BY j.id_jugador, j.nombre, j.es_humano, pj.es_banca, j.nivel_riesgo, tb.nombre_tipo
+                ORDER BY j.id_jugador;
+            """
+            cursor.execute(query)
+            players = cursor.fetchall()
 
-import mysql.connector
-from mysql.connector import Error
+            # Formatear los datos como un diccionario estructurado
+            contextGame["players"] = {
+                player["id_jugador"]: {
+                    "name": player["player_name"],
+                    "human": bool(player["human"]),
+                    "bank": bool(player["bank"]),
+                    "initialCard": player["initial_card"],
+                    "priority": player["priority"],
+                    "type": player["card_type"],
+                    "bet": player["bet"],
+                    "points": player["total_points"],
+                    "cards": player["cards"].split(', ') if player["cards"] else [],
+                    "roundPoints": player["round_points"],
+                }
+                for player in players
+            }
+            return contextGame["players"]
+    except Error as e:
+        print(f"Error al obtener los detalles de los jugadores: {e}")
+        return {}
+    finally:
+        if connection.is_connected():
+            connection.close()
+            print("Conexión cerrada.")
+
+
+# Código principal para ejecutar la función y verificar los datos
+if __name__ == "__main__":
+    try:
+        # Llamamos a la función para obtener los detalles de los jugadores
+        players = getPlayerDetails()
+
+        # Verificamos si se obtuvieron datos correctamente
+        if isinstance(players, dict) and players:
+            print("Detalles de los jugadores obtenidos correctamente:")
+            for player_id, details in players.items():
+                print(f"\nID: {player_id}")
+                for key, value in details.items():
+                    print(f"  {key.capitalize()}: {value}")
+        else:
+            print("No se han encontrado jugadores o ocurrió un error.")
+    except Exception as e:
+        print(f"Error inesperado: {e}")
+
 
 def get_all_players():
     try:
