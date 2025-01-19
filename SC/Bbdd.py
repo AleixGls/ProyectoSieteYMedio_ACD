@@ -377,7 +377,7 @@ import mysql.connector
 from mysql.connector import Error
 import time
 
-# muestra el ranking ordenado por puntos mayor a menor
+
 def getBBDDRankingPoint():
     try:
         # Conexión a la base de datos
@@ -438,7 +438,6 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Error inesperado: {e}")
 
-# ranking por puntos y tiempo jugado
 def getBBDDRanking():
     try:
         # Conexión a la base de datos
@@ -721,78 +720,3 @@ def delete_player(connection, id_jugador):
             print(f"No se encontró ningún jugador con ID {id_jugador}.")
     except Error as e:
         print(f"Error al eliminar jugador: {e}")
-
-def getCardsDetails():
-    """Obtiene los detalles de las cartas y las guarda en un diccionario estructurado."""
-    try:
-        connection = mysql.connector.connect(
-            host='acd-game1.mysql.database.azure.com',
-            user='ACD_USER',
-            password='P@ssw0rd',
-            database='acd_game'
-        )
-        if connection.is_connected():
-            cursor = connection.cursor(dictionary=True)
-            query = """
-                SELECT 
-                    c.id_carta,
-                    c.id_tipo_baraja,
-                    c.nombre AS card_name,
-                    c.valor_juego AS game_value,
-                    c.palo AS suit,
-                    c.priority AS priority,
-                    c.realValue AS real_value
-                FROM cartas c
-                ORDER BY c.id_carta;
-            """
-            cursor.execute(query)
-            cards = cursor.fetchall()
-
-            # Comprobación de que se obtuvieron cartas
-            if not cards:
-                print("No se encontraron cartas en la base de datos.")
-                return {}
-
-            # Formatear los datos como un diccionario estructurado
-            cards_dict = {
-                card["id_carta"]: {
-                    "id_tipo_baraja": card["id_tipo_baraja"],
-                    "name": card["card_name"],
-                    "gameValue": card["game_value"],
-                    "suit": card["suit"],
-                    "priority": card["priority"],
-                    "realValue": card["real_value"]
-                }
-                for card in cards
-            }
-
-            # Mostrar el diccionario de cartas
-            print(cards_dict)
-
-            return cards_dict
-    except Error as e:
-        print(f"Error al obtener los detalles de las cartas: {e}")
-        return {}
-    finally:
-        if connection.is_connected():
-            connection.close()
-            print("Conexión cerrada.")
-
-
-# Código principal para ejecutar la función y verificar los datos
-if __name__ == "__main__":
-    try:
-        # Llamamos a la función para obtener los detalles de las cartas
-        cards = getCardsDetails()
-
-        # Verificamos si se obtuvieron datos correctamente
-        if isinstance(cards, dict) and cards:
-            print("\nDetalles de las cartas obtenidos correctamente:")
-            for card_id, details in cards.items():
-                print(f"\nID de Carta: {card_id}")
-                for key, value in details.items():
-                    print(f"  {key.capitalize()}: {value}")
-        else:
-            print("No se han encontrado cartas o ocurrió un error.")
-    except Exception as e:
-        print(f"Error inesperado: {e}")
