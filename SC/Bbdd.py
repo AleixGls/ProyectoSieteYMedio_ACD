@@ -378,7 +378,7 @@ from mysql.connector import Error
 import time
 
 
-def getBBDDRanking():
+def getBBDDRankingPoint():
     try:
         # Conexión a la base de datos
         connection = mysql.connector.connect(
@@ -433,6 +433,62 @@ def getBBDDRanking():
 if __name__ == "__main__":
     try:
         # Llamamos a la función de jugadores y ranking
+        getBBDDRankingPoint()
+
+    except Exception as e:
+        print(f"Error inesperado: {e}")
+
+def getBBDDRanking():
+    try:
+        # Conexión a la base de datos
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+
+        if connection.is_connected():
+            # Creamos el cursor
+            cursor = connection.cursor()
+
+            # Consultar jugadores (humanos y bots) y minutos jugados
+            query_players = """
+                          SELECT j.id_jugador, j.nombre, 
+                          IFNULL(SUM(pj.puntos_finales - pj.puntos_iniciales), 0) AS puntos,
+                          IFNULL(SUM(TIMESTAMPDIFF(MINUTE, p.hora_inicio, p.hora_fin)), 0) AS minutos_jugados
+                          FROM jugadores j
+                          LEFT JOIN partidas_jugadores pj ON j.id_jugador = pj.id_jugador
+                          LEFT JOIN partidas p ON p.id_partida = pj.id_partida
+                          GROUP BY j.id_jugador, j.nombre
+                          ORDER BY minutos_jugados DESC;
+                      """
+            cursor.execute(query_players)
+            players = cursor.fetchall()
+
+            # Mostrar título centrado
+            print("*" * 140)
+            print(f"{' ' * 50}{'Ranking'.center(40)}")
+            print("-" * 140)
+            print(f"{'ID':<20}{'Name':<30}{'Minutos Jugados':<20}{'Points':<10}")
+            print("-" * 140)
+
+            # Mostrar los jugadores ordenados
+            for player in players:
+                print(f"{player[0]:<20} {player[1]:<30} {player[3]:<20} {player[2]:<10}")
+
+            print("*" * 140)
+
+    except Error as e:
+        print(f"Error al obtener jugadores o ranking: {e}")
+    finally:
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+            print("Conexión cerrada.")
+
+# Ejecutar la función
+if __name__ == "__main__":
+    try:
         getBBDDRanking()
 
     except Exception as e:
