@@ -1,5 +1,8 @@
 import random
 import SC.Datos as Dt
+import SC.Utilidad as Ut
+import SC.Cabeceras as Cb
+
 
 
 def playGame():
@@ -326,57 +329,64 @@ def printWinner():
     orderPlayersByPoints(Dt.context_game["game"])
     winner_id = Dt.context_game["game"][0]
     winner = Dt.context_game["players"][winner_id]
-    print(f"El ganador es {winner['name']} con {winner['points']} puntos!")
-    input("Enter para continuar")
+    Ut.clear_terminal()
+    print(Cb.cabecera05)
+    print(f"The winner is {winner['name']} with {winner['points']} points!".center(127))
+    input("Press Enter to continue...".center(127))
 
 def printStats(idPlayer="", titulo=""):
-    if titulo:
-        print(titulo)
-    
-    # Definir el formato de las columnas
-    header_format = "{:<15} {:<15} {:<15} {:<15} {:<15} {:<15} {:<15}"
-    row_format = "{:<15} {:<15} {:<15} {:<15} {:<15} {:<15} {:<15}"
-    
-    # Mostrar el encabezado
-    print(header_format.format(
-        "Name", "Human", "Priority", "Type", "Bank", "Bet", "Points"
-    ))
-    
-    # Determinar los jugadores a mostrar
-    if idPlayer:
-        # Mostrar solo un jugador específico
-        players_to_show = [idPlayer]
-    else:
-        # Mostrar todos los jugadores en la partida (hasta un máximo de 6)
-        players_to_show = Dt.context_game["game"][:6]
-    
-    # Mostrar las estadísticas de los jugadores
-    for player_id in players_to_show:
-        player = Dt.context_game["players"][player_id]
-        print(row_format.format(
-            player["name"],
-            str(player["human"]),
-            str(player["priority"]),
-            str(player["type"]),
-            str(player["bank"]),
-            str(player["bet"]),
-            str(player["points"])
+    while True:
+        if titulo:
+            print(titulo)
+
+        # Definir el formato de las columnas
+        header_format = "{:<15} {:<15} {:<15} {:<15} {:<15} {:<15} {:<15}"
+        row_format = "{:<15} {:<15} {:<15} {:<15} {:<15} {:<15} {:<15}"
+
+        # Mostrar el encabezado
+        print(header_format.format(
+            "Name", "Human", "Priority", "Type", "Bank", "Bet", "Points"
         ))
+
+        # Determinar los jugadores a mostrar
+        if idPlayer:
+            # Mostrar solo un jugador específico
+            players_to_show = [idPlayer]
+        else:
+            # Mostrar todos los jugadores en la partida (hasta un máximo de 6)
+            players_to_show = Dt.context_game["game"][:6]
+
+        # Mostrar las estadísticas de los jugadores
+        for player_id in players_to_show:
+            player = Dt.context_game["players"][player_id]
+            print(row_format.format(
+                player["name"],
+                str(player["human"]),
+                str(player["priority"]),
+                str(player["type"]),
+                str(player["bank"]),
+                str(player["bet"]),
+                str(player["points"])
+            ))
+        print()
+        input("Press Enter to return...")
+        break
 
 def printPlayerStats(id):
     player = Dt.context_game["players"][id]
     while True:
         print(f"name {player['name']}")
-        print(f"type {player['type']}")
-        print(f"human {player['human']}")
-        print(f"bank {player['bank']}")
-        print(f"initialCard {player['initialCard']}")
-        print(f"priority {player['priority']}")
-        print(f"bet {player['bet']}")
-        print(f"points {player['points']}")
-        print(f"cards {' '.join(player['cards'])}")  # Mostrar las cartas como una cadena separada por espacios
-        print(f"roundPoints {player['roundPoints']}")
-        input("Enter para volver")
+        print(f"type: {player['type']}")
+        print(f"human: {player['human']}")
+        print(f"bank: {player['bank']}")
+        print(f"Initial Card: {player['initialCard']}")
+        print(f"Priority: {player['priority']}")
+        print(f"Bet: {player['bet']}")
+        print(f"Points: {player['points']}")
+        print(f"Cards: {' '.join(player['cards'])}")  # Mostrar las cartas como una cadena separada por espacios
+        print(f"Round Points: {player['roundPoints']}")
+        print()
+        input("Press Enter to return...")
         break
 
 def newPlayer(dni, name, profile, human):
@@ -435,6 +445,11 @@ def setBets():
             # Jugador bot: apostar un porcentaje de sus puntos según su perfil de riesgo
             percentage = player["type"]  # El tipo del jugador (30, 40 o 50)
             bet_amount = int(player["points"] * (percentage / 100))  # Calcular el porcentaje y truncar
+            
+            # Asegurarse de que la apuesta no sea 0
+            if bet_amount == 0:
+                bet_amount = 1  # Apostar al menos 1 punto
+            
             player["bet"] = bet_amount
             print(f"{player['name']} (bot) apuesta {bet_amount} puntos ({percentage}% de sus puntos).")
 
