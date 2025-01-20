@@ -26,33 +26,63 @@
     </header>
 
     <section class="programacion-intro">
-        <h1>Documentación de la Programación</h1>
-        <p>En esta sección se explica cómo se han resuelto diversos aspectos de la programación del juego.</p>
+        <h1>Documentación Técnica</h1>
+        <p>En esta sección, describimos cómo se resolvieron los aspectos técnicos clave del juego. Se detallan las decisiones tomadas en la programación y las estrategias utilizadas.</p>
     </section>
 
     <section class="programacion-details">
         <div class="programacion-item">
-            <h2>Lógica de Juego de la Banca</h2>
+            <h2>Lógica del Juego de la Banca</h2>
             <p>
-                La banca es la última en jugar. Su comportamiento se define de manera que actúa sólo cuando todos los jugadores han tomado su turno. La banca siempre intenta conseguir una mano lo más alta posible, sin pasarse de 7 y medio. Si su mano está por debajo de 5 puntos, la banca toma una nueva carta. Si tiene entre 5 y 7 puntos, decidirá si toma otra carta dependiendo de su estrategia.
+                La banca juega después de todos los jugadores y sigue estas reglas:
             </p>
+            <ul>
+                <li>Si ya tiene 7.5, se planta automáticamente.</li>
+                <li>Si se pasa de 7.5, no puede pedir más cartas.</li>
+                <li>Si no supera a ningún jugador y corre riesgo de eliminación, pide una carta adicional incluso si es arriesgado.</li>
+                <li>Si ya gana a todos los jugadores, no pide más cartas.</li>
+            </ul>
+            <p>Se implementó en Python en la función <code>bank_logic</code>, la cual analiza las cartas actuales de la banca y los jugadores.</p>
         </div>
         <div class="programacion-item">
             <h2>Lógica del Juego de un Bot</h2>
             <p>
-                El bot en el juego sigue una serie de reglas predefinidas. Si su puntuación es inferior a 5, siempre tomará otra carta. Si tiene entre 5 y 6 puntos, el bot toma una carta sólo si las probabilidades de mejorar su mano son altas. Si tiene más de 6 puntos, el bot se plantará y no tomará más cartas.
+                Los bots tienen un perfil de riesgo que afecta sus decisiones:
+            </p>
+            <ul>
+                <li><b>Prudente:</b> Se planta si la probabilidad de pasarse es superior al 30%.</li>
+                <li><b>Normal:</b> Se planta si la probabilidad de pasarse es superior al 40%.</li>
+                <li><b>Atrevido:</b> Se planta solo si la probabilidad de pasarse supera el 50%.</li>
+            </ul>
+            <p>
+                Estas reglas se calcularon usando la función <code>chance_exceeding_seven_and_half</code>, que determina la probabilidad de pasarse basándose en las cartas restantes en el mazo.
             </p>
         </div>
         <div class="programacion-item">
             <h2>Establecimiento de la Prioridad Inicial de los Jugadores</h2>
             <p>
-                Al iniciar el juego, los jugadores se ordenan aleatoriamente para determinar quién comienza. Esta orden se genera automáticamente al azar, pero puede modificarse si así se decide en las configuraciones del juego. El orden influye en el flujo de la partida, ya que cada jugador actúa antes que el siguiente, seguido de la banca al final.
+                Para determinar quién será la banca inicial, se reparte una carta a cada jugador. Si hay empate en el valor de las cartas, se resuelve usando la prioridad de los palos:
             </p>
+            <ol>
+                <li><b>Oros:</b> Prioridad más alta.</li>
+                <li><b>Copas:</b> Segunda prioridad.</li>
+                <li><b>Espadas:</b> Tercera prioridad.</li>
+                <li><b>Bastos:</b> Menor prioridad.</li>
+            </ol>
+            <p>La función <code>set_game_priority</code> gestiona este proceso al inicio de cada partida.</p>
         </div>
         <div class="programacion-item">
             <h2>Inserción en BBDD de los Datos del Juego</h2>
             <p>
-                Los resultados de cada partida, incluyendo la puntuación final de cada jugador, el nombre de los participantes, y la fecha, se guardan en una base de datos para su posterior análisis. Cada vez que se finaliza una partida, se realiza una consulta SQL para insertar los datos relevantes en la tabla correspondiente de la base de datos.
+                Durante el juego, los datos se registran en la base de datos MySQL para garantizar la persistencia. Los datos registrados incluyen:
+            </p>
+            <ul>
+                <li>Datos de cada partida: ID de la partida, número de rondas, baraja utilizada, hora de inicio y fin.</li>
+                <li>Datos de los jugadores: ID del jugador, puntos iniciales y finales, y sus apuestas.</li>
+                <li>Datos de las rondas: Puntos obtenidos por cada jugador y cartas jugadas.</li>
+            </ul>
+            <p>
+                Estas operaciones se implementaron en funciones como <code>insertBBDDCardgame</code>, <code>insertBBDD_player_game</code> y <code>insertBBDD_player_game_round</code>.
             </p>
         </div>
     </section>
