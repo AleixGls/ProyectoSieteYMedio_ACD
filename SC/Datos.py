@@ -266,4 +266,5 @@ context_game = {
 
     "round":0,      #Ronda actual
     "maxRounds":5,   #Rondas maximas de la partida
+    "round_history":[]
 }
