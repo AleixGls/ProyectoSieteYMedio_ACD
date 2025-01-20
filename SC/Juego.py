@@ -3,6 +3,7 @@ import SC.Datos as Dt
 import SC.Utilidad as Ut
 import SC.Cabeceras as Cb
 import time
+import random
 
 
 def playGame():
@@ -13,6 +14,7 @@ def playGame():
         input("Press Enter to return...".center(127))
         return
     
+    ID_partida =  random.randrange(100000000,999999999)
     Dt.context_game["round"] = 0  # Inicializar el contador de rondas
     resetPoints()
     
@@ -25,7 +27,7 @@ def playGame():
     # Comenzar las rondas
     while Dt.context_game["round"] < Dt.context_game["maxRounds"] and checkMinimun2PlayerWithPoints():
         Dt.context_game["round"] += 1
-        print(f"\n--- Ronda {Dt.context_game['round']} ---")
+        print(f" Ronda {Dt.context_game['round']} ".center(127,"="))
         
         # Reiniciar el historial de la ronda
         Dt.context_game["round_history"] = []
@@ -93,6 +95,7 @@ def setGamePriority(mazo):
         Dt.context_game["players"][new_bank_id]["bank"] = True
         print(f"{Dt.context_game['players'][new_bank_id]['name']} es la banca en esta ronda.")
         addToRoundHistory(str(f"{Dt.context_game['players'][new_bank_id]['name']} es la banca en esta ronda."))
+        time.sleep(1.2)
 
 def resetPoints():
     for player_id in Dt.context_game["players"]:
@@ -111,6 +114,7 @@ def standarRound(id, mazo):
         if probability > player["type"]:
             print(f"{player['name']} se planta con {player['roundPoints']} puntos.")
             addToRoundHistory(str(f"{player['name']} se planta con {player['roundPoints']} puntos."))
+            time.sleep(1.2)
             break
         
         # Pedir una carta
@@ -118,14 +122,17 @@ def standarRound(id, mazo):
         player["cards"].append(card)
         player["roundPoints"] += Dt.context_game["cards_deck"][card]["value"]
         print(f"{player['name']} ha recibido: {Dt.context_game['cards_deck'][card]['literal']}")
+        time.sleep(1.2)
         print(f"Puntos actuales en esta ronda: {player['roundPoints']}")
         addToRoundHistory(str(f"{player['name']} ha recibido: {Dt.context_game['cards_deck'][card]['literal']}"))
         addToRoundHistory(str(f"Puntos actuales de {player["name"]} en esta ronda: {player['roundPoints']}"))
+        time.sleep(1.2)
         
         # Verificar si se ha pasado de 7.5
         if player["roundPoints"] > 7.5:
             print(f"{player['name']} se ha pasado de 7.5.")
             addToRoundHistory(str(f"{player['name']} se ha pasado de 7.5."))
+            time.sleep(1.2)
             break
 
 def humanRound(id, mazo):
@@ -460,6 +467,7 @@ def setBets():
             player["bet"] = 0  # La banca no tiene apuesta
             print(f"{player['name']} es la banca y no apuesta.")
             addToRoundHistory(str(f"{player['name']} es la banca y no apuesta."))
+            time.sleep(1.2)
             continue
         
         if player["human"]:
@@ -488,6 +496,7 @@ def setBets():
             player["bet"] = bet_amount
             print(f"{player['name']} (bot) apuesta {bet_amount} puntos.")
             addToRoundHistory(str(f"{player['name']} (bot) apuesta {bet_amount} puntos."))
+            time.sleep(1.2)
 
 def addCardsToMaze():
     for card_key in Dt.context_game["cards_deck"]:
@@ -531,18 +540,19 @@ def dealInitialCardToPlayers(mazo):
         Dt.context_game["players"][player_id]["roundPoints"] += Dt.context_game["cards_deck"][card]["value"]
         print(f"{Dt.context_game['players'][player_id]['name']} ha recibido: {Dt.context_game['cards_deck'][card]['literal']}")
         addToRoundHistory(str(f"{Dt.context_game['players'][player_id]['name']} ha recibido: {Dt.context_game['cards_deck'][card]['literal']}"))
+        time.sleep(1.2)
 
 def addToRoundHistory(text):
     Dt.context_game["round_history"].append(text)
 
 def printRoundHistory():
-    """
-    Muestra el historial de la ronda con todos los detalles.
-    """
+    # Muestra el historial de la ronda con todos los detalles.
+    Ut.clear_terminal()
+    print(Cb.cabecera06)
     if not Dt.context_game["round_history"]:
         print("El historial de la ronda está vacío.")
         return
     
-    print("\n--- Historial de la Ronda ---")
+    print(" Historial de la Ronda ".center(127,"="))
     for entry in range(0,len(Dt.context_game["round_history"])):
         print(Dt.context_game["round_history"][entry])
