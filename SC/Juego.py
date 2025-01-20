@@ -375,18 +375,20 @@ def printStats(idPlayer="", titulo=""):
         break
 
 def printPlayerStats(id):
+    Ut.clear_terminal()
+    print(Cb.cabecera06)
     player = Dt.context_game["players"][id]
     while True:
-        print(f"name {player['name']}")
-        print(f"type: {player['type']}")
-        print(f"human: {player['human']}")
-        print(f"bank: {player['bank']}")
-        print(f"Initial Card: {player['initialCard']}")
-        print(f"Priority: {player['priority']}")
-        print(f"Bet: {player['bet']}")
-        print(f"Points: {player['points']}")
-        print(f"Cards: {' '.join(player['cards'])}")  # Mostrar las cartas como una cadena separada por espacios
-        print(f"Round Points: {player['roundPoints']}")
+        print(f"Name "         .ljust(14)+f"{player['name']}")
+        print(f"Type: "        .ljust(14)+f"{player['type']}")
+        print(f"Human: "       .ljust(14)+f"{player['human']}")
+        print(f"bank: "        .ljust(14)+f"{player['bank']}")
+        print(f"Initial Card: ".ljust(14)+f"{player['initialCard']}")
+        print(f"Priority: "    .ljust(14)+f"{player['priority']}")
+        print(f"Bet: "         .ljust(14)+f"{player['bet']}")
+        print(f"Points: "      .ljust(14)+f"{player['points']}")
+        print(f"Cards: "       .ljust(14)+f"{' '.join(player['cards'])}")
+        print(f"Round Points: ".ljust(14)+f"{player['roundPoints']}")
         print()
         input("Press Enter to return...")
         break
