@@ -276,5 +276,6 @@ def delBBDDPlayer(connection, id_jugador):
             print(f"No player found with ID {id_jugador}.".center(127))
             time.sleep(1)
     except Error as e:
-        print(f"Error when deleting player: {e}".center(127))
+        print(f"Error when deleting player: This player had matches played. You can't delete this user".center(127))
+        input("Enter to continue... ".center(127))
         time.sleep(1)
