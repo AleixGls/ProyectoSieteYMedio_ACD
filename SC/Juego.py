@@ -2,13 +2,15 @@ import random
 import SC.Datos as Dt
 import SC.Utilidad as Ut
 import SC.Cabeceras as Cb
-
+import time
 
 
 def playGame():
+    Ut.clear_terminal()
+    print(Cb.cabecera06)
     if len(Dt.context_game["game"])<2:
-        print("Necesitas 2 jugadores para empezar")
-        input("Presiona Enter para volver")
+        print("You need 2 players to start".center(127))
+        input("Press Enter to return...".center(127))
         return
     
     Dt.context_game["round"] = 0  # Inicializar el contador de rondas
@@ -23,7 +25,7 @@ def playGame():
     # Comenzar las rondas
     while Dt.context_game["round"] < Dt.context_game["maxRounds"] and checkMinimun2PlayerWithPoints():
         Dt.context_game["round"] += 1
-        print(f"\n--- Ronda {Dt.context_game['round']} ---")
+        print(f" Round {Dt.context_game['round']} ".center(127,"="))
         
         # Establecer las apuestas de los jugadores al inicio de cada ronda
         setBets()
@@ -451,7 +453,7 @@ def setBets():
                 bet_amount = 1  # Apostar al menos 1 punto
             
             player["bet"] = bet_amount
-            print(f"{player['name']} (bot) apuesta {bet_amount} puntos ({percentage}% de sus puntos).")
+            print(f"{player['name']} (bot) apuesta {bet_amount} puntos.")
 
 def addCardsToMaze():
     for card_key in Dt.context_game["cards_deck"]:
@@ -477,7 +479,6 @@ def setInitialPriorities(mazo):
     # Asignar la banca al jugador con la menor prioridad (primero en la lista ordenada)
     new_bank_id = Dt.context_game["game"][0]  # El primer jugador en la lista ordenada
     Dt.context_game["players"][new_bank_id]["bank"] = True
-    print(f"{Dt.context_game['players'][new_bank_id]['name']} es la banca en esta partida.")
 
 def returnInitialCardsToDeck():
     for player_id in Dt.context_game["game"]:
