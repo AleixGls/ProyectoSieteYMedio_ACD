@@ -652,12 +652,6 @@ def get_all_players():
             
             # Imprimir encabezado
             print("*" * 140)
-            print(" " * 35 + " _____  __                            ____                                         ____   __")
-            print(" " * 34 + "/ ___/ / /_   ____  _      __        / __ \\ ___   ____ ___   ____  _   __ ___     / __ \\ / /____ _ __  __ ___   _____ _____")
-            print(" " * 33 + "\\__ \\ / __ \\ / __ \\| | /| / /______ / /_/ // _ \\ / __ `__ \\ / __ \\| | / // _ \\   / /_/ // // __ `// / / // _ \\ / ___// ___/")
-            print(" " * 33 + "___/ // / / // /_/ /| |/ |/ //_____// _, _//  __// / / / / // /_/ /| |/ //  __/  / ____// // /_/ // /_/ //  __// /   (__  )")
-            print(" " * 32 + "/____//_/ /_/ \\____/ |__/|__/       /_/ |_| \\___//_/ /_/ /_/ \\____/ |___/ \\___/  /_/    /_/ \\__,_/ \\__, / \\___//_/   /____/")
-            print(" " * 96 + "/____/")
             print("*" * 140)
             print("*" * 63 + "Select Players" + "*" * 64)
             print(" " * 29 + "Boot Players" + " " * 29 + "||" + " " * 29 + "Human Players")
@@ -665,10 +659,8 @@ def get_all_players():
             print("ID                  Name                     Type                     || ID                  Name                     Type")
             print("*" * 140)
 
-            # Combinar y mostrar datos de bots y humanos
             max_rows = max(len(bots), len(humanos))
             for i in range(max_rows):
-                # Obtener los datos de cada lista
                 bot_data = bots[i] if i < len(bots) else ("", "", "")
                 human_data = humanos[i] if i < len(humanos) else ("", "", "")
                 
@@ -680,7 +672,6 @@ def get_all_players():
             
             print("*" * 140)
             
-            # Entrada del usuario para eliminar jugador
             opc = input("Option ( -id to remove player, -1 to exit): ")
             
             if opc == "-1":
@@ -699,7 +690,6 @@ def get_all_players():
             print("Conexión cerrada.")
 
 
-# Función para eliminar jugador
 def delete_player(connection, id_jugador):
     try:
         cursor = connection.cursor()
@@ -724,7 +714,6 @@ def card_BBDD():
     :return: Tres diccionarios con las cartas en el formato especificado.
     """
     try:
-        # Establecer conexión a la base de datos
         connection = mysql.connector.connect(
             host='acd-game1.mysql.database.azure.com',
             user='ACD_USER',
@@ -735,10 +724,8 @@ def card_BBDD():
         if connection.is_connected():
             print("Conexión exitosa a la base de datos.")
             
-            # Crear cursor para ejecutar la consulta
             cursor = connection.cursor(dictionary=True)
             
-            # Consulta para obtener las cartas
             query = """
             SELECT id_carta, nombre, valor_juego, priority, realValue
             FROM cartas
@@ -746,12 +733,10 @@ def card_BBDD():
             cursor.execute(query)
             rows = cursor.fetchall()
             
-            # Diccionarios para clasificar las cartas
             cartas_es = {}
             cartas_en = {}
             cartas_al = {}
             
-            # Clasificar cartas según el prefijo de id_carta
             for row in rows:
                 card_data = {
                     "literal": row['nombre'],
@@ -766,7 +751,6 @@ def card_BBDD():
                 elif row['id_carta'].startswith("AL_"):
                     cartas_al[row['id_carta']] = card_data
             
-            # Cerrar cursor y conexión
             cursor.close()
             connection.close()
             print("Conexión cerrada correctamente.")
@@ -777,7 +761,6 @@ def card_BBDD():
         print(f"Error al obtener cartas: {e}")
         return {}, {}, {}
 
-# Uso de la función
 if __name__ == "__main__":
     cartas_es, cartas_en, cartas_al = card_BBDD()
     print("Cartas ES:", cartas_es)
