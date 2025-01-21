@@ -27,7 +27,7 @@ def playGame():
     # Comenzar las rondas
     while Dt.context_game["round"] < Dt.context_game["maxRounds"] and checkMinimun2PlayerWithPoints():
         Dt.context_game["round"] += 1
-        print(f" Ronda {Dt.context_game['round']} ".center(127,"="))
+        print(f" Round {Dt.context_game['round']} ".center(127,"="))
         
         # Reiniciar el historial de la ronda
         Dt.context_game["round_history"] = []
@@ -60,6 +60,8 @@ def playGame():
         
         # Mostrar estadísticas de la ronda
         printStats()
+        Ut.clear_terminal()
+        print(Cb.cabecera06)
     
     # Mostrar al ganador de la partida
     printWinner()
@@ -139,8 +141,10 @@ def humanRound(id, mazo):
     player = Dt.context_game["players"][id]
     
     while True:
+        Ut.clear_terminal()
+        print(Cb.cabecera06)
         # Mostrar el menú
-        print("\n--- Menú del Jugador ---")
+        print(" Player Menu ".center(127,"="))
         print("1) View Stats")
         print("2) View Game Stats")
         if not player["bank"]:  # Solo mostrar la opción de apuesta si no es la banca
@@ -159,6 +163,9 @@ def humanRound(id, mazo):
             printStats()
         elif option == "3" and not player["bank"]:  # Solo permitir apuesta si no es la banca
             # Cambiar la apuesta
+            Ut.clear_terminal()
+            print(Cb.cabecera06)
+            print(f" Set Bet ".center(127,"="))
             while True:
                 try:
                     new_bet = int(input(f"Introduce tu nueva apuesta (máximo {player['points']}): "))
@@ -172,41 +179,59 @@ def humanRound(id, mazo):
                 except ValueError:
                     print("Entrada no válida. Introduce un número.")
         elif option == "4":
+            Ut.clear_terminal()
+            print(Cb.cabecera06)
+            print(f" Round {Dt.context_game['round']} ".center(127,"="))
             # Pedir una carta
             card = mazo.pop()
             player["cards"].append(card)
             player["roundPoints"] += Dt.context_game["cards_deck"][card]["value"]
             print(f"Has recibido: {Dt.context_game['cards_deck'][card]['literal']}")
+            time.sleep(1.2)
             print(f"Puntos actuales en esta ronda: {player['roundPoints']}")
+            time.sleep(1.2)
             addToRoundHistory(str(f"{player["name"]} ha recibido: {Dt.context_game['cards_deck'][card]['literal']}."))
             addToRoundHistory(str(f"Puntos actuales de {player["name"]} en esta ronda: {player['roundPoints']}"))
             if player["roundPoints"] > 7.5:
                 print("¡Te has pasado de 7.5!")
+                time.sleep(1.2)
                 addToRoundHistory(str(f"¡{player["name"]} se ha pasado de 7.5!"))
                 break
         elif option == "5":
             # Jugar en modo automático (como un bot)
+            Ut.clear_terminal()
+            print(Cb.cabecera06)
+            print(f" Round {Dt.context_game['round']} ".center(127,"="))
             print("Modo automático activado.")
+            time.sleep(1.2)
             while True:
                 if chanceExceedingSevenAndHalf(id, mazo) > player["type"]:
                     print("Te plantas automáticamente.")
                     addToRoundHistory(str(f"{player["name"]} se ha plantado."))
+                    time.sleep(1.2)
                     break
                 card = mazo.pop()
                 player["cards"].append(card)
                 player["roundPoints"] += Dt.context_game["cards_deck"][card]["value"]
                 print(f"Has recibido: {Dt.context_game['cards_deck'][card]['literal']}")
+                time.sleep(1.2)
                 print(f"Puntos actuales en esta ronda: {player['roundPoints']}")
+                time.sleep(1.2)
                 addToRoundHistory(str(f"{player["name"]} ha recibido: {Dt.context_game['cards_deck'][card]['literal']}."))
                 addToRoundHistory(str(f"Puntos actuales de {player["name"]} en esta ronda: {player['roundPoints']}"))
                 if player["roundPoints"] > 7.5:
                     print("¡Te has pasado de 7.5!")
+                    time.sleep(1.2)
                     addToRoundHistory(str(f"¡{player["name"]} se ha pasado de 7.5!"))
                     break
             break
         elif option == "6":
             # Plantarse
+            Ut.clear_terminal()
+            print(Cb.cabecera06)
+            print(f" Round {Dt.context_game['round']} ".center(127,"="))
             print("Te has plantado.")
+            time.sleep(1.2)
             addToRoundHistory(str(f"{player["name"]} se ha plantado."))
             break
         elif option == "7":
@@ -248,6 +273,7 @@ def distributionPointAndNewBankCandidates():
             bank["points"] += player["bet"]
             print(f"{player['name']} se ha pasado y pierde {player['bet']} puntos.")
             addToRoundHistory(str(f"{player['name']} se ha pasado y pierde {player['bet']} puntos."))
+            time.sleep(1.2)
         elif bank_busted:
             # La banca se ha pasado, paga a los jugadores que no se hayan pasado
             if player["roundPoints"] <= 7.5:
@@ -255,6 +281,7 @@ def distributionPointAndNewBankCandidates():
                 bank["points"] -= player["bet"]
                 print(f"{player['name']} gana {player['bet']} puntos porque la banca se ha pasado.")
                 addToRoundHistory(f"{player['name']} gana {player['bet']} puntos porque la banca se ha pasado.")
+                time.sleep(1.2)
         else:
             # La banca no se ha pasado, comparar puntuaciones
             if player["roundPoints"] == 7.5 and bank["roundPoints"] != 7.5:
@@ -264,18 +291,21 @@ def distributionPointAndNewBankCandidates():
                 candidates.append(player_id)  # Añadir a candidatos a banca
                 print(f"{player['name']} tiene 7.5 y gana el doble: {2 * player['bet']} puntos.")
                 addToRoundHistory(str(f"{player['name']} tiene 7.5 y gana el doble: {2 * player['bet']} puntos."))
+                time.sleep(1.2)
             elif player["roundPoints"] > bank["roundPoints"]:
                 # El jugador tiene más puntos que la banca
                 player["points"] += player["bet"]
                 bank["points"] -= player["bet"]
                 print(f"{player['name']} gana {player['bet']} puntos contra la banca.")
                 addToRoundHistory(str(f"{player['name']} gana {player['bet']} puntos contra la banca."))
+                time.sleep(1.2)
             else:
                 # El jugador tiene igual o menos puntos que la banca
                 player["points"] -= player["bet"]
                 bank["points"] += player["bet"]
                 print(f"{player['name']} pierde {player['bet']} puntos contra la banca.")
                 addToRoundHistory(str(f"{player['name']} pierde {player['bet']} puntos contra la banca."))
+                time.sleep(1.2)
     
     # Eliminar jugadores sin puntos
     players_to_remove = []
@@ -285,6 +315,7 @@ def distributionPointAndNewBankCandidates():
             players_to_remove.append(player_id)
             print(f"{player['name']} se ha quedado sin puntos y ha sido eliminado.")
             addToRoundHistory(str(f"{player['name']} se ha quedado sin puntos y ha sido eliminado."))
+            time.sleep(1.2)
     
     for player_id in players_to_remove:
         Dt.context_game["game"].remove(player_id)
@@ -298,6 +329,7 @@ def distributionPointAndNewBankCandidates():
             Dt.context_game["players"][bank_id]["bank"] = False
         print(f"{Dt.context_game['players'][new_bank_id]['name']} es la nueva banca.")
         addToRoundHistory(str(f"{Dt.context_game['players'][new_bank_id]['name']} es la nueva banca."))
+        time.sleep(1.2)
     elif bank["points"] <= 0:
         # La banca ha sido eliminada, elegir al jugador con mayor prioridad
         if Dt.context_game["game"]:
@@ -305,6 +337,7 @@ def distributionPointAndNewBankCandidates():
             Dt.context_game["players"][new_bank_id]["bank"] = True
             print(f"{Dt.context_game['players'][new_bank_id]['name']} es la nueva banca porque la anterior fue eliminada.")
             addToRoundHistory(str(f"{Dt.context_game['players'][new_bank_id]['name']} es la nueva banca porque la anterior fue eliminada."))
+            time.sleep(1.2)
     
     # Devolver las cartas de los jugadores al mazo
     for player_id in Dt.context_game["game"]:
@@ -373,7 +406,10 @@ def printWinner():
     input("Press Enter to continue...".center(127))
 
 def printStats(idPlayer="", titulo=""):
+    Ut.clear_terminal()
+    print(Cb.cabecera06)
     while True:
+        print(" Game Stats ".center(127,"="))
         if titulo:
             print(titulo)
 
@@ -415,6 +451,7 @@ def printPlayerStats(id):
     print(Cb.cabecera06)
     player = Dt.context_game["players"][id]
     while True:
+        print(" Player Stats ".center(127,"="))
         print(f"Name "         .ljust(14)+f"{player['name']}")
         print(f"Type: "        .ljust(14)+f"{player['type']}")
         print(f"Human: "       .ljust(14)+f"{player['human']}")
@@ -477,7 +514,6 @@ def setBets():
                     new_bet = int(input(f"{player['name']}, introduce tu apuesta (máximo {player['points']}): "))
                     if new_bet > 0 and new_bet <= player["points"]:
                         player["bet"] = new_bet
-                        print(f"Apuesta cambiada a {new_bet}.")
                         addToRoundHistory(str(f"{player['name']} apuesta {new_bet} puntos."))
                         break
                     else:
@@ -549,10 +585,16 @@ def printRoundHistory():
     # Muestra el historial de la ronda con todos los detalles.
     Ut.clear_terminal()
     print(Cb.cabecera06)
-    if not Dt.context_game["round_history"]:
-        print("El historial de la ronda está vacío.")
-        return
-    
-    print(" Historial de la Ronda ".center(127,"="))
-    for entry in range(0,len(Dt.context_game["round_history"])):
-        print(Dt.context_game["round_history"][entry])
+    while True:
+        print(f" Round {Dt.context_game["round"]} History ".center(127,"="))
+        if not Dt.context_game["round_history"]:
+            print("The round history is empty.")
+            print()
+            input("Press Enter to return...")
+            break
+
+        for entry in range(0,len(Dt.context_game["round_history"])):
+            print(Dt.context_game["round_history"][entry])
+        print()
+        input("Press Enter to return...")
+        break
