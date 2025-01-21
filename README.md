@@ -94,7 +94,7 @@ Si encuentras un error relacionado con permisos administrativos durante la insta
 
 ## Página Web
 Explora nuestra página web para aprender más sobre el proyecto:  
-**[Visita la página aquí](https://www.proyecto7ymedio.com)**  
+**[Visita la página aquí]((https://aleixgls.github.io/ProyectoSieteYMedio_ACD/))**  
 
 ---
 
