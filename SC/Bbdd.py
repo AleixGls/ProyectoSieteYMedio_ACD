@@ -1125,7 +1125,103 @@ def highest_bet_per_game(cursor):
     return data
 
 
+
+# Función para obtener la apuesta más baja por partida
+
+# def lowest_bet_per_game(cursor):
+#     query = """
+#     SELECT r.id_partida, p.player_name, MIN(rp.bet) AS lowest_bet
+#     FROM round_players rp
+#     JOIN rounds r ON rp.id_round = r.id_round
+#     JOIN players p ON rp.id_player = p.id_player
+#     GROUP BY r.id_partida, p.player_name
+#     LIMIT 0, 50000;
+#     """
+#     cursor.execute(query)
+#     results = cursor.fetchall()
+#
+#     # Preparar los resultados para exportarlos a XML
+#     data = []
+#     for row in results:
+#         data.append({
+#             'id_partida': row[0],
+#             'player_name': row[1],
+#             'lowest_bet': row[2]
+#         })
+#
+#     print(f"Lowest Bet per Game: {data}")
+#     return data
+#
+#
+# # Función para calcular el porcentaje de victorias por ronda
+# def win_percentage_per_round(cursor):
+#     query = """
+#     SELECT r.id_round, p.player_name,
+#            (SUM(rp.won) / COUNT(*)) * 100 AS win_percentage
+#     FROM round_players rp
+#     JOIN rounds r ON rp.id_round = r.id_round
+#     JOIN players p ON rp.id_player = p.id_player
+#     GROUP BY r.id_round, p.player_name;
+#     """
+#     cursor.execute(query)
+#     results = cursor.fetchall()
+#     data = [{'id_round': row[0], 'player_name': row[1], 'win_percentage': round(row[2], 2)} for row in results]
+#     print(f"Win Percentage per Round: {data}")
+#     return data
+#
+# # Función para calcular las partidas ganadas por bots
+# def games_won_by_bots(cursor):
+#     query = """
+#     SELECT g.id_partida, COUNT(*) AS games_won
+#     FROM game_players gp
+#     JOIN players p ON gp.id_player = p.id_player
+#     JOIN games g ON gp.id_game = g.id_game
+#     WHERE p.is_human = 0 AND gp.is_bank = 0 AND gp.final_points =
+#           (SELECT MAX(gp2.final_points)
+#            FROM game_players gp2
+#            WHERE gp2.id_game = gp.id_game)
+#     GROUP BY g.id_partida;
+#     """
+#     cursor.execute(query)
+#     results = cursor.fetchall()
+#     data = [{'id_partida': row[0], 'games_won': row[1]} for row in results]
+#     print(f"Games Won by Bots: {data}")
+#     return data
+#
+# def rounds_won_by_bank(cursor):
+#     query = """
+#     SELECT r.id_round, COUNT(*) AS rounds_won_by_bank
+#     FROM round_players rp
+#     JOIN rounds r ON rp.id_round = r.id_round
+#     JOIN players p ON rp.id_player = p.id_player
+#     WHERE rp.won = 1 AND rp.is_bank = 1
+#     GROUP BY r.id_round;
+#     """
+#     cursor.execute(query)
+#     results = cursor.fetchall()
+#     data = [{'id_round': row[0], 'rounds_won_by_bank': row[1]} for row in results]
+#     print(f"Rounds Won by Bank: {data}")
+#     return data
+#
+# # Función para listar los usuarios que han sido banca
+# def users_who_have_been_bank(cursor):
+#     query = """
+#     SELECT DISTINCT p.id_player, p.player_name
+#     FROM players p
+#     JOIN game_players gp ON p.id_player = gp.id_player
+#     WHERE gp.is_bank = 1;
+#     """
+#     cursor.execute(query)
+#     results = cursor.fetchall()
+#     data = [{'id_player': row[0], 'player_name': row[1]} for row in results]
+#     print(f"Users Who Have Been Bank: {data}")
+#     return data
+
 # Función para exportar los datos a un archivo XML
+import mysql.connector
+import xml.etree.ElementTree as ET
+
+# Función para exportar datos a un archivo XML
 def export_to_xml(data, filename):
     root = ET.Element("Results")
 
@@ -1140,17 +1236,56 @@ def export_to_xml(data, filename):
     print(f"Data exported to {filename}")
 
 
-# Ejecutar el script
+# Función para obtener la carta más repetida
+def most_repeated_initial_card(cursor):
+    query = """
+    SELECT name, COUNT(*) AS count
+    FROM cards
+    GROUP BY name
+    ORDER BY count DESC
+    LIMIT 1;
+    """
+    cursor.execute(query)
+    result = cursor.fetchone()
+    print(f"Most Repeated Initial Card: {result[0]} with {result[1]} occurrences.")
+    return [{'name': result[0], 'count': result[1]}]
+
+
+# Función para obtener la apuesta más alta por partida
+def highest_bet_per_game(cursor):
+    query = """
+    SELECT r.id_game, p.player_name, MAX(rp.bet) AS highest_bet
+    FROM round_players rp
+    JOIN rounds r ON rp.id_round = r.id_round
+    JOIN players p ON rp.id_player = p.id_player
+    GROUP BY r.id_game, p.player_name;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+    data = [{'id_game': row[0], 'player_name': row[1], 'highest_bet': row[2]} for row in results]
+    print(f"Highest Bet per Game: {data}")
+    return data
+
+
+# Configuración de conexión a MySQL
+config = {
+    'user': 'ACD_USER',  # Usuario
+    'password': 'P@ssw0rd',  # Contraseña
+    'host': 'acd-game1.mysql.database.azure.com',  # Host
+    'database': 'acd_game',  # Base de datos
+    'port': '3306'  # Puerto
+}
+
+# Bloque principal del script
 try:
-    # Conectar a la base de datos
+    # Establecer conexión a la base de datos
     conn = mysql.connector.connect(**config)
     print("Conexión exitosa")
-
     cursor = conn.cursor()
 
-    # Ejecutar las consultas y exportar a XML
+    # Ejecutar las funciones y exportar los resultados a XML
     most_repeated_card_data = most_repeated_initial_card(cursor)
-    export_to_xml(most_repeated_card_data, "most_repeated_card.xml")
+    export_to_xml(most_repeated_card_data, "most_repeated_initial_card.xml")
 
     highest_bet_data = highest_bet_per_game(cursor)
     export_to_xml(highest_bet_data, "highest_bet_per_game.xml")
@@ -1159,7 +1294,8 @@ except mysql.connector.Error as err:
     print(f"Error: {err}")
 
 finally:
-    if conn.is_connected():
+    # Cerrar conexión si está activa
+    if 'conn' in locals() and conn.is_connected():
         cursor.close()
         conn.close()
         print("Conexión cerrada")
