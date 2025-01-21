@@ -39,8 +39,8 @@ finally:
     # Función que guarda un nuevo registro en la tabla cardgame.
     # Esta función debería llamarse justo después de acabar una partida.
 
-
-def insertBBDDCardgame(baraja_id, num_jugadores, num_rondas, hora_fin):
+# def insertBBDDCardgame esta ok
+def insertBBDDCardgame(deck_id, num_players, num_rounds, end_time):
     try:
         connection = mysql.connector.connect(
             host='acd-game1.mysql.database.azure.com',
@@ -52,55 +52,39 @@ def insertBBDDCardgame(baraja_id, num_jugadores, num_rondas, hora_fin):
             cursor = connection.cursor()
 
             query = """
-                INSERT INTO partidas (hora_inicio, hora_fin, num_jugadores, num_rondas, id_baraja)
+                INSERT INTO games (start_time, end_time, num_players, num_rounds, id_deck)
                 VALUES (NOW(), %s, %s, %s, %s);
             """
-            cursor.execute(query, (hora_fin, num_jugadores, num_rondas, baraja_id))
+            cursor.execute(query, (end_time, num_players, num_rounds, deck_id))
             connection.commit()
-            print("Partida insertada correctamente.")
+            print("Game inserted successfully.")
 
     except Error as e:
-        print(f"Error al insertar la partida: {e}")
+        print(f"Error inserting the game: {e}")
 
     finally:
         if connection.is_connected():
             connection.close()
+if __name__ == "__main__":
+        try:
+            # Llamamos a la función insertBBDDCardgame con parámetros de prueba
+            deck_id = 2  # Ejemplo de ID de baraja
+            num_players = 4  # Número de jugadores
+            num_rounds = 5  # Número de rondas
+            end_time = '2025-01-21 18:00:00'  # Hora de finalización de la partida (en formato de fecha y hora)
+
+            # Llamada a la función
+            insertBBDDCardgame(deck_id, num_players, num_rounds, end_time)
+
+        except Exception as e:
+            print(f"Unexpected error: {e}")
 
     # Función que guarda en la tabla player_game de la BBDD el diccionario
     # player_game.
     # Esta función debería llamarse justo después de acabar una partida
 
-
-def insertBBDD_player_game(id_partida, id_jugador, puntos_iniciales, puntos_finales, es_banca):
-    try:
-        connection = mysql.connector.connect(
-            host='acd-game1.mysql.database.azure.com',
-            user='ACD_USER',
-            password='P@ssw0rd',
-            database='acd_game')
-
-        if connection.is_connected():
-            cursor = connection.cursor()
-
-            query = """
-                INSERT INTO partidas_jugadores (id_partida, id_jugador, puntos_iniciales, es_banca)
-                VALUES (%s, %s, %s, %s);
-            """
-            cursor.execute(query, (id_partida, id_jugador, puntos_iniciales, puntos_finales, es_banca))
-            connection.commit()
-            print(f"Jugador {id_jugador} insertado correctamente en la partida {id_partida}.")
-
-    except Error as e:
-        print(f"Error al insertar jugador en la partida: {e}")
-
-    finally:
-        if connection.is_connected():
-            connection.close()
-
-
-# fundion inserta un jugador en la bbdd
-
-def insert_player_game(dni, nombre, risk, human):
+# def insert_player_game esta ok (inserta los datos en la tabla partidas jugadores)
+def insert_player_game(dni, game_id, initial_points, final_points, is_bank):
     try:
         # Conecta a la base de datos
         connection = mysql.connector.connect(
@@ -113,26 +97,103 @@ def insert_player_game(dni, nombre, risk, human):
         if connection.is_connected():
             cursor = connection.cursor()
             query = """
-                INSERT INTO jugadores (id_jugador, nombre, nivel_riesgo, es_humano)
-                VALUES (%s, %s, %s, %s);
+                INSERT INTO game_players (id_game, id_player, initial_points, final_points, is_bank)
+                VALUES (%s, %s, %s, %s, %s);
             """
             # Inserta el jugador en la base de datos
-            cursor.execute(query, (dni, nombre, risk, human))
+            cursor.execute(query, (game_id, dni, initial_points, final_points, is_bank))
             connection.commit()
-            print(f"Jugador {nombre} con id_jugador {dni} insertado correctamente.")
+            print(f"Player {dni} inserted successfully in game {game_id}.")
             cursor.close()
 
     except Error as e:
-        # Manejando el error de duplicidad del id_jugador
+        # Manejo de errores
         if "duplicate" in str(e).lower():
-            print(f"Error: El id_jugador {dni} ya está registrado en la base de datos.")
+            print(f"Error: The player {dni} is already registered in the game {game_id}.")
         else:
-            print(f"Error al insertar jugador: {e}")
+            print(f"Error inserting player in game: {e}")
 
     finally:
         # Cierra la conexión con la base de datos
         if connection.is_connected():
             connection.close()
+
+if __name__ == "__main__":
+    try:
+        # Llamada a la función insert_player_game con parámetros de prueba
+        dni = '419236335S'  # DNI del jugador
+        game_id = 2  # ID del juego
+        initial_points = 30  # Puntos iniciales del jugador
+        final_points = 45  # Puntos finales del jugador
+        is_bank = 0  # 0 si no es el banco, 1 si es el banco
+
+        # Llamada a la función
+        insert_player_game(dni, game_id, initial_points, final_points, is_bank)
+
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+
+
+
+# def insert_player esta esta ok funcion inserta un jugador en la bbdd
+
+import mysql.connector
+from mysql.connector import Error
+
+def insert_player(dni, player_name, risk_level, is_human):
+    try:
+        # Connect to the database
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+
+        if connection.is_connected():
+            cursor = connection.cursor()
+
+            # Verificar que risk_level es uno de los valores permitidos ('30', '40', '50')
+            if risk_level not in ['30', '40', '50']:
+                print(f"Error: 'risk_level' must be one of ['30', '40', '50'].")
+                return
+
+            # Insert the player into the database
+            query = """
+                INSERT INTO players (id_player, player_name, risk_level, is_human)
+                VALUES (%s, %s, %s, %s);
+            """
+            # Insert the player into the database
+            cursor.execute(query, (dni, player_name, risk_level, is_human))
+            connection.commit()
+            print(f"Player {player_name} with id_player {dni} inserted successfully.")
+            cursor.close()
+
+    except Error as e:
+        # Handle duplicate player error
+        if "duplicate" in str(e).lower():
+            print(f"Error: The player with id_player {dni} is already registered in the database.")
+        else:
+            print(f"Error inserting player: {e}")
+
+    finally:
+        # Close the database connection
+        if connection.is_connected():
+            connection.close()
+
+if __name__ == "__main__":
+    try:
+        # Call the insert_player_game function with test parameters
+        dni = '419236335S'  # Player's DNI
+        player_name = 'pepe'  # Player's name
+        risk_level = '30'  # Player's risk level (must be '30', '40', or '50')
+        is_human = 1  # 1 if human, 0 if not
+
+        # Call the function
+        insert_player(dni, player_name, risk_level, is_human)
+
+    except Exception as e:
+        print(f"Unexpected error: {e}")
 
     # Función que guarda en la tabla player_game_round de la BBDD el diccionario
     # player_game_round.
