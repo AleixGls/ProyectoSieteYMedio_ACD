@@ -279,3 +279,47 @@ def delBBDDPlayer(connection, id_jugador):
         print(f"Error when deleting player: This player had matches played. You can't delete this user".center(127))
         input("Enter to continue... ".center(127))
         time.sleep(1)
+
+def card_database():
+    # Establece una conexión con la base de datos, recupera las tarjetas y las clasifica
+    # en tres diccionarios separados en función de su tipo (es_cards, en_cards, al_cards).
+    # Return: Tres diccionarios con las tarjetas en el formato especificado.
+
+    try:
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+
+        if connection.is_connected():
+
+            cursor = connection.cursor(dictionary=True)
+
+            query = """
+            SELECT id_card, name, game_value, priority, realValue
+            FROM cards
+            """
+            cursor.execute(query)
+            rows = cursor.fetchall()
+
+            for row in rows:
+                card_data = {
+                    "literal": row['name'],
+                    "value": float(row['game_value']),
+                    "priority": row['priority'],
+                    "realValue": float(row['realValue'])
+                }
+                if row['id_card'].startswith("SP_"):
+                    Dt.cartas_es[row['id_card']] = card_data
+                elif row['id_card'].startswith("EN_"):
+                    Dt.cartas_en[row['id_card']] = card_data
+                elif row['id_card'].startswith("GE_"):
+                    Dt.cartas_al[row['id_card']] = card_data
+
+            cursor.close()
+            connection.close()
+
+    except Error as e:
+        print(f"Error while retrieving cards: {e}".center(127))
