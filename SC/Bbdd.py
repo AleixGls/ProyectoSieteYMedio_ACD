@@ -1086,6 +1086,54 @@ def rounds_won_by_bank(cursor):
     print(f"Rounds Won by Bank: {data}")
     return data
 
+#  Función jugadores con mas derrotas (menu opcion 8)
+def players_with_most_losses(cursor):
+    query = """
+    SELECT p.player_name, COUNT(*) AS total_losses
+    FROM round_players rp
+    JOIN players p ON rp.id_player = p.id_player
+    WHERE rp.won = 0
+    GROUP BY p.player_name
+    ORDER BY total_losses DESC;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+    data = [{'player_name': row[0], 'total_losses': row[1]} for row in results]
+    print(f"Players with the Most Losses: {data}")
+    return data
+
+
+# Función rondas con mas jugadores (menu opcion 9)
+def rounds_with_most_players(cursor):
+    query = """
+    SELECT r.id_round, COUNT(rp.id_player) AS total_players
+    FROM round_players rp
+    JOIN rounds r ON rp.id_round = r.id_round
+    GROUP BY r.id_round
+    ORDER BY total_players DESC;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+    data = [{'id_round': row[0], 'total_players': row[1]} for row in results]
+    print(f"Rounds with the Most Players: {data}")
+    return data
+
+# Función total apuestas por jugador (menu opcion 10)
+def total_bets_by_player(cursor):
+    query = """
+    SELECT p.player_name, SUM(rp.bet) AS total_bets
+    FROM round_players rp
+    JOIN players p ON rp.id_player = p.id_player
+    GROUP BY p.player_name;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+    data = [{'player_name': row[0], 'total_bets': row[1]} for row in results]
+    print(f"Total Bets by Player: {data}")
+    return data
+
+
+
 
 # Función para calcular el porcentaje de victorias por ronda (menu opcion 4)
 def win_percentage_per_round(cursor):
@@ -1147,6 +1195,16 @@ try:
     cursor = conn.cursor()
 
     # Ejecutar las funciones y exportar los resultados a XML
+
+    total_bets_by_player_data = total_bets_by_player(cursor)
+    export_to_xml(total_bets_by_player_data, "total_bets_by_player.xml")
+
+    rounds_with_most_players_data = rounds_with_most_players(cursor)
+    export_to_xml(rounds_with_most_players_data, "rounds_with_most_players.xml")
+
+    players_with_most_losses_data = players_with_most_losses(cursor)
+    export_to_xml(players_with_most_losses_data, "players_with_most_losses.xml")
+
 
     data_users_who_have_been_bank = users_who_have_been_bank(cursor)
     export_to_xml(data_users_who_have_been_bank, "users_who_have_been_bank.xml")
