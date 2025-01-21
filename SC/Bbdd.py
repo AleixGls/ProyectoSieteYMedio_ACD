@@ -621,6 +621,7 @@ import mysql.connector
 from mysql.connector import Error
 
 # ranking ordenado por partidas opcion 2
+# ranking ordenado por partidas opcion 2
 def getPlayersByGamesPlayed():
     try:
         # Conexión a la base de datos

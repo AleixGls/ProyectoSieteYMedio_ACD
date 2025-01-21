@@ -5,7 +5,7 @@ import SC.Bbdd as Bd
 import SC.Cabeceras as Cb
 import time
 
-from ProyectoSieteYMedio_ACD.SC.Bbdd import getBBDDRankingPoint, getBBDDRanking, getPlayersByGamesPlayed, \
+from ProyectoSieteYMedio_ACD.SC.Bbdd import getBBDDRankingPoints, getBBDDRankingByMinutes, getPlayersByGamesPlayed, \
     getBBDDRankingByMinutes, getBBDDRankingPoints
 
 
