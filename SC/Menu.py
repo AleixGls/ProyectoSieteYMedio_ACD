@@ -5,6 +5,9 @@ import SC.Bbdd as Bd
 import SC.Cabeceras as Cb
 import time
 
+from ProyectoSieteYMedio_ACD.SC.Bbdd import getBBDDRankingPoint, getBBDDRanking, getPlayersByGamesPlayed, \
+    getBBDDRankingByMinutes, getBBDDRankingPoints
+
 
 def main_menu():
     # Muestra el menú principal del juego y gestiona la selección de opciones.
@@ -430,7 +433,12 @@ def ranking():
             inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3, 4]
         )
-        
+        if option == 1:
+            getBBDDRankingPoints()
+        elif option == 2:
+            getPlayersByGamesPlayed()
+        elif option == 3:
+            getBBDDRankingByMinutes()
         if option == 4:
             break
         else:

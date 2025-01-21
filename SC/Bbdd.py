@@ -490,9 +490,6 @@ def delBBDDPlayer(nif):
     # player_id | earnings | games_played | minutes_played.
 '''
 
-import mysql.connector
-from mysql.connector import Error
-import time
 
 
 # funcion ranking puntos mayor a menor y tiempo jugado
@@ -501,7 +498,10 @@ from mysql.connector import Error
 
 # 7 getBBDDRankingPoint() esta ok
 
-def getBBDDRankingPoint():
+import mysql.connector
+from mysql.connector import Error
+# ranking por puntos opcion 1 getBBDDRankingPoints()
+def getBBDDRankingPoints():
     try:
         # Conexión a la base de datos
         connection = mysql.connector.connect(
@@ -512,30 +512,33 @@ def getBBDDRankingPoint():
         )
 
         if connection.is_connected():
-            # Creamos el cursor
+            # Crear el cursor
             cursor = connection.cursor()
 
-            # Consultar el ranking de jugadores desde la vista player_earnings
+            # Consultar el ranking de jugadores ordenados por puntos
             query_ranking = """
-                SELECT player_id, earnings, games_played, minutes_played
-                FROM player_earnings
-                ORDER BY earnings DESC;
+                SELECT p.id_player, p.player_name, 
+                       IFNULL(SUM(gp.final_points - gp.initial_points), 0) AS points
+                FROM players p
+                LEFT JOIN game_players gp ON p.id_player = gp.id_player
+                GROUP BY p.id_player, p.player_name
+                ORDER BY points DESC;
             """
             cursor.execute(query_ranking)
             players = cursor.fetchall()
 
-            # Mostrar título centrado
-            print("*" * 140)
-            print(f"{' ' * 50}{'Ranking'.center(40)}")
-            print("-" * 140)
-            print(f"{'Player ID':<20}{'Earnings':<15}{'Games Played':<15}{'Minutes Played':<15}")
-            print("-" * 140)
+            # Mostrar encabezado
+            print("*" * 60)
+            print(f"{' ':<20}{'Ranking by Points'}".center(40))
+            print("-" * 60)
+            print(f"{'ID':<20}{'Name':<30}{'Points':<10}")
+            print("-" * 60)
 
-            # Mostrar los jugadores ordenados por ganancias
+            # Mostrar los jugadores ordenados por puntos
             for player in players:
-                print(f"{player[0]:<20} {player[1]:<15} {player[2]:<15} {player[3]:<15}")
+                print(f"{player[0]:<20} {player[1]:<30} {player[2]:<10}")
 
-            print("*" * 140)
+            print("*" * 60)
 
     except Error as e:
         print(f"Error al obtener el ranking: {e}")
@@ -547,17 +550,19 @@ def getBBDDRankingPoint():
 # Código principal para ejecutar la función
 if __name__ == "__main__":
     try:
-        # Llamamos a la función de jugadores y ranking
-        getBBDDRankingPoint()
-
+        getBBDDRankingPoints()
     except Exception as e:
         print(f"Error inesperado: {e}")
 
-# 8 def getBBDDRanking esta ok funcion puntos
+
+
+
 import mysql.connector
 from mysql.connector import Error
 
-def getBBDDRanking():
+#ranking por minutos opcion 3 getBBDDRankingByMinutes()
+
+def getBBDDRankingByMinutes():
     try:
         # Conexión a la base de datos
         connection = mysql.connector.connect(
@@ -568,52 +573,106 @@ def getBBDDRanking():
         )
 
         if connection.is_connected():
-            # Creamos el cursor
+            # Crear el cursor
             cursor = connection.cursor()
 
-            # Consultar jugadores (humanos y bots) y minutos jugados
+            # Consulta para obtener jugadores y minutos jugados
             query_players = """
-                          SELECT p.id_player, p.player_name, 
-                          IFNULL(SUM(gp.final_points - gp.initial_points), 0) AS points,
-                          IFNULL(SUM(TIMESTAMPDIFF(MINUTE, g.start_time, g.end_time)), 0) AS minutes_played
-                          FROM players p
-                          LEFT JOIN game_players gp ON p.id_player = gp.id_player
-                          LEFT JOIN games g ON g.id_game = gp.id_game
-                          GROUP BY p.id_player, p.player_name
-                          ORDER BY minutes_played DESC;
-                      """
+                SELECT p.id_player, p.player_name, 
+                       IFNULL(SUM(TIMESTAMPDIFF(MINUTE, g.start_time, g.end_time)), 0) AS minutes_played
+                FROM players p
+                LEFT JOIN game_players gp ON p.id_player = gp.id_player
+                LEFT JOIN games g ON g.id_game = gp.id_game
+                GROUP BY p.id_player, p.player_name
+                ORDER BY minutes_played DESC;
+            """
             cursor.execute(query_players)
             players = cursor.fetchall()
 
-            # Mostrar título centrado
-            print("*" * 140)
-            print(f"{' ' * 50}{'Ranking'.center(40)}")
-            print("-" * 140)
-            print(f"{'ID':<20}{'Name':<30}{'Minutes Played':<20}{'Points':<10}")
-            print("-" * 140)
+            # Mostrar encabezado
+            print("*" * 60)
+            print(f"{' ':<20}{'Ranking by Minutes Played'}".center(40))
+            print("-" * 60)
+            print(f"{'ID':<20}{'Name':<30}{'Minutes Played':<10}")
+            print("-" * 60)
 
             # Mostrar los jugadores ordenados
             for player in players:
-                print(f"{player[0]:<20} {player[1]:<30} {player[3]:<20} {player[2]:<10}")
+                print(f"{player[0]:<20} {player[1]:<30} {player[2]:<10}")
 
-            print("*" * 140)
+            print("*" * 60)
 
     except Error as e:
-        print(f"Error al obtener jugadores o ranking: {e}")
+        print(f"Error al obtener el ranking: {e}")
     finally:
         if 'connection' in locals() and connection.is_connected():
             connection.close()
             print("Conexión cerrada.")
 
+# Ejecutar la función
+if __name__ == "__main__":
+    try:
+        getBBDDRankingByMinutes()
+    except Exception as e:
+        print(f"Error inesperado: {e}")
+
+
+import mysql.connector
+from mysql.connector import Error
+
+# ranking ordenado por partidas opcion 2
+def getPlayersByGamesPlayed():
+    try:
+        # Conexión a la base de datos
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+
+        if connection.is_connected():
+            # Crear el cursor
+            cursor = connection.cursor()
+
+            # Consultar todos los jugadores ordenados por partidas jugadas
+            query_players = """
+                SELECT p.id_player, p.player_name, 
+                       COUNT(gp.id_game) AS games_played
+                FROM players p
+                LEFT JOIN game_players gp ON p.id_player = gp.id_player
+                GROUP BY p.id_player, p.player_name
+                ORDER BY games_played DESC;
+            """
+            cursor.execute(query_players)
+            players = cursor.fetchall()
+
+            # Mostrar encabezado
+            print("*" * 80)
+            print(f"{' ':<20}{'Players Ranked by Games Played'}".center(40))
+            print("-" * 80)
+            print(f"{'ID':<20}{'Name':<30}{'Games Played':<15}")
+            print("-" * 80)
+
+            # Mostrar jugadores ordenados
+            for player in players:
+                print(f"{player[0]:<20} {player[1]:<30} {player[2]:<15}")
+
+            print("*" * 80)
+
+    except Error as e:
+        print(f"Error al obtener jugadores: {e}")
+    finally:
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+            print("Conexión cerrada.")
 
 # Ejecutar la función
 if __name__ == "__main__":
     try:
-        getBBDDRanking()
-
+        getPlayersByGamesPlayed()
     except Exception as e:
         print(f"Error inesperado: {e}")
-
 
 # Función que extrae los jugadores definidos en la BBDD y los almacena en el diccionario
 # contextGame[“players”]
@@ -624,7 +683,6 @@ from mysql.connector import Error
 # 9 def getPlayers esta ok
 # Diccionario para almacenar el contexto del juego
 contextGame = {}
-
 
 def getPlayers():
     """Fetches players and stores them in a dictionary with id_player as the key and name as the value."""
