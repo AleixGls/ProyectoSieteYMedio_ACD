@@ -461,20 +461,6 @@ def printPlayerStats(id):
         input("Press Enter to return...".center(127))
         break
 
-def newPlayer(dni, name, profile, human):
-    Dt.context_game["players"][dni] = {
-        "name": name,
-        "human": human,
-        "bank": False,
-        "initialCard": "",
-        "priority": 0,
-        "type": profile,
-        "bet": 4,
-        "points": 20,
-        "cards": [],
-        "roundPoints": 0
-    }
-
 def checkMinimun2PlayerWithPoints():
     players_with_points = [player_id for player_id in Dt.context_game["game"] if Dt.context_game["players"][player_id]["points"] > 0]
     return len(players_with_points) >= 2
