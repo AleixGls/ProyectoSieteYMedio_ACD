@@ -5,8 +5,10 @@ import SC.Bbdd as Bd
 import SC.Cabeceras as Cb
 import time
 
+import data
+
 from ProyectoSieteYMedio_ACD.SC.Bbdd import getBBDDRankingPoints, getBBDDRankingByMinutes, getPlayersByGamesPlayed, \
-    getBBDDRankingByMinutes, getBBDDRankingPoints
+    getBBDDRankingByMinutes, getBBDDRankingPoints, export_to_xml
 
 
 def main_menu():
@@ -408,7 +410,9 @@ def reports():
             inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3, 4, 5, 6, 7, 8]
         )
-        
+        if option == 1:
+            most_repeated_initial_card(cursor)
+            export_to_xml(data, filename)
         if option == 8:
             break
         else:
