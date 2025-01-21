@@ -112,6 +112,7 @@ def removeBBDDPlayer():
     finally:
         if 'connection' in locals() and connection.is_connected():
             connection.close()
+            
 
 # Función para eliminar jugador
 def delBBDDPlayer(connection, id_jugador):
@@ -175,3 +176,57 @@ def card_database():
 
     except Error as e:
         print(f"Error while retrieving cards: {e}".center(127))
+
+def player_database():
+    # Inicializar el diccionario con "players" vacío y "game" como una lista vacía
+    Dt.context_game = {
+        "cards_deck":{},    #Baraja de cartas seleccionada
+        "mazo":[],          #Mazo de carta de la partida
+
+        "players":{},       #Jugadores extraidos de la base de datos
+        "game":[],          #Jugadores en partida
+
+        "round":0,          #Ronda actual
+        "maxRounds":5,      #Rondas maximas de la partida
+        "round_history":[]  #Historial de la ronda
+    }
+    
+    try:
+        # Conexión a la base de datos
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+        
+        if connection.is_connected():
+            cursor = connection.cursor()
+            
+            # Consultar jugadores
+            query_players = "SELECT id_player, player_name, risk_level, is_human FROM players;"
+            cursor.execute(query_players)
+            players = cursor.fetchall()
+            
+            # Añadir cada jugador al diccionario context_game
+            for player in players:
+                id_player, player_name, risk_level, is_human = player
+                Dt.context_game["players"][id_player] = {
+                    "name": player_name,
+                    "human": bool(is_human),
+                    "bank": False,
+                    "initialCard": "",
+                    "priority": 0,
+                    "type": int(risk_level),
+                    "bet": 0,
+                    "points": 0,
+                    "cards": [],
+                    "roundPoints": 0
+                }
+            
+            cursor.close()
+            connection.close()
+            
+    except Error as e:
+        print(f"Error while importing players: {e}".center(127))
+        return None  # Retornar None en caso de error
