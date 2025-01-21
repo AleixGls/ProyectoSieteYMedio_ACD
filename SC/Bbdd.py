@@ -758,9 +758,84 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Unexpected error: {e}")
 
-def get_all_players():
+# def get_all_players():
+#     try:
+#         # Conexión a la base de datos
+#         connection = mysql.connector.connect(
+#             host='acd-game1.mysql.database.azure.com',
+#             user='ACD_USER',
+#             password='P@ssw0rd',
+#             database='acd_game'
+#         )
+#
+#         if connection.is_connected():
+#             # Ut.clear_terminal()
+#
+#             cursor = connection.cursor()
+#
+#             # Consultar jugadores humanos
+#             query_humanos = "SELECT id_jugador, nombre, nivel_riesgo FROM jugadores WHERE es_humano = TRUE;"
+#             cursor.execute(query_humanos)
+#             humanos = cursor.fetchall()
+#
+#             # Consultar jugadores bots
+#             query_bots = "SELECT id_jugador, nombre, nivel_riesgo FROM jugadores WHERE es_humano = FALSE;"
+#             cursor.execute(query_bots)
+#             bots = cursor.fetchall()
+#
+#             # Imprimir encabezado
+#             print("*" * 140)
+#             print("*" * 140)
+#             print("*" * 63 + "Select Players" + "*" * 64)
+#             print(" " * 29 + "Boot Players" + " " * 29 + "||" + " " * 29 + "Human Players")
+#             print("-" * 140)
+#             print(
+#                 "ID                  Name                     Type                     || ID                  Name                     Type")
+#             print("*" * 140)
+#
+#             max_rows = max(len(bots), len(humanos))
+#             for i in range(max_rows):
+#                 bot_data = bots[i] if i < len(bots) else ("", "", "")
+#                 human_data = humanos[i] if i < len(humanos) else ("", "", "")
+#
+#                 # Formatear las filas
+#                 bot_line = f"{bot_data[0]:<20} {bot_data[1]:<25} {bot_data[2]:<25}"
+#                 human_line = f"{human_data[0]:<20} {human_data[1]:<25} {human_data[2]:<25}"
+#
+#                 print(f"{bot_line} || {human_line}")
+#
+#             print("*" * 140)
+#
+#             opc = input("Option ( -id to remove player, -1 to exit): ")
+#
+#             if opc == "-1":
+#                 return {"humanos": humanos, "bots": bots}
+#             else:
+#                 delete_player(connection, opc.strip())
+#                 print(f"Jugador con ID {opc} eliminado, recarga la lista para verificar.")
+#                 # Ut.clear_terminal()
+#                 get_all_players()
+#     except Error as e:
+#         print(f"Error al listar jugadores: {e}")
+#         return {"humanos": [], "bots": []}
+#     finally:
+#         if 'connection' in locals() and connection.is_connected():
+#             connection.close()
+#             print("Conexión cerrada.")
+#
+#
+
+import mysql.connector
+from mysql.connector import Error
+
+def execute_query(query):
+    """
+    Ejecuta una consulta SQL en la base de datos y devuelve los resultados.
+
+    :param query: La consulta SQL a ejecutar.
+    :return: Lista de diccionarios con los resultados de la consulta.
+    """
     try:
-        # Conexión a la base de datos
         connection = mysql.connector.connect(
             host='acd-game1.mysql.database.azure.com',
             user='ACD_USER',
@@ -769,61 +844,17 @@ def get_all_players():
         )
 
         if connection.is_connected():
-            # Ut.clear_terminal()
-
-            cursor = connection.cursor()
-
-            # Consultar jugadores humanos
-            query_humanos = "SELECT id_jugador, nombre, nivel_riesgo FROM jugadores WHERE es_humano = TRUE;"
-            cursor.execute(query_humanos)
-            humanos = cursor.fetchall()
-
-            # Consultar jugadores bots
-            query_bots = "SELECT id_jugador, nombre, nivel_riesgo FROM jugadores WHERE es_humano = FALSE;"
-            cursor.execute(query_bots)
-            bots = cursor.fetchall()
-
-            # Imprimir encabezado
-            print("*" * 140)
-            print("*" * 140)
-            print("*" * 63 + "Select Players" + "*" * 64)
-            print(" " * 29 + "Boot Players" + " " * 29 + "||" + " " * 29 + "Human Players")
-            print("-" * 140)
-            print(
-                "ID                  Name                     Type                     || ID                  Name                     Type")
-            print("*" * 140)
-
-            max_rows = max(len(bots), len(humanos))
-            for i in range(max_rows):
-                bot_data = bots[i] if i < len(bots) else ("", "", "")
-                human_data = humanos[i] if i < len(humanos) else ("", "", "")
-
-                # Formatear las filas
-                bot_line = f"{bot_data[0]:<20} {bot_data[1]:<25} {bot_data[2]:<25}"
-                human_line = f"{human_data[0]:<20} {human_data[1]:<25} {human_data[2]:<25}"
-
-                print(f"{bot_line} || {human_line}")
-
-            print("*" * 140)
-
-            opc = input("Option ( -id to remove player, -1 to exit): ")
-
-            if opc == "-1":
-                return {"humanos": humanos, "bots": bots}
-            else:
-                delete_player(connection, opc.strip())
-                print(f"Jugador con ID {opc} eliminado, recarga la lista para verificar.")
-                # Ut.clear_terminal()
-                get_all_players()
-    except Error as e:
-        print(f"Error al listar jugadores: {e}")
-        return {"humanos": [], "bots": []}
-    finally:
-        if 'connection' in locals() and connection.is_connected():
+            print("Conexión exitosa a la base de datos.")
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query)
+            results = cursor.fetchall()
+            cursor.close()
             connection.close()
-            print("Conexión cerrada.")
+            return results
 
-
+    except Error as e:
+        print(f"Error al ejecutar la consulta: {e}")
+        return []
 
 
 import mysql.connector
@@ -895,3 +926,108 @@ if sp_cards or en_cards or ge_cards:
     print("Alemania cards:", ge_cards)
 else:
     print("No cards were retrieved.")
+
+# menu report ospcion 1
+def most_repeated_initial_card():
+    query = """
+    SELECT id_card, COUNT(id_card) AS repetitions
+    FROM card_players
+    GROUP BY id_card
+    ORDER BY repetitions DESC
+    LIMIT 1;
+    """
+    return execute_query(query)
+# opcion 2
+def highest_bet_per_game():
+    query = """
+    SELECT r.id_partida, MAX(rp.bet) AS highest_bet
+    FROM round_players rp
+    JOIN rounds r ON rp.id_round = r.id_round
+    GROUP BY r.id_partida;
+    """
+    return execute_query(query)
+
+# opcion 3
+
+def lowest_bet_per_game():
+    query = """
+    SELECT r.id_partida, MIN(rp.bet) AS lowest_bet
+    FROM round_players rp
+    JOIN rounds r ON rp.id_round = r.id_round
+    GROUP BY r.id_partida;
+    """
+    return execute_query(query)
+
+# opcion 4
+
+def win_percentage_per_round():
+    query = """
+    SELECT id_round, 
+           (SUM(CASE WHEN won = 1 THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS win_percentage
+    FROM round_players
+    GROUP BY id_round;
+    """
+    return execute_query(query)
+
+#opcion 5
+def games_won_by_bots():
+    query = """
+    SELECT COUNT(DISTINCT id_game) AS games_won_by_bots
+    FROM games
+    WHERE id_game IN (
+        SELECT id_game
+        FROM game_players
+        WHERE is_bank = 0 AND id_player IN (
+            SELECT id_player
+            FROM players
+            WHERE is_human = 0
+        )
+    );
+    """
+    return execute_query(query)
+
+
+#opcion 6
+def rounds_won_by_bank():
+    query = """
+    SELECT COUNT(DISTINCT id_round) AS rounds_won_by_bank
+    FROM round_players
+    WHERE won = 1 AND id_player IN (
+        SELECT id_player
+        FROM game_players
+        WHERE is_bank = 1
+    );
+    """
+    return execute_query(query)
+
+
+#opcion 7
+
+def users_who_have_been_bank():
+    query = """
+    SELECT DISTINCT id_player
+    FROM game_players
+    WHERE is_bank = 1;
+    """
+    return execute_query(query)
+
+
+import xml.etree.ElementTree as ET
+
+def export_to_xml(data, filename):
+    root = ET.Element("Results")
+
+    for item in data:
+        record = ET.SubElement(root, "Record")
+        for key, value in item.items():
+            field = ET.SubElement(record, key)
+            field.text = str(value)
+
+    tree = ET.ElementTree(root)
+    tree.write(filename)
+
+# Llamada a la función para obtener los datos
+most_repeated_card = most_repeated_initial_card()
+
+# Exportar a XML
+export_to_xml(most_repeated_card, "most_repeated_card.xml")
