@@ -1,9 +1,11 @@
 import mysql.connector
 import SC.Utilidad as Ut
 from mysql.connector import Error
+import xml.etree.ElementTree as ET
 import SC.Datos as Dt
 import SC.Cabeceras as Cb
 import time
+import os
 
 
 
@@ -234,3 +236,210 @@ def player_database():
     except Error as e:
         print(f"Error while importing players: {e}".center(127))
         return None  # Retornar None en caso de error
+    
+
+
+# Función para exportar datos a un archivo XML
+def export_to_xml(data, filename):
+    # Define la ruta de la carpeta ../XML
+    folder_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'XML')
+    
+    # Crea la carpeta si no existe
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+    
+    # Define la ruta completa del archivo
+    file_path = os.path.join(folder_path, filename)
+    
+    # Crea el elemento raíz
+    root = ET.Element("Results")
+
+    # Recorre los datos y crea los elementos XML
+    for item in data:
+        record = ET.SubElement(root, "Record")
+        for key, value in item.items():
+            field = ET.SubElement(record, key)
+            field.text = str(value)
+
+    # Crea el árbol XML y escribe el archivo
+    tree = ET.ElementTree(root)
+    tree.write(file_path)
+    
+    # Imprime un mensaje centrado
+    print(f"Data exported to {file_path}".center(127))
+    time.sleep(1)
+    
+
+
+
+# Función para obtener la carta más repetida (menu opcion 1)
+def most_repeated_initial_card(cursor):
+    query = """
+    SELECT name, COUNT(*) AS count
+    FROM cards
+    GROUP BY name
+    ORDER BY count DESC
+    LIMIT 1;
+    """
+    cursor.execute(query)
+    result = cursor.fetchone()
+    return [{'name': result[0], 'count': result[1]}]
+
+
+# Función para obtener la apuesta más alta por partida (menu opcion 2)
+def highest_bet_per_game(cursor):
+    query = """
+    SELECT r.id_game, p.player_name, MAX(rp.bet) AS highest_bet
+    FROM round_players rp
+    JOIN rounds r ON rp.id_round = r.id_round
+    JOIN players p ON rp.id_player = p.id_player
+    GROUP BY r.id_game, p.player_name;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+    data = [{'id_game': row[0], 'player_name': row[1], 'highest_bet': row[2]} for row in results]
+    return data
+
+# Función para obtener la apuesta más baja por partida (menu opcion 3)
+def lowest_bet_per_game(cursor):
+    query = """
+    SELECT r.id_game, p.player_name, MIN(rp.bet) AS lowest_bet
+    FROM round_players rp
+    JOIN rounds r ON rp.id_round = r.id_round
+    JOIN players p ON rp.id_player = p.id_player
+    GROUP BY r.id_game, p.player_name
+    LIMIT 0, 50000;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+
+    # Preparar los resultados para exportarlos a XML
+    data = []
+    for row in results:
+        data.append({
+            'id_game': row[0],
+            'player_name': row[1],
+            'lowest_bet': row[2]
+        })
+    return data
+
+    # Función para calcular el porcentaje de victorias por ronda (menu opcion 4)
+def win_percentage_per_round(cursor):
+    query = """
+    SELECT r.id_round, p.player_name,
+           (SUM(rp.won) / COUNT(*)) * 100 AS win_percentage
+    FROM round_players rp
+    JOIN rounds r ON rp.id_round = r.id_round
+    JOIN players p ON rp.id_player = p.id_player
+    GROUP BY r.id_round, p.player_name;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+    data = [{'id_round': row[0], 'player_name': row[1], 'win_percentage': round(row[2], 2)} for row in results]
+    return data
+
+# Función para calcular el porcentaje de victorias por ronda (menu opcion 4)
+def win_percentage_per_round(cursor):
+    query = """
+    SELECT r.id_round, p.player_name,
+           (SUM(rp.won) / COUNT(*)) * 100 AS win_percentage
+    FROM round_players rp
+    JOIN rounds r ON rp.id_round = r.id_round
+    JOIN players p ON rp.id_player = p.id_player
+    GROUP BY r.id_round, p.player_name;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+    data = [{'id_round': row[0], 'player_name': row[1], 'win_percentage': round(row[2], 2)} for row in results]
+    return data
+
+# Función para calcular las partidas ganadas por bots (menu opcion 5)
+def games_won_by_bots(cursor):
+    query = """
+    SELECT g.id_game, COUNT(*) AS games_won
+    FROM game_players gp
+    JOIN players p ON gp.id_player = p.id_player
+    JOIN games g ON gp.id_game = g.id_game
+    WHERE p.is_human = 0 AND gp.is_bank = 0 AND gp.final_points =
+          (SELECT MAX(gp2.final_points)
+           FROM game_players gp2
+           WHERE gp2.id_game = gp.id_game)
+    GROUP BY g.id_game;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+    data = [{'id_game': row[0], 'games_won': row[1]} for row in results]
+    return data
+
+# Función para listar los usuarios que han sido banca (menu opcion 7)
+def users_who_have_been_bank(cursor):
+    query = """
+    SELECT DISTINCT p.id_player, p.player_name
+    FROM players p
+    JOIN game_players gp ON p.id_player = gp.id_player
+    WHERE gp.is_bank = 1;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+    data = [{'id_player': row[0], 'player_name': row[1]} for row in results]
+    return data
+
+
+# Función para calcular las rondas ganadas por la banca (menu opcion 6)
+def rounds_won_by_bank(cursor):
+    query = """
+    SELECT r.id_round, COUNT(*) AS rounds_won_by_bank
+    FROM round_players rp
+    JOIN rounds r ON rp.id_round = r.id_round
+    JOIN players p ON rp.id_player = p.id_player
+    JOIN game_players gp ON gp.id_player = p.id_player AND gp.id_game = r.id_game
+    WHERE rp.won = 1 AND gp.is_bank = 1
+    GROUP BY r.id_round;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+    data = [{'id_round': row[0], 'rounds_won_by_bank': row[1]} for row in results]
+    return data
+
+#  Función jugadores con mas derrotas (menu opcion 8)
+def players_with_most_losses(cursor):
+    query = """
+    SELECT p.player_name, COUNT(*) AS total_losses
+    FROM round_players rp
+    JOIN players p ON rp.id_player = p.id_player
+    WHERE rp.won = 0
+    GROUP BY p.player_name
+    ORDER BY total_losses DESC;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+    data = [{'player_name': row[0], 'total_losses': row[1]} for row in results]
+    return data
+
+
+# Función rondas con mas jugadores (menu opcion 9)
+def rounds_with_most_players(cursor):
+    query = """
+    SELECT r.id_round, COUNT(rp.id_player) AS total_players
+    FROM round_players rp
+    JOIN rounds r ON rp.id_round = r.id_round
+    GROUP BY r.id_round
+    ORDER BY total_players DESC;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+    data = [{'id_round': row[0], 'total_players': row[1]} for row in results]
+    return data
+
+# Función total apuestas por jugador (menu opcion 10)
+def total_bets_by_player(cursor):
+    query = """
+    SELECT p.player_name, SUM(rp.bet) AS total_bets
+    FROM round_players rp
+    JOIN players p ON rp.id_player = p.id_player
+    GROUP BY p.player_name;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+    data = [{'player_name': row[0], 'total_bets': row[1]} for row in results]
+    return data

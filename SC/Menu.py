@@ -3,6 +3,8 @@ import SC.Datos as Dt
 import SC.Juego as Jg
 import SC.Bbdd as Bd
 import SC.Cabeceras as Cb
+import mysql.connector
+from mysql.connector import Error
 import time
 
 
@@ -385,32 +387,158 @@ def setCardsDeck():
 
 def reports():
     # Muestra el menú de informes y gestiona la selección de opciones.
-    
     while True:
+        config = {
+            'user': 'ACD_USER',  # Usuario
+            'password': 'P@ssw0rd',  # Contraseña
+            'host': 'acd-game1.mysql.database.azure.com',  # Host
+            'database': 'acd_game',  # Base de datos
+            'port': '3306'  # Puerto
+        }
+        conn = mysql.connector.connect(**config)
+        cursor = conn.cursor()
         Ut.clear_terminal()
         print(Cb.cabecera04)
         menu=[
-            "1) Most Repeated Initial Card",
-            "2) Highest Bet per Game",
-            "3) Lowest Bet per Game",
-            "4) Win Percentage per Round",
-            "5) Games Won by Bots",
-            "6) Rounds Won by the Bank",
-            "7) Users Who Have Been Bank",
-            "8) Return to Main Menu",
+            "1)  Most Repeated Initial Card",
+            "2)  Highest Bet per Game",
+            "3)  Lowest Bet per Game",
+            "4)  Win Percentage per Round",
+            "5)  Games Won by Bots",
+            "6)  Rounds Won by the Bank",
+            "7)  Users Who Have Been Bank",
+            "8)  Players with the Most Losses",
+            "9)  Rounds with the Most Players",
+            "10) Total Bets by Player",
+            "11) Return to Main Menu",
         ]
         Ut.print_centered_menu(menu,127)
 
         option = Ut.getOpt(
             inputOptText="Select an option: ".rjust(70),
-            rangeList=[1, 2, 3, 4, 5, 6, 7, 8]
+            rangeList=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
         )
         
-        if option == 8:
+        if option == 1:
+            try:
+                most_repeated_card_data = Bd.most_repeated_initial_card(cursor)
+                Bd.export_to_xml(most_repeated_card_data, "most_repeated_initial_card.xml")
+            except mysql.connector.Error as err:
+                print(f"Error: {err}")
+            finally:
+                # Cerrar conexión si está activa
+                if 'conn' in locals() and conn.is_connected():
+                    cursor.close()
+                    conn.close()
+        
+        elif option == 2:
+            try:
+                highest_bet_data = Bd.highest_bet_per_game(cursor)
+                Bd.export_to_xml(highest_bet_data, "highest_bet_per_game.xml")
+            except mysql.connector.Error as err:
+                print(f"Error: {err}")
+            finally:
+                # Cerrar conexión si está activa
+                if 'conn' in locals() and conn.is_connected():
+                    cursor.close()
+                    conn.close()
+
+        elif option == 3:
+            try:
+                data_lowest_bet = Bd.lowest_bet_per_game(cursor)
+                Bd.export_to_xml(data_lowest_bet, "lowest_bet_per_game.xml")
+            except mysql.connector.Error as err:
+                print(f"Error: {err}")
+            finally:
+                # Cerrar conexión si está activa
+                if 'conn' in locals() and conn.is_connected():
+                    cursor.close()
+                    conn.close()
+
+        elif option == 4:
+            try:
+                data_win_percentage = Bd.win_percentage_per_round(cursor)
+                Bd.export_to_xml(data_win_percentage, "win_percentage_per_round.xml")
+            except mysql.connector.Error as err:
+                print(f"Error: {err}")
+            finally:
+                # Cerrar conexión si está activa
+                if 'conn' in locals() and conn.is_connected():
+                    cursor.close()
+                    conn.close()
+
+        elif option == 5:
+            try:
+                data_games_won_by_bots = Bd.games_won_by_bots(cursor)
+                Bd.export_to_xml(data_games_won_by_bots, "games_won_by_bots.xml")
+            except mysql.connector.Error as err:
+                print(f"Error: {err}")
+            finally:
+                # Cerrar conexión si está activa
+                if 'conn' in locals() and conn.is_connected():
+                    cursor.close()
+                    conn.close()
+
+        elif option == 6:
+            try:
+                data_rounds_won_by_bank = Bd.rounds_won_by_bank(cursor)
+                Bd.export_to_xml(data_rounds_won_by_bank, "rounds_won_by_bank.xml")
+            except mysql.connector.Error as err:
+                print(f"Error: {err}")
+            finally:
+                # Cerrar conexión si está activa
+                if 'conn' in locals() and conn.is_connected():
+                    cursor.close()
+                    conn.close()
+
+        elif option == 7:
+            try:
+                data_users_who_have_been_bank = Bd.users_who_have_been_bank(cursor)
+                Bd.export_to_xml(data_users_who_have_been_bank, "users_who_have_been_bank.xml")
+            except mysql.connector.Error as err:
+                print(f"Error: {err}")
+            finally:
+                # Cerrar conexión si está activa
+                if 'conn' in locals() and conn.is_connected():
+                    cursor.close()
+                    conn.close()
+        elif option == 8:
+            try:
+                players_with_most_losses_data = Bd.players_with_most_losses(cursor)
+                Bd.export_to_xml(players_with_most_losses_data, "players_with_most_losses.xml")
+            except mysql.connector.Error as err:
+                print(f"Error: {err}")
+            finally:
+                # Cerrar conexión si está activa
+                if 'conn' in locals() and conn.is_connected():
+                    cursor.close()
+                    conn.close()
+        elif option == 9:
+            try:
+                rounds_with_most_players_data = Bd.rounds_with_most_players(cursor)
+                Bd.export_to_xml(rounds_with_most_players_data, "rounds_with_most_players.xml")
+            except mysql.connector.Error as err:
+                print(f"Error: {err}")
+            finally:
+                # Cerrar conexión si está activa
+                if 'conn' in locals() and conn.is_connected():
+                    cursor.close()
+                    conn.close()
+
+        elif option == 10:
+            try:
+                total_bets_by_player_data = Bd.total_bets_by_player(cursor)
+                Bd.export_to_xml(total_bets_by_player_data, "total_bets_by_player.xml")
+            except mysql.connector.Error as err:
+                print(f"Error: {err}")
+            finally:
+                # Cerrar conexión si está activa
+                if 'conn' in locals() and conn.is_connected():
+                    cursor.close()
+                    conn.close()
+
+        if option == 11:
             break
-        else:
-            print(f"Report {option} selected. Functionality under development...".center(127))
-            time.sleep(1)
 
 def ranking():
     # Muestra el menú de ranking y gestiona la selección de opciones.
