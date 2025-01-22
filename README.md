@@ -22,7 +22,7 @@ El proyecto **7 y Medio** es una implementación digital del juego de cartas "Si
 
 **Características principales:**
 - Simulación del juego para 2-6 jugadores.
-- Perfiles de riesgo para bots controlados por la IA.
+- Perfiles de riesgo para bots controlados por algoritmos.
 - Sistema de ranking persistente almacenado en la base de datos.
 - Página web moderna y accesible.
 
