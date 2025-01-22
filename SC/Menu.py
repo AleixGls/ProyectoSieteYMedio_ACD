@@ -559,7 +559,13 @@ def ranking():
             rangeList=[1, 2, 3, 4]
         )
         
-        if option == 4:
+        if option == 1:
+            Bd.getBBDDRankingPoints()
+        elif option == 2:
+            Bd.getPlayersByGamesPlayed()
+        elif option == 3:
+            Bd.getBBDDRankingByMinutes()
+        elif option == 4:
             break
         else:
             print(f"Ranking {option} selected. Functionality under development...".center(127))

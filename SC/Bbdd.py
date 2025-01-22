@@ -443,3 +443,152 @@ def total_bets_by_player(cursor):
     results = cursor.fetchall()
     data = [{'player_name': row[0], 'total_bets': row[1]} for row in results]
     return data
+
+# ranking por puntos opcion 1 getBBDDRankingPoints()
+def getBBDDRankingPoints():
+    try:
+        # Conexión a la base de datos
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+
+        if connection.is_connected():
+            # Crear el cursor
+            cursor = connection.cursor()
+
+            # Consultar el ranking de jugadores ordenados por puntos
+            query_ranking = """
+                SELECT p.id_player, p.player_name, 
+                       IFNULL(SUM(gp.final_points - gp.initial_points), 0) AS points
+                FROM players p
+                LEFT JOIN game_players gp ON p.id_player = gp.id_player
+                GROUP BY p.id_player, p.player_name
+                ORDER BY points DESC;
+            """
+            cursor.execute(query_ranking)
+            players = cursor.fetchall()
+
+            # Mostrar encabezado
+            while True:
+                Ut.clear_terminal()
+                print(Cb.cabecera03)
+                print(' Ranking by Points '.center(127))
+                print("-" * 127)
+                print('ID'.center(42)+'Name'.center(43)+'Points'.center(42))
+                print("-" * 127)
+
+                # Mostrar los jugadores ordenados por puntos
+                for player in players:
+                    print(f"{player[0]}".center(42)+f"{player[1]}".center(43)+f"{player[2]}".center(42))
+                print()
+                input("Press Enter to continue...".center(127))
+                break
+
+    except Error as e:
+        print(f"Error obtaining ranking: {e}".center(127))
+    finally:
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+
+# ranking ordenado por partidas opcion 2
+def getPlayersByGamesPlayed():
+    try:
+        # Conexión a la base de datos
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+
+        if connection.is_connected():
+            # Crear el cursor
+            cursor = connection.cursor()
+
+            # Consultar todos los jugadores ordenados por partidas jugadas
+            query_players = """
+                SELECT p.id_player, p.player_name, 
+                       COUNT(gp.id_game) AS games_played
+                FROM players p
+                LEFT JOIN game_players gp ON p.id_player = gp.id_player
+                GROUP BY p.id_player, p.player_name
+                ORDER BY games_played DESC;
+            """
+            cursor.execute(query_players)
+            players = cursor.fetchall()
+
+            # Mostrar encabezado
+            while True:
+                Ut.clear_terminal()
+                print(Cb.cabecera03)
+                print(' Players Ranked by Games Played '.center(127))
+                print("-" * 127)
+                print('ID'.center(42)+'Name'.center(43)+'Games Played'.center(42))
+                print("-" * 127)
+
+                # Mostrar jugadores ordenados
+                for player in players:
+                    print(f"{player[0]}".center(42) + f"{player[1]}".center(43) + f"{player[2]}".center(42))
+                print()
+                input("Press Enter to continue...".center(127))
+                break
+
+    except Error as e:
+        print(f"Error getting players: {e}".center(127))
+    finally:
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+
+#ranking por minutos opcion 3 getBBDDRankingByMinutes()
+def getBBDDRankingByMinutes():
+    try:
+        # Conexión a la base de datos
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+
+        if connection.is_connected():
+            # Crear el cursor
+            cursor = connection.cursor()
+
+            # Consulta para obtener jugadores y minutos jugados
+            query_players = """
+                SELECT p.id_player, p.player_name, 
+                       IFNULL(SUM(TIMESTAMPDIFF(MINUTE, g.start_time, g.end_time)), 0) AS minutes_played
+                FROM players p
+                LEFT JOIN game_players gp ON p.id_player = gp.id_player
+                LEFT JOIN games g ON g.id_game = gp.id_game
+                GROUP BY p.id_player, p.player_name
+                ORDER BY minutes_played DESC;
+            """
+            cursor.execute(query_players)
+            players = cursor.fetchall()
+
+            while True:
+                # Mostrar encabezado
+                Ut.clear_terminal()
+                print(Cb.cabecera03)
+                print(' Ranking by Minutes Played '.center(127))
+                print("-" * 127)
+                print('ID'.center(42)+'Name'.center(43)+'Minutes Played'.center(42))
+                print("-" * 127)
+
+                # Mostrar los jugadores ordenados
+                for player in players:
+                    print(f"{player[0]}".center(42)+f"{player[1]}".center(43)+f"{player[2]}".center(42))
+
+                print()
+                input("Press Enter to continue...".center(127))
+                break
+
+    except Error as e:
+        print(f"Error obtaining ranking: {e}".center(127))
+    finally:
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
