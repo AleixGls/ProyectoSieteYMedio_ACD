@@ -2,8 +2,9 @@ import random
 import SC.Datos as Dt
 import SC.Utilidad as Ut
 import SC.Cabeceras as Cb
+import SC.Bbdd as Bd
 import time
-import random
+
 
 
 def playGame():
@@ -65,9 +66,8 @@ def playGame():
         
     
     # Mostrar al ganador de la partida
-    for player in Dt.context_game["players"]:
-        Dt.context_game["players"][player]["bank"] = False
     printWinner()
+    Bd.player_database()
 
 def setGamePriority(mazo):
     # Mezclar el mazo

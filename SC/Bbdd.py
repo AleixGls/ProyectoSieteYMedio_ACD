@@ -46,6 +46,8 @@ def savePlayer(dni, player_name, risk_level, is_human):
         # Cierra la conexión con la base de datos
         if connection.is_connected():
             connection.close()
+            player_database()
+
 
 def removeBBDDPlayer():
     try:
@@ -112,6 +114,7 @@ def removeBBDDPlayer():
     finally:
         if 'connection' in locals() and connection.is_connected():
             connection.close()
+            player_database()
             
 
 # Función para eliminar jugador
@@ -226,6 +229,7 @@ def player_database():
             
             cursor.close()
             connection.close()
+            Dt.context_game["cards_deck"] = Dt.cartas_es
             
     except Error as e:
         print(f"Error while importing players: {e}".center(127))
