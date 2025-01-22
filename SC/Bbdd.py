@@ -592,3 +592,93 @@ def getBBDDRankingByMinutes():
     finally:
         if 'connection' in locals() and connection.is_connected():
             connection.close()
+
+# 1 def insertBBDDCardgame esta ok
+def insertBBDDCardgame(deck_id, num_players, num_rounds, end_time):
+    try:
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game')
+
+        if connection.is_connected():
+            cursor = connection.cursor()
+
+            query = """
+                INSERT INTO games (start_time, end_time, num_players, num_rounds, id_deck)
+                VALUES (NOW(), %s, %s, %s, %s);
+            """
+            cursor.execute(query, (end_time, num_players, num_rounds, deck_id))
+            connection.commit()
+
+
+    except Error as e:
+        print(f"Error inserting the game: {e}".center(127))
+
+    finally:
+        if connection.is_connected():
+            connection.close()
+
+# 2 def insert_player_game esta ok (inserta los datos en la tabla partidas jugadores)
+def insert_player_game(dni, game_id, initial_points, final_points, is_bank):
+    try:
+        # Conecta a la base de datos
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+
+        if connection.is_connected():
+            cursor = connection.cursor()
+            query = """
+                INSERT INTO game_players (id_game, id_player, initial_points, final_points, is_bank)
+                VALUES (%s, %s, %s, %s, %s);
+            """
+            # Inserta el jugador en la base de datos
+            cursor.execute(query, (game_id, dni, initial_points, final_points, is_bank))
+            connection.commit()
+            cursor.close()
+
+    except Error as e:
+        # Manejo de errores
+        if "duplicate" in str(e).lower():
+            print(f"Error: The player {dni} is already registered in the game {game_id}.".center(127))
+        else:
+            print(f"Error inserting player in game: {e}".center(127))
+
+    finally:
+        # Cierra la conexión con la base de datos
+        if connection.is_connected():
+            connection.close()
+
+def insertBBDD_player_game_round(id_round, id_player, bet, initial_points, final_points, won):
+    try:
+        # Establish the database connection
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+
+        if connection.is_connected():
+            cursor = connection.cursor()
+
+            # Insert the round data for the player into the round_players table
+            query = """
+                INSERT INTO round_players (id_round, id_player, bet, initial_points, final_points, won)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE bet = %s, initial_points = %s, final_points = %s, won = %s
+            """
+            cursor.execute(query, (id_round, id_player, bet, initial_points, final_points, won, bet, initial_points, final_points, won))
+            connection.commit()
+
+    except Error as e:
+        print(f"Error inserting or updating round data: {e}".center(127))
+
+    finally:
+        if connection.is_connected():
+            connection.close()

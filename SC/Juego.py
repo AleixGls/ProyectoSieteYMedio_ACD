@@ -4,18 +4,22 @@ import SC.Utilidad as Ut
 import SC.Cabeceras as Cb
 import SC.Bbdd as Bd
 import time
+import mysql.connector
+from mysql.connector import Error
 
 
 
 def playGame():
     Ut.clear_terminal()
     print(Cb.cabecera06)
-    if len(Dt.context_game["game"])<2:
+    if len(Dt.context_game["game"]) < 2:
         print("You need 2 players to start".center(127))
         input("Press Enter to return...".center(127))
         return
     
-    ID_partida =  random.randrange(100000000,999999999)
+    # Generar un ID de partida único
+    ID_partida = generate_unique_game_id()
+    
     Dt.context_game["round"] = 0  # Inicializar el contador de rondas
     resetPoints()
     
@@ -25,10 +29,19 @@ def playGame():
     # Devolver las cartas iniciales al mazo (conservando el ID en "initialCard")
     returnInitialCardsToDeck()
     
+    # Determinar el ID del mazo
+    deck_id = get_deck_id(Dt.context_game["cards_deck"], Dt.cartas_es, Dt.cartas_en, Dt.cartas_al)
+    
+    # Insertar la partida en la tabla 'games' y obtener el ID de la partida
+    end_time = time.strftime('%Y-%m-%d %H:%M:%S')  # Obtener el tiempo de finalización
+    num_players = len(Dt.context_game["game"])
+    num_rounds = Dt.context_game["maxRounds"]
+    ID_partida = insert_game(deck_id, num_players, num_rounds, end_time)
+    
     # Comenzar las rondas
     while Dt.context_game["round"] < Dt.context_game["maxRounds"] and checkMinimun2PlayerWithPoints():
         Dt.context_game["round"] += 1
-        print(f" Round {Dt.context_game['round']} ".center(127,"="))
+        print(f" Round {Dt.context_game['round']} ".center(127, "="))
         
         # Reiniciar el historial de la ronda
         Dt.context_game["round_history"] = []
@@ -57,16 +70,24 @@ def playGame():
                 break  # Solo hay una banca, así que salimos del bucle
         
         # Distribuir puntos, eliminar jugadores sin puntos y asignar nueva banca
-        distributionPointAndNewBankCandidates()
+        distributionPointAndNewBankCandidates(ID_partida)  # Pasar ID_partida como parámetro
         
         # Mostrar estadísticas de la ronda
         printStats()
         Ut.clear_terminal()
         print(Cb.cabecera06)
-        
     
     # Mostrar al ganador de la partida
     printWinner()
+    
+    # Insertar datos de los jugadores en la base de datos
+    for player_id in Dt.context_game["game"]:
+        player = Dt.context_game["players"][player_id]
+        initial_points = 20  # Puntos iniciales
+        final_points = player["points"]
+        is_bank = player["bank"]
+        Bd.insert_player_game(player_id, ID_partida, initial_points, final_points, is_bank)
+    
     Bd.player_database()
 
 def setGamePriority(mazo):
@@ -247,7 +268,7 @@ def humanRound(id, mazo):
             print("Invalid option. Please try again.".center(127))
             time.sleep(1.2)
 
-def distributionPointAndNewBankCandidates():
+def distributionPointAndNewBankCandidates(ID_partida):
     bank_id = None
     candidates = []
     
@@ -355,6 +376,17 @@ def distributionPointAndNewBankCandidates():
     
     # Barajar el mazo para la siguiente ronda
     random.shuffle(Dt.context_game["mazo"])
+    
+    # Insertar la ronda en la tabla 'rounds' y obtener el ID de la ronda
+    round_id = insert_round(ID_partida, Dt.context_game["round"])
+    
+    # Insertar datos de los jugadores en la tabla 'round_players'
+    for player_id in Dt.context_game["game"]:
+        player = Dt.context_game["players"][player_id]
+        initial_points = player["points"] - player["bet"]  # Puntos iniciales antes de la ronda
+        final_points = player["points"]  # Puntos finales después de la ronda
+        won = final_points > initial_points  # Determinar si el jugador ganó en esta ronda
+        Bd.insertBBDD_player_game_round(round_id, player_id, player["bet"], initial_points, final_points, won)
 
 def bankOrderNewCard(id, mazo):
     player = Dt.context_game["players"][id]
@@ -579,3 +611,148 @@ def printRoundHistory():
         print()
         input("Press Enter to return...".center(127))
         break
+
+def get_deck_id(cards_deck, cartas_es, cartas_en, cartas_al):
+    """
+    Determina el ID del mazo comparando el diccionario cards_deck con los diccionarios de mazos conocidos.
+    
+    :param cards_deck: El diccionario de cartas en uso (context_game["cards_deck"]).
+    :param cartas_es: Diccionario de cartas en español.
+    :param cartas_en: Diccionario de cartas en inglés.
+    :param cartas_al: Diccionario de cartas en alemán.
+    :return: El ID del mazo (1 para español, 2 para inglés, 3 para alemán).
+    """
+    if cards_deck == cartas_es:
+        return 1  # ID para cartas en español
+    elif cards_deck == cartas_en:
+        return 2  # ID para cartas en inglés
+    elif cards_deck == cartas_al:
+        return 3  # ID para cartas en alemán
+    else:
+        raise ValueError("The card dictionary does not match any known deck.".center(127))
+    
+def generate_unique_game_id():
+    """
+    Genera un ID de partida único que no existe en la base de datos.
+    
+    :return: Un ID de partida único.
+    """
+    while True:
+        # Generar un ID aleatorio
+        game_id = random.randrange(100000000, 999999999)
+        
+        try:
+            # Conectar a la base de datos
+            connection = mysql.connector.connect(
+                host='acd-game1.mysql.database.azure.com',
+                user='ACD_USER',
+                password='P@ssw0rd',
+                database='acd_game'
+            )
+            
+            if connection.is_connected():
+                cursor = connection.cursor()
+                
+                # Consultar si el ID ya existe en la base de datos
+                query = "SELECT id_game FROM game_players WHERE id_game = %s;"
+                cursor.execute(query, (game_id,))
+                result = cursor.fetchone()
+                
+                # Si el ID no existe, devolverlo
+                if not result:
+                    return game_id
+                
+                # Si el ID existe, generar otro
+        
+        except Error as e:
+            print(f"Error checking game ID in the database: {e}".center(127))
+            raise  # Relanzar la excepción para manejar el error fuera de la función
+        
+        finally:
+            # Cerrar la conexión con la base de datos
+            if connection.is_connected():
+                connection.close()
+
+def insert_round(game_id, round_number):
+    """
+    Inserta una nueva ronda en la tabla 'rounds' y devuelve el ID generado.
+    
+    :param game_id: El ID de la partida.
+    :param round_number: El número de la ronda.
+    :return: El ID de la ronda generado.
+    """
+    try:
+        # Conectar a la base de datos
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+        
+        if connection.is_connected():
+            cursor = connection.cursor()
+            
+            # Insertar la ronda en la tabla 'rounds'
+            query = """
+                INSERT INTO rounds (id_game, round_number)
+                VALUES (%s, %s);
+            """
+            cursor.execute(query, (game_id, round_number))
+            connection.commit()
+            
+            # Obtener el ID de la ronda generado
+            round_id = cursor.lastrowid
+            return round_id
+    
+    except Error as e:
+        print(f"Error inserting round: {e}")
+        raise  # Relanzar la excepción para manejar el error fuera de la función
+    
+    finally:
+        # Cerrar la conexión con la base de datos
+        if connection.is_connected():
+            connection.close()
+
+def insert_game(deck_id, num_players, num_rounds, end_time):
+    """
+    Inserta una nueva partida en la tabla 'games' y devuelve el ID generado.
+    
+    :param deck_id: El ID del mazo utilizado.
+    :param num_players: El número de jugadores.
+    :param num_rounds: El número de rondas.
+    :param end_time: El tiempo de finalización de la partida.
+    :return: El ID de la partida generado.
+    """
+    try:
+        # Conectar a la base de datos
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+        
+        if connection.is_connected():
+            cursor = connection.cursor()
+            
+            # Insertar la partida en la tabla 'games'
+            query = """
+                INSERT INTO games (start_time, end_time, num_players, num_rounds, id_deck)
+                VALUES (NOW(), %s, %s, %s, %s);
+            """
+            cursor.execute(query, (end_time, num_players, num_rounds, deck_id))
+            connection.commit()
+            
+            # Obtener el ID de la partida generado
+            game_id = cursor.lastrowid
+            return game_id
+    
+    except Error as e:
+        print(f"Error inserting game: {e}")
+        raise  # Relanzar la excepción para manejar el error fuera de la función
+    
+    finally:
+        # Cerrar la conexión con la base de datos
+        if connection.is_connected():
+            connection.close()
