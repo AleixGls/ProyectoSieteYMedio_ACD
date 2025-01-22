@@ -34,56 +34,226 @@
         <div class="programacion-item">
             <h2>Lógica del Juego de la Banca</h2>
             <p>
-                La banca juega después de todos los jugadores y sigue estas reglas:
+                La lógica de la banca se implementa en la función <code>bankOrderNewCard</code>. Esta función determina si la banca debe pedir una nueva carta o no, basándose en las siguientes condiciones:
             </p>
             <ul>
-                <li>Si ya tiene 7.5, se planta automáticamente.</li>
-                <li>Si se pasa de 7.5, no puede pedir más cartas.</li>
-                <li>Si no supera a ningún jugador y corre riesgo de eliminación, pide una carta adicional incluso si es arriesgado.</li>
-                <li>Si ya gana a todos los jugadores, no pide más cartas.</li>
+                <li><strong>Si la banca ya tiene 7.5 puntos:</strong> No pide más cartas.</li>
+                <li><strong>Si la banca se ha pasado de 7.5 puntos:</strong> No pide más cartas.</li>
+                <li><strong>Si la banca no tiene 7.5 puntos, pero después de repartir puntos se quedaría sin puntos:</strong> Pide una carta.</li>
+                <li><strong>Si la banca ya gana a todos los jugadores:</strong> No pide más cartas.</li>
+                <li><strong>Si la banca no supera a ningún jugador:</strong> Pide una carta.</li>
+                <li><strong>Si la banca ya supera a algún jugador y no se queda sin puntos:</strong> Pide una carta según su perfil de riesgo.</li>
             </ul>
-            <p>Se implementó en Python en la función <code>bank_logic</code>, la cual analiza las cartas actuales de la banca y los jugadores.</p>
+            <pre><code>
+def bankOrderNewCard(id, mazo):
+    player = Dt.context_game["players"][id]
+    
+    # Si ya tiene 7.5, no pide más cartas
+    if player["roundPoints"] == 7.5:
+        return False
+    
+    # Si ya se ha pasado, no pide más cartas
+    if player["roundPoints"] > 7.5:
+        return False
+    
+    # Si no tiene 7.5, pero después de repartir puntos se quedaría sin puntos, pide carta
+    if player["points"] - player["bet"] <= 0:
+        return True
+    
+    # Si ya gana a todos los jugadores, no pide carta
+    if all(player["roundPoints"] >= Dt.context_game["players"][other_id]["roundPoints"] for other_id in Dt.context_game["game"] if other_id != id):
+        return False
+    
+    # Si no supera a ningún jugador, pide carta
+    if all(player["roundPoints"] < Dt.context_game["players"][other_id]["roundPoints"] for other_id in Dt.context_game["game"] if other_id != id):
+        return True
+    
+    # Si ya supera a algún jugador y no se queda sin puntos, pide carta según su perfil de riesgo
+    probability = chanceExceedingSevenAndHalf(id, mazo)
+    return probability <= player["type"]
+            </code></pre>
         </div>
         <div class="programacion-item">
             <h2>Lógica del Juego de un Bot</h2>
             <p>
-                Los bots tienen un perfil de riesgo que afecta sus decisiones:
+                La lógica de un bot se implementa en la función <code>standarRound</code>. Esta función determina si el bot debe pedir una nueva carta o plantarse, basándose en las siguientes condiciones:
             </p>
             <ul>
-                <li><b>Prudente:</b> Se planta si la probabilidad de pasarse es superior al 30%.</li>
-                <li><b>Normal:</b> Se planta si la probabilidad de pasarse es superior al 40%.</li>
-                <li><b>Atrevido:</b> Se planta solo si la probabilidad de pasarse supera el 50%.</li>
+                <li><strong>Si el bot es la banca:</strong> Sigue la lógica de la banca implementada en <code>bankOrderNewCard</code>.</li>
+                <li><strong>Si el bot no es la banca:</strong> Calcula la probabilidad de pasarse de 7.5 puntos si pide otra carta. Si la probabilidad supera su perfil de riesgo, se planta. De lo contrario, pide una carta.</li>
             </ul>
-            <p>
-                Estas reglas se calcularon usando la función <code>chance_exceeding_seven_and_half</code>, que determina la probabilidad de pasarse basándose en las cartas restantes en el mazo.
-            </p>
+            <pre><code>
+def standarRound(id, mazo):
+    player = Dt.context_game["players"][id]
+    
+    while True:
+        # Si el jugador es la banca, seguir la lógica de bankOrderNewCard()
+        if player["bank"]:
+            if not bankOrderNewCard(id, mazo):
+                print(f"{player['name']} stands with {player['roundPoints']} points.".center(127))
+                addToRoundHistory(str(f"{player['name']} stands with {player['roundPoints']} points."))
+                time.sleep(1.2)
+                break
+        
+        # Calcular la probabilidad de pasarse si pide otra carta
+        probability = chanceExceedingSevenAndHalf(id, mazo)
+        
+        # Si la probabilidad supera el perfil de riesgo, se planta
+        if probability > player["type"]:
+            print(f"{player['name']} stands with {player['roundPoints']} points.".center(127))
+            addToRoundHistory(str(f"{player['name']} stands with {player['roundPoints']} points."))
+            time.sleep(1.2)
+            break
+        
+        # Pedir una carta
+        card = mazo.pop()
+        player["cards"].append(card)
+        player["roundPoints"] += Dt.context_game["cards_deck"][card]["value"]
+        print(f"{player['name']} has received: {Dt.context_game['cards_deck'][card]['literal']}".center(127))
+        time.sleep(1.2)
+        print(f"Current points in this round: {player['roundPoints']}".center(127))
+        addToRoundHistory(str(f"{player['name']} has received: {Dt.context_game['cards_deck'][card]['literal']}"))
+        addToRoundHistory(str(f"Current points of {player['name']} in this round: {player['roundPoints']}"))
+        time.sleep(1.2)
+        
+        # Verificar si se ha pasado de 7.5
+        if player["roundPoints"] > 7.5:
+            print(f"{player['name']} has passed above 7.5.".center(127))
+            addToRoundHistory(str(f"{player['name']} has passed above 7.5."))
+            time.sleep(1.2)
+            break
+            </code></pre>
         </div>
         <div class="programacion-item">
             <h2>Establecimiento de la Prioridad Inicial de los Jugadores</h2>
             <p>
-                Para determinar quién será la banca inicial, se reparte una carta a cada jugador. Si hay empate en el valor de las cartas, se resuelve usando la prioridad de los palos:
+                La prioridad inicial de los jugadores se establece en la función <code>setInitialPriorities</code>. Esta función reparte una carta inicial a cada jugador y establece su prioridad basándose en la carta recibida. La prioridad se determina por el valor de la carta y su valor real (<code>realValue</code>). Los jugadores se ordenan primero por prioridad ascendente y, en caso de empate, por <code>realValue</code> descendente.
             </p>
-            <ol>
-                <li><b>Oros:</b> Prioridad más alta.</li>
-                <li><b>Copas:</b> Segunda prioridad.</li>
-                <li><b>Espadas:</b> Tercera prioridad.</li>
-                <li><b>Bastos:</b> Menor prioridad.</li>
-            </ol>
-            <p>La función <code>set_game_priority</code> gestiona este proceso al inicio de cada partida.</p>
+            <pre><code>
+def setInitialPriorities(mazo):
+    # Mezclar el mazo
+    random.shuffle(mazo)
+    
+    # Repartir una carta a cada jugador y establecer su prioridad
+    for player_id in Dt.context_game["game"]:
+        card = mazo.pop()
+        Dt.context_game["players"][player_id]["initialCard"] = card  # Guardar el ID de la carta inicial
+        Dt.context_game["players"][player_id]["priority"] = Dt.context_game["cards_deck"][card]["priority"]
+        Dt.context_game["players"][player_id]["realValue"] = Dt.context_game["cards_deck"][card]["realValue"]  # Guardar el valor real de la carta
+    
+    # Ordenar jugadores por prioridad (de menor a mayor) y, en caso de empate, por realValue (de mayor a menor)
+    Dt.context_game["game"].sort(key=lambda x: (
+        Dt.context_game["players"][x]["priority"],  # Prioridad ascendente (menor valor primero)
+        -Dt.context_game["players"][x]["realValue"]  # realValue descendente en caso de empate
+    ))
+    
+    # Asignar la banca al jugador con la menor prioridad (primero en la lista ordenada)
+    new_bank_id = Dt.context_game["game"][0]  # El primer jugador en la lista ordenada
+    Dt.context_game["players"][new_bank_id]["bank"] = True
+            </code></pre>
         </div>
         <div class="programacion-item">
-            <h2>Inserción en BBDD de los Datos del Juego</h2>
+            <h2>Inserción en la Base de Datos</h2>
             <p>
-                Durante el juego, los datos se registran en la base de datos MySQL para garantizar la persistencia. Los datos registrados incluyen:
+                La inserción de datos en la base de datos se realiza en varias funciones:
             </p>
             <ul>
-                <li>Datos de cada partida: ID de la partida, número de rondas, baraja utilizada, hora de inicio y fin.</li>
-                <li>Datos de los jugadores: ID del jugador, puntos iniciales y finales, y sus apuestas.</li>
-                <li>Datos de las rondas: Puntos obtenidos por cada jugador y cartas jugadas.</li>
+                <li><strong>Inserción en la tabla <code>games</code>:</strong> Se realiza en la función <code>insert_game</code>, que inserta una nueva partida en la tabla <code>games</code> y devuelve el ID generado.</li>
+                <li><strong>Inserción en la tabla <code>round_players</code>:</strong> Se realiza en la función <code>insertBBDD_player_game_round</code>, que inserta los datos de los jugadores en la tabla <code>round_players</code> para cada ronda.</li>
+                <li><strong>Inserción en la tabla <code>game_players</code>:</strong> Se realiza en la función <code>insert_player_game</code>, que inserta los datos de los jugadores en la tabla <code>game_players</code> al finalizar la partida.</li>
             </ul>
-            <p>
-                Estas operaciones se implementaron en funciones como <code>insertBBDDCardgame</code>, <code>insertBBDD_player_game</code> y <code>insertBBDD_player_game_round</code>.
-            </p>
+            <pre><code>
+def insert_game(deck_id, num_players, num_rounds, end_time):
+    try:
+        # Conectar a la base de datos
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+        
+        if connection.is_connected():
+            cursor = connection.cursor()
+            
+            # Insertar la partida en la tabla 'games'
+            query = """
+                INSERT INTO games (start_time, end_time, num_players, num_rounds, id_deck)
+                VALUES (NOW(), %s, %s, %s, %s);
+            """
+            cursor.execute(query, (end_time, num_players, num_rounds, deck_id))
+            connection.commit()
+            
+            # Obtener el ID de la partida generado
+            game_id = cursor.lastrowid
+            return game_id
+    
+    except Error as e:
+        print(f"Error inserting game: {e}")
+        raise  # Relanzar la excepción para manejar el error fuera de la función
+    
+    finally:
+        # Cerrar la conexión con la base de datos
+        if connection.is_connected():
+            connection.close()
+
+def insertBBDD_player_game_round(id_round, id_player, bet, initial_points, final_points, won):
+    try:
+        # Conectar a la base de datos
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+        
+        if connection.is_connected():
+            cursor = connection.cursor()
+            
+            # Insertar los datos del jugador en la tabla 'round_players'
+            query = """
+                INSERT INTO round_players (id_round, id_player, bet, initial_points, final_points, won)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE bet = %s, initial_points = %s, final_points = %s, won = %s
+            """
+            cursor.execute(query, (id_round, id_player, bet, initial_points, final_points, won, bet, initial_points, final_points, won))
+            connection.commit()
+    
+    except Error as e:
+        print(f"Error inserting or updating round data: {e}")
+    
+    finally:
+        if connection.is_connected():
+            connection.close()
+
+def insert_player_game(dni, game_id, initial_points, final_points, is_bank):
+    try:
+        # Conectar a la base de datos
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game'
+        )
+        
+        if connection.is_connected():
+            cursor = connection.cursor()
+            
+            # Insertar los datos del jugador en la tabla 'game_players'
+            query = """
+                INSERT INTO game_players (id_game, id_player, initial_points, final_points, is_bank)
+                VALUES (%s, %s, %s, %s, %s);
+            """
+            cursor.execute(query, (game_id, dni, initial_points, final_points, is_bank))
+            connection.commit()
+    
+    except Error as e:
+        print(f"Error inserting player in game: {e}")
+    
+    finally:
+        if connection.is_connected():
+            connection.close()
+            </code></pre>
         </div>
     </section>
 
@@ -92,7 +262,6 @@
             <h2>Archivos XML</h2>
             <a href="DESC/XML_DOCS.7z" class="cta-button" download>¡Empieza el Tutorial!</a>
         </div>
-        
     </section>
 
     <button class="modo2" id="Modee">🌙</button>
