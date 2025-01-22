@@ -186,7 +186,7 @@ context_game = {
             "type":40,
             "bet":4,
             "points":0,
-            "cards":["AL_BE_01", "AL_BE_12","AL_BE_15"],
+            "cards":[],
             "roundPoints":0
         },
         "22225555A":{
@@ -198,11 +198,11 @@ context_game = {
             "type":30,
             "bet":4,
             "points":0,
-            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "cards":[],
             "roundPoints":0
         },
         "33335555A":{
-            "name":"Jose",
+            "name":"Jose1",
             "human":False,
             "bank":False,
             "initialCard":"",
@@ -210,11 +210,11 @@ context_game = {
             "type":50,
             "bet":4,
             "points":0,
-            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "cards":[],
             "roundPoints":0
         },
         "44445555A":{
-            "name":"Jose",
+            "name":"Jose2",
             "human":False,
             "bank":False,
             "initialCard":"",
@@ -222,11 +222,11 @@ context_game = {
             "type":50,
             "bet":4,
             "points":0,
-            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "cards":[],
             "roundPoints":0
         },
         "55555555A":{
-            "name":"Jose",
+            "name":"Jose3",
             "human":False,
             "bank":False,
             "initialCard":"",
@@ -234,11 +234,11 @@ context_game = {
             "type":50,
             "bet":4,
             "points":0,
-            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "cards":[],
             "roundPoints":0
         },        
         "66665555A":{
-            "name":"Jose",
+            "name":"Jose4",
             "human":False,
             "bank":False,
             "initialCard":"",
@@ -246,11 +246,11 @@ context_game = {
             "type":50,
             "bet":4,
             "points":0,
-            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "cards":[],
             "roundPoints":0
         },
         "77775555A":{
-            "name":"Jose",
+            "name":"Jose5",
             "human":False,
             "bank":False,
             "initialCard":"",
@@ -258,12 +258,12 @@ context_game = {
             "type":50,
             "bet":4,
             "points":0,
-            "cards":["AL_BE_09", "AL_BE_11","AL_BE_13"],
+            "cards":[],
             "roundPoints":0
         },
     },    #Jugadores extraidos de la base de datos
     "game":[],       #Jugadores en partida
 
-    "round":"",      #Ronda actual
+    "round":0,      #Ronda actual
     "maxRounds":5,   #Rondas maximas de la partida
 }

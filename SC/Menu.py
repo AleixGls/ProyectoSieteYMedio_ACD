@@ -5,6 +5,11 @@ import SC.Bbdd as Bd
 import SC.Cabeceras as Cb
 import time
 
+import data
+
+from ProyectoSieteYMedio_ACD.SC.Bbdd import getBBDDRankingPoints, getBBDDRankingByMinutes, getPlayersByGamesPlayed, \
+    getBBDDRankingByMinutes, getBBDDRankingPoints, export_to_xml
+
 
 def main_menu():
     # Muestra el menú principal del juego y gestiona la selección de opciones.
@@ -32,6 +37,7 @@ def main_menu():
         elif option == 2:
             settings()
         elif option == 3:
+            Jg.addCardsToMaze()
             Jg.playGame()
         elif option == 4:
             ranking()
@@ -103,13 +109,13 @@ def setMaxRounds():
     while True:
         Ut.clear_terminal()
         print(Cb.cabecera02)
-        print(f"Current: {Dt.context_game['maxRounds']} rounds".center(127))
+        print(f"Current: {Dt.context_game['maxRounds']} rounds (Max 30 rounds)".center(127))
         print()
         print("0) Leave this menu".center(127))
         print() 
         max_rounds = input("Enter the maximum number of rounds: ".rjust(82)).strip()
         
-        if max_rounds.isdigit() and int(max_rounds) > 0:
+        if max_rounds.isdigit() and 0 < int(max_rounds) <= 30:
             Dt.context_game["maxRounds"] = int(max_rounds)
             print(f"Maximum number of rounds set to {max_rounds}.".center(127))
             time.sleep(1)
@@ -117,7 +123,7 @@ def setMaxRounds():
         elif max_rounds.isdigit() and int(max_rounds) == 0:
             break
         else:
-            print("Invalid input. Enter a number greater than 0.".center(127))
+            print("Invalid input. Enter a number greater than 0 and lower than 31.".center(127))
             time.sleep(1)
 
 def setPlayersGame():
@@ -404,7 +410,9 @@ def reports():
             inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3, 4, 5, 6, 7, 8]
         )
-        
+        if option == 1:
+            most_repeated_initial_card(cursor)
+            export_to_xml(data, filename)
         if option == 8:
             break
         else:
@@ -429,7 +437,12 @@ def ranking():
             inputOptText="Select an option: ".rjust(70),
             rangeList=[1, 2, 3, 4]
         )
-        
+        if option == 1:
+            getBBDDRankingPoints()
+        elif option == 2:
+            getPlayersByGamesPlayed()
+        elif option == 3:
+            getBBDDRankingByMinutes()
         if option == 4:
             break
         else:
