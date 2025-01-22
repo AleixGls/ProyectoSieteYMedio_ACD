@@ -682,3 +682,29 @@ def insertBBDD_player_game_round(id_round, id_player, bet, initial_points, final
     finally:
         if connection.is_connected():
             connection.close()
+
+def updateGameEndTime(id_game, end_time, num_players, num_rounds, id_deck):
+    try:
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game')
+
+        if connection.is_connected():
+            cursor = connection.cursor()
+
+            query = """
+                UPDATE games
+                SET end_time = %s, num_players = %s, num_rounds = %s, id_deck = %s
+                WHERE id_game = %s;
+            """
+            cursor.execute(query, (end_time, num_players, num_rounds, id_deck, id_game))
+            connection.commit()
+
+    except Error as e:
+        print(f"Error updating the game: {e}".c)
+
+    finally:
+        if connection.is_connected():
+            connection.close()

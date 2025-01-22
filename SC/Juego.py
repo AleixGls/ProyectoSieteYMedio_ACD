@@ -90,6 +90,12 @@ def playGame():
         is_bank = player["bank"]
         Bd.insert_player_game(player_id, ID_partida, initial_points, final_points, is_bank)
     
+    # Actualizar el tiempo de finalización y otros detalles de la partida
+    end_time = time.strftime('%Y-%m-%d %H:%M:%S')  # Obtener el tiempo de finalización
+    num_players = len(Dt.context_game["game"])
+    num_rounds = Dt.context_game["round"]
+    Bd.updateGameEndTime(ID_partida, end_time, num_players, num_rounds, deck_id)
+    
     Bd.player_database()
 
 def setGamePriority(mazo):
