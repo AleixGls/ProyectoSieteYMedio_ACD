@@ -220,6 +220,51 @@ if __name__ == "__main__":
 import mysql.connector
 from mysql.connector import Error
 
+import mysql.connector
+from mysql.connector import Error
+
+def updateGameEndTime(id_game, end_time, num_players, num_rounds, id_deck):
+    try:
+        connection = mysql.connector.connect(
+            host='acd-game1.mysql.database.azure.com',
+            user='ACD_USER',
+            password='P@ssw0rd',
+            database='acd_game')
+
+        if connection.is_connected():
+            cursor = connection.cursor()
+
+            query = """
+                UPDATE games
+                SET end_time = %s, num_players = %s, num_rounds = %s, id_deck = %s
+                WHERE id_game = %s;
+            """
+            cursor.execute(query, (end_time, num_players, num_rounds, id_deck, id_game))
+            connection.commit()
+            print("Game end time and details updated successfully.")
+
+    except Error as e:
+        print(f"Error updating the game: {e}")
+
+    finally:
+        if connection.is_connected():
+            connection.close()
+
+if __name__ == "__main__":
+    try:
+        # Llamamos a la función updateGameEndTime con parámetros de prueba
+        id_game = 50  # ID del juego a actualizar
+        end_time = '2025-01-21 20:00:00'  # Hora de finalización de la partida (en formato de fecha y hora)
+        num_players = 4  # Número de jugadores
+        num_rounds = 5  # Número de rondas
+        id_deck = 2  # Ejemplo de ID de baraja
+
+        # Llamada a la función
+        updateGameEndTime(id_game, end_time, num_players, num_rounds, id_deck)
+
+    except Exception as e:
+        print(f"Error: {e}")
+
 def insertBBDD_player_game_round(id_round, id_player, bet, initial_points, final_points, won):
     try:
         # Establish the database connection
@@ -1200,33 +1245,33 @@ try:
     export_to_xml(total_bets_by_player_data, "total_bets_by_player.xml")
 
     rounds_with_most_players_data = rounds_with_most_players(cursor)
-    export_to_xml(rounds_with_most_players_data, "rounds_with_most_players.xml")
+    export_to_xml(rounds_with_most_players_data, "../XML/rounds_with_most_players.xml")
 
     players_with_most_losses_data = players_with_most_losses(cursor)
-    export_to_xml(players_with_most_losses_data, "players_with_most_losses.xml")
+    export_to_xml(players_with_most_losses_data, "../XML/players_with_most_losses.xml")
 
 
     data_users_who_have_been_bank = users_who_have_been_bank(cursor)
-    export_to_xml(data_users_who_have_been_bank, "users_who_have_been_bank.xml")
+    export_to_xml(data_users_who_have_been_bank, "../XML/users_who_have_been_bank.xml")
 
     data_rounds_won_by_bank = rounds_won_by_bank(cursor)
-    export_to_xml(data_rounds_won_by_bank, "rounds_won_by_bank.xml")
+    export_to_xml(data_rounds_won_by_bank, "../XML/rounds_won_by_bank.xml")
 
     data_games_won_by_bots = games_won_by_bots(cursor)
-    export_to_xml(data_games_won_by_bots, "games_won_by_bots.xml")
+    export_to_xml(data_games_won_by_bots, "../XML/games_won_by_bots.xml")
 
     data_win_percentage = win_percentage_per_round(cursor)
-    export_to_xml(data_win_percentage, "win_percentage_per_round.xml")
+    export_to_xml(data_win_percentage, "../XML/win_percentage_per_round.xml")
 
     data_lowest_bet = lowest_bet_per_game(cursor)
-    export_to_xml(data_lowest_bet, "lowest_bet_per_game.xml")
+    export_to_xml(data_lowest_bet, "../XML/lowest_bet_per_game.xml")
 
 
     most_repeated_card_data = most_repeated_initial_card(cursor)
     export_to_xml(most_repeated_card_data, "most_repeated_initial_card.xml")
 
     highest_bet_data = highest_bet_per_game(cursor)
-    export_to_xml(highest_bet_data, "highest_bet_per_game.xml")
+    export_to_xml(highest_bet_data, "../XML/highest_bet_per_game.xml")
 
 except mysql.connector.Error as err:
     print(f"Error: {err}")
