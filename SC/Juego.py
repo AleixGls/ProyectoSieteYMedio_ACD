@@ -64,8 +64,10 @@ def playGame():
         for player_id in Dt.context_game["game"]:
             if Dt.context_game["players"][player_id]["bank"]:
                 if Dt.context_game["players"][player_id]["human"]:
-                    humanRound(player_id, Dt.context_game["mazo"])
+                    # Si es un jugador humano en modo automático, sigue la lógica de la banca
+                    standarRound(player_id, Dt.context_game["mazo"])
                 else:
+                    # Si es un bot, sigue la lógica de la banca
                     standarRound(player_id, Dt.context_game["mazo"])
                 break  # Solo hay una banca, así que salimos del bucle
         
@@ -133,6 +135,14 @@ def standarRound(id, mazo):
     player = Dt.context_game["players"][id]
     
     while True:
+        # Si el jugador es la banca, seguir la lógica de bankOrderNewCard()
+        if player["bank"]:
+            if not bankOrderNewCard(id, mazo):
+                print(f"{player['name']} stands with {player['roundPoints']} points.".center(127))
+                addToRoundHistory(str(f"{player['name']} stands with {player['roundPoints']} points."))
+                time.sleep(1.2)
+                break
+        
         # Calcular la probabilidad de pasarse si pide otra carta
         probability = chanceExceedingSevenAndHalf(id, mazo)
         
@@ -151,7 +161,7 @@ def standarRound(id, mazo):
         time.sleep(1.2)
         print(f"Current points in this round: {player['roundPoints']}".center(127))
         addToRoundHistory(str(f"{player['name']} has received: {Dt.context_game['cards_deck'][card]['literal']}"))
-        addToRoundHistory(str(f"Current points of {player["name"]} in this round: {player['roundPoints']}"))
+        addToRoundHistory(str(f"Current points of {player['name']} in this round: {player['roundPoints']}"))
         time.sleep(1.2)
         
         # Verificar si se ha pasado de 7.5
