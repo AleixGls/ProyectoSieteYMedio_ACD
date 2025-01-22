@@ -1,9 +1,9 @@
-from SC.Menu import main_menu
+import SC.Menu
 import SC.Datos
-import SC.Utilidad as Ut
+import SC.Bbdd
 
 
-
-if __name__ == "__main__":
-    SC.Datos.context_game["cards_deck"] = SC.Datos.cartas_es
-    main_menu()
+if __name__ == "__main__": 
+    SC.Bbdd.card_database()
+    SC.Bbdd.player_database()
+    SC.Menu.main_menu()
