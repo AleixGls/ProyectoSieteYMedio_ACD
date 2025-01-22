@@ -29,9 +29,9 @@ El proyecto **7 y Medio** es una implementación digital del juego de cartas "Si
 ---
 
 ## Miembros del Equipo
-- **David Perera Gonzalez**
-- **Cristina Vázquez Garrrote**
-- **Aleix Linares Sousa**
+- **David Perera Gonzalez: dpereragonzalez2.eb@iesesteveterradas.cat**
+- **Cristina Vázquez Garrrote: covica@gmail.com**
+- **Aleix Linares Sousa: aleixgls@gmail.com**
 
 ---
 
