@@ -1,3 +1,4 @@
+
 .equip-intro, .equip-intro-osc {
     text-align: center;
     padding: 2rem;
@@ -114,5 +115,57 @@
 @media (max-width: 768px) {
     .team-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+.sponsors {
+    text-align: center;
+    padding: 50px 0px;
+}
+
+.sponsor-carousel {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 10px;
+}
+
+.sponsor-carousel img {
+    max-width: 150px;
+    max-height: 80px;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sponsor-carousel img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+    .sponsor-carousel {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sponsor-carousel {
+        grid-template-columns: repeat(3, 1fr);
+        margin-left: 5px;
+        align-items: center;
+    }
+
+    .sponsors h2 {
+        font-size: 24px;
+    }
+
+    .sponsor-carousel img {
+        max-width: 80px;
+        max-height: 60px;
     }
 }

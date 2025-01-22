@@ -91,11 +91,17 @@
     right: 20px;
 }
 
+
+
 .footer, .footer-osc {
     text-align: center;
     padding: 20px 0;
     font-size: 14px;
     border-top: 2px solid #D72638;
+    position: absolute; 
+    bottom: 0;
+    width: 100%;
+    left: 0; 
 }
 
 .footer {
